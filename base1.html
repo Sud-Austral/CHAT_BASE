@@ -1269,7 +1269,8 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <script src="pass.js"></script>
-    <script src="ley.js"></script>
+    <script src="dataContext/ley.js"></script>
+    <script src="dataContext/ley2.js"></script>
     
     
     <script>
@@ -1305,35 +1306,35 @@
             
             
             // Configuración del prompt
-            PROMPT_PREFIX: `Eres un asistente experto en la ley de transito de Chile. Tu objetivo es responder preguntas de manera clara, concisa y precisa.
-
-            Tu función es responder preguntas basándote exclusivamente en la siguiente información de contexto :
+            PROMPT_PREFIX: `Eres un asistente experto en la Leyes de Chile.  
+            Responde basándote solo en el contexto proporcionado:
 
             Contexto:
-            ${ley}  
+            ${ley}
+            ${ley2}
 
             Instrucciones:
-            1. Responde en el mismo idioma en que se formula la pregunta.
-            2. Proporciona respuestas claras, concisas y amigables.
-            3. Utiliza tu conocimiento general para responder preguntas.
-            4. Si no conoces la respuesta, indícalo amablemente.
-            5. Mantén un tono profesional pero accesible.
-            6. Usa formato de texto enriquecido cuando sea apropiado (**negrita**, *cursiva*).
-            7. Genera exactamente 3 preguntas de seguimiento que el usuario podría hacer.
-            8. Si la pregunta es ambigua, pide amablemente que la aclaren.
+            - Responde en el mismo idioma del usuario.
+            - Sé claro, conciso y amable.
+            - Usa solo la información del contexto; si no la sabes, dilo con cortesía.
+            - Mantén tono profesional y accesible.
+            - Usa **negrita** y *cursiva* cuando corresponda.
+            - Entrega exactamente 3 preguntas de seguimiento posibles.
+            - Si la pregunta es ambigua, pide aclaración.
 
-            Formato de respuesta:
+            Formato:
             [RESPUESTA]
-            ...tu respuesta aquí...
+            (texto)
             [/RESPUESTA]
 
             [PREGUNTAS]
-            1. Primera pregunta de seguimiento
-            2. Segunda pregunta de seguimiento
-            3. Tercera pregunta de seguimiento
+            1. ...
+            2. ...
+            3. ...
             [/PREGUNTAS]
 
-            Pregunta del usuario: `,
+            Pregunta del usuario: 
+            `,
             
             // Configuración del footer
             FOOTER_TEXT: "Asistente Virtual"
@@ -2019,28 +2020,29 @@
          * @param {string} pregunta - Pregunta del usuario
          * @returns {Promise<Object>} Respuesta del bot
          */
+       
         async function obtenerRespuesta(pregunta) {
-            // Sanitizar la entrada del usuario
             const preguntaSanitizada = sanitizeInput(pregunta);
             
-            // Agregar la pregunta del usuario al historial
             UIState.historialConversacion.push({
                 role: "user",
                 content: preguntaSanitizada
             });
 
-            // Crear el prompt con la base de datos y la pregunta
-            const promptBase = CHAT_CONFIG.PROMPT_PREFIX + preguntaSanitizada;
-
-            // Preparar mensajes con el historial (máximo últimas CHAT_CONFIG.MAX_HISTORY_LENGTH interacciones)
+            // Recortar historial: solo las últimas N interacciones
             const historialReciente = UIState.historialConversacion.slice(-CHAT_CONFIG.MAX_HISTORY_LENGTH);
-            const mensajes = [
-                {
-                    role: "user",
-                    content: promptBase
-                },
-                ...historialReciente
-            ];
+            
+            // ✅ OPTIMIZACIÓN CLAVE: Enviar contexto SOLO en el primer mensaje
+            const mensajes = historialReciente.map((msg, idx) => {
+                // Solo agregar el prompt prefix al primer mensaje del usuario
+                if (idx === 0 && msg.role === "user") {
+                    return {
+                        role: "user",
+                        content: CHAT_CONFIG.PROMPT_PREFIX + msg.content
+                    };
+                }
+                return msg;
+            });
 
             const requestBody = {
                 model: CHAT_CONFIG.API_MODEL,
@@ -2050,9 +2052,8 @@
             };
 
             try {
-                // Implementar timeout para la llamada a la API
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000000); // 30 segundos
+                const timeoutId = setTimeout(() => controller.abort(), 3000000);
                 
                 const response = await fetch(CHAT_CONFIG.API_URL, {
                     method: 'POST',
@@ -2067,102 +2068,70 @@
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
-                    throw new Error(`Error en la petición: ${response.status} ${response.statusText}`);
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
 
-                const dataResp = await response.json();
+                const data = await response.json();
+                const respuestaCompleta = data?.choices?.[0]?.message?.content?.trim();
 
-                // Manejo seguro de la respuesta
-                if (dataResp?.choices?.[0]?.message?.content) {
-                    const respuestaCompleta = dataResp.choices[0].message.content.trim();
-
-                    let respuestaPrincipal = "";
-                    let preguntasSeguimiento = [];
-
-                    // --- 1️⃣ Intentar extraer el bloque de respuesta ---
-                    // Caso 1: formato estándar [RESPUESTA] ... [/RESPUESTA]
-                    const matchConEtiquetas = respuestaCompleta.match(/\[RESPUESTA\]([\s\S]*?)\[\/RESPUESTA\]/i);
-
-                    // Caso 2: texto antes de [PREGUNTAS] (sin etiqueta de respuesta)
-                    const matchAntesDePreguntas = respuestaCompleta.match(/^([\s\S]*?)(?=\[PREGUNTAS\]|PREGUNTAS:|$)/i);
-
-                    // Caso 3: encabezado tipo "RESPUESTA:" sin corchetes
-                    const matchConEncabezado = respuestaCompleta.match(/RESPUESTA:\s*([\s\S]*?)(?=\[PREGUNTAS\]|PREGUNTAS:|$)/i);
-
-                    if (matchConEtiquetas?.[1]) {
-                        respuestaPrincipal = matchConEtiquetas[1].trim();
-                    } else if (matchConEncabezado?.[1]) {
-                        respuestaPrincipal = matchConEncabezado[1].trim();
-                    } else if (matchAntesDePreguntas?.[1]) {
-                        respuestaPrincipal = matchAntesDePreguntas[1].trim();
-                    } else {
-                        respuestaPrincipal = respuestaCompleta.trim();
-                    }
-
-                    // --- 2️⃣ Intentar extraer el bloque de preguntas ---
-                    // Soporta tanto [PREGUNTAS]...[/PREGUNTAS] como PREGUNTAS: sin corchetes
-                    const matchPreguntas = respuestaCompleta.match(/\[PREGUNTAS\]([\s\S]*?)\[\/PREGUNTAS\]/i)
-                        || respuestaCompleta.match(/PREGUNTAS:\s*([\s\S]*)/i);
-
-                    if (matchPreguntas?.[1]) {
-                        const lineas = matchPreguntas[1]
-                            .split('\n')
-                            .map(l => l.trim())
-                            .filter(l => l);
-
-                        for (const linea of lineas) {
-                            const matchLinea = linea.match(/^\d+\.\s*(.+)$/); // 1. Pregunta
-                            if (matchLinea?.[1]) {
-                                preguntasSeguimiento.push(matchLinea[1].trim());
-                            }
-                        }
-                    }
-
-                    // --- 3️⃣ Si no hay preguntas o son pocas, agregar genéricas ---
-                    if (preguntasSeguimiento.length < 3) {
-                        const preguntasGenericas = [
-                            "¿Puedes darme más detalles sobre este tema?",
-                            "¿Cómo se relaciona esto con otros aspectos?",
-                            "¿Qué implicaciones tiene esto?"
-                        ];
-                        while (preguntasSeguimiento.length < 3) {
-                            preguntasSeguimiento.push(preguntasGenericas[preguntasSeguimiento.length]);
-                        }
-                    }
-
-                    // --- 4️⃣ Limpieza final de texto ---
-                    respuestaPrincipal = respuestaPrincipal
-                        .replace(/\[\/?RESPUESTA\]/gi, '')
-                        .replace(/RESPUESTA:/gi, '')
-                        .replace(/\[\/?PREGUNTAS\]/gi, '')
-                        .replace(/PREGUNTAS:/gi, '')
-                        .trim();
-
-                    // --- 6️⃣ Guardar en historial
-                    UIState.historialConversacion.push({
-                        role: "assistant",
-                        content: respuestaPrincipal
-                    });
-
-                    return {
-                        respuesta: respuestaPrincipal,
-                        preguntas: preguntasSeguimiento
-                    };
-                } else {
+                if (!respuestaCompleta) {
                     throw new Error("Respuesta inesperada de la API");
                 }
-            } catch (error) {
-                console.error("Error al llamar a la API:", error);
+
+                // Extracción optimizada de respuesta y preguntas
+                let respuesta = respuestaCompleta;
+                let preguntas = [];
+
+                // Extraer respuesta
+                const matchResp = respuestaCompleta.match(/\[RESPUESTA\]([\s\S]*?)\[\/RESPUESTA\]/i)
+                    || respuestaCompleta.match(/RESPUESTA:\s*([\s\S]*?)(?=\[PREGUNTAS\]|PREGUNTAS:|$)/i);
                 
-                // Manejar error de timeout
-                if (error.name === 'AbortError') {
-                    throw new Error("La solicitud ha excedido el tiempo de espera. Por favor, intenta nuevamente.");
+                if (matchResp?.[1]) {
+                    respuesta = matchResp[1].trim();
                 }
-                
+
+                // Extraer preguntas
+                const matchPreg = respuestaCompleta.match(/\[PREGUNTAS\]([\s\S]*?)\[\/PREGUNTAS\]/i)
+                    || respuestaCompleta.match(/PREGUNTAS:\s*([\s\S]*?)$/i);
+
+                if (matchPreg?.[1]) {
+                    preguntas = matchPreg[1]
+                        .split('\n')
+                        .map(l => l.trim().replace(/^\d+\.\s*/, ''))
+                        .filter(l => l && l.length > 5);
+                }
+
+                // Preguntas genéricas si faltan
+                const genericas = CHAT_CONFIG.INITIAL_QUESTIONS;
+                while (preguntas.length < 3) {
+                    preguntas.push(genericas[preguntas.length]);
+                }
+
+                // Limpiar texto
+                respuesta = respuesta
+                    .replace(/\[?\/?RESPUESTA\]?/gi, '')
+                    .replace(/\[?\/?PREGUNTAS\]?/gi, '')
+                    .replace(/RESPUESTA:|PREGUNTAS:/gi, '')
+                    .trim();
+
+                UIState.historialConversacion.push({
+                    role: "assistant",
+                    content: respuesta
+                });
+
+                return { respuesta, preguntas };
+
+            } catch (error) {
+                console.error("Error API:", error);
+                if (error.name === 'AbortError') {
+                    throw new Error("Tiempo de espera excedido. Intenta nuevamente.");
+                }
                 throw error;
             }
         }
-
+        
+        
+        
         /**
          * Sanitiza la entrada del usuario para prevenir ataques XSS
          * @param {string} input - Entrada del usuario
