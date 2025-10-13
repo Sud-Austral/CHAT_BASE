@@ -1306,19 +1306,23 @@
             API_KEY: API_KEY,
             API_URL: API_URL,
             
-            
+            //${JSON.stringify(delito)} ${JSON.stringify(localizacion)} ${JSON.stringify(metrica)}
             // Configuración del prompt
             PROMPT_PREFIX: `Eres un asistente experto en la Leyes de Chile.  
             Responde basándote solo en las siguientes base de datos:
 
             Base de datos:
-            ${JSON.stringify(delito)}
-
-            ${JSON.stringify(localizacion)}
-
+            Tabla 1:
+            ${JSON.stringify(delito)} 
+            Tabla 2:
+            ${JSON.stringify(localizacion)}            
+            Tabla 3:
             ${JSON.stringify(tiempo)}
+            Tabla 4:
+            ${JSON.stringify(metrica.slice(0, 100))}
+            
 
-            ${JSON.stringify(metrica)}
+            
 
             Instrucciones:
             - Responde en el mismo idioma del usuario.
@@ -2038,6 +2042,7 @@
 
             // Recortar historial: solo las últimas N interacciones
             const historialReciente = UIState.historialConversacion.slice(-CHAT_CONFIG.MAX_HISTORY_LENGTH);
+
             
             // ✅ OPTIMIZACIÓN CLAVE: Enviar contexto SOLO en el primer mensaje
             const mensajes = historialReciente.map((msg, idx) => {
@@ -2055,7 +2060,7 @@
                 model: CHAT_CONFIG.API_MODEL,
                 messages: mensajes,
                 temperature: 0.7,
-                max_tokens: 3000
+                //max_tokens: 300000
             };
 
             try {
