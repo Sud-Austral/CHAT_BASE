@@ -1354,6 +1354,8 @@
                 "Nivel_Agregacion": "Región",
                 "metrica": "Frecuencia_Semana_Actual"
                 }
+                IMPORTANTE
+                Ten mucho cuidado en encontrar el ID_Tiempo, verifica 3 veces la Base 3 - Tiempos antes de responder 
                 `.trim(),
 
             /*
@@ -2432,7 +2434,8 @@
                             `.trim()
                         }
                     ],
-                    temperature: 0.1
+                    //temperature: 0.1
+                    temperature: .1
                 };
 
                 const resParams = await fetch(CHAT_CONFIG.API_URL, {
@@ -2460,6 +2463,8 @@
                 } catch (err) {
                     throw new Error("Error al parsear JSON de parámetros: " + err.message);
                 }
+                //return 
+                //return {JSON.stringify({parametros}, null, 2), preguntas, parametros, datosFiltrados }
 
                 console.log("✅ Parámetros detectados:", parametros);
                 const metrica = parametros.metrica;
@@ -2485,11 +2490,13 @@
                 const promptConDatos = `
         [INSTRUCCIONES]
         Usa el valor obtenido para generar una respuesta clara y contextual a la pregunta del usuario.
-        Debes responder de manera natural pero concisa, utilizando el valor entregado como base.
+        Debes responder de manera natural pero concisa, utilizando el valor entregado como base. 
+        Si hay un historial en la conversación agrega un pequeño analisis considerando 
+        siempre los datos filtrados de la sección[DATOS_FILTRADOS] [/DATOS_FILTRADOS] y luego el contexto del historial.
         [/INSTRUCCIONES]
 
         [DATOS_FILTRADOS]
-        ${JSON.stringify({ parametros, metrica, answer }, null, 2)}
+        ${JSON.stringify({ parametros, metrica, answer,datosFiltrados }, null, 2)}
         [/DATOS_FILTRADOS]
 
         [PREGUNTA_ORIGINAL]
