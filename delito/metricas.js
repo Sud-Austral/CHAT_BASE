@@ -1,4 +1,4 @@
-const metrica = [
+const metricaArray = [
  {
   "ID_Tiempo": 1,
   "ID_Delito": 1,
