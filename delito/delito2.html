@@ -1279,14 +1279,15 @@
             const tiempoAux = metrica["ID_Tiempo"]
 
             const tiempo2 = tiempo.find(x => x["ID_Tiempo (PK)"] == tiempoAux);
-            metrica["ID_Tiempo"] = tiempo2["ID_Mes"] * 1000 + tiempo2["Semana_del_Año"];
+            metrica["ID_Tiempo"] = tiempo2["ID_Mes"] * 100 + tiempo2["Semana_del_Año"];
+            metrica["ID_Tiempo"] = `T-${metrica["ID_Tiempo"]}`
             return metrica;
         }
         metricaArray = metricaArray.map(getNewTime)
         
         tiempo =  tiempo.map(obj => ({
                         ...obj,
-                        "ID_Tiempo (PK)": obj.ID_Mes * 1000 + obj["Semana_del_Año"]
+                        "ID_Tiempo (PK)": `T-${obj.ID_Mes * 100 + obj["Semana_del_Año"]}` 
                         }));
     </script>
     
@@ -1344,11 +1345,15 @@
             - "ID_Año" coincide exactamente con el año mencionado.
             - "Semana_del_Año" coincide exactamente con el número de semana mencionado.
             2. Usa el valor exacto de su campo "ID_Tiempo (PK)" como "ID_Tiempo".
-            3. No calcules ni estimes el ID_Tiempo. No uses fórmulas, no restes ni sumes 1.
+            3. No calcules ni estimes el ID_Tiempo. No uses fórmulas, no restes ni sumes 1.            
             4. No asumas que los ID son correlativos entre años. El conteo continúa de un año a otro.
             5. Si hay varios candidatos (lo cual no debería ocurrir), elige el primero que cumpla ambas condiciones exactas.
-
-
+            6. Las claves "ID_Tiempo (PK)" se forman con ID_Mes y Semana_del_Año, por ejemplo:
+                 la semana 12 del 2024 = "T-20240312"
+                 la semana 15 del 2023 = "T-20230415"
+                 la semana 27 del 2025 = "T-20240727"
+                 la semana 35 del 2025 = "T-20240835"
+                 la semana 35 del 2024 = "T-20240835"
             El JSON final debe incluir solo los campos relevantes presentes en la estructura de la lista 'metrica':
             {
             "ID_Tiempo": number,
@@ -1402,7 +1407,7 @@
 
                 El JSON debe incluir solo los campos relevantes presentes en la estructura de la lista 'metrica':
                 {
-                "ID_Tiempo": number,
+                "ID_Tiempo": string,
                 "ID_Delito": number,
                 "ID_Localizacion_Agg": string,
                 "Nivel_Agregacion": string
@@ -1424,7 +1429,7 @@
                 ⚠️ Responde solo con un JSON válido, sin texto adicional, sin explicaciones, sin comillas triples ni etiquetas Markdown.
                 Ejemplo de salida esperada:
                 {
-                "ID_Tiempo": 45,
+                "ID_Tiempo": "T-45",
                 "ID_Delito": 2,
                 "ID_Localizacion_Agg": "R-13",
                 "Nivel_Agregacion": "Región",
@@ -2503,7 +2508,7 @@
         {
         "ID_Delito": 1,
         "ID_Localizacion_Agg": "R-02",
-        "ID_Tiempo": 1,
+        "ID_Tiempo": "T-1",
         "metrica": "Frecuencia_Semana_Anterior"
         }
 
@@ -2544,6 +2549,7 @@
                 //return {JSON.stringify({parametros}, null, 2), preguntas, parametros, datosFiltrados }
 
                 console.log("✅ Parámetros detectados:", parametros);
+                
                 const metrica = parametros.metrica;
                 delete parametros.metrica;
 
