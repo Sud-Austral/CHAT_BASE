@@ -1,4 +1,4 @@
-const tiempo = [
+let tiempo = [
  {
   "ID_Tiempo (PK)": 1,
   "ID_Año": 2023,

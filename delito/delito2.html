@@ -1274,6 +1274,21 @@
     <script src="tiempo.js"></script>
     <script src="metricas.js"></script>
     
+    <script>
+        function getNewTime(metrica){
+            const tiempoAux = metrica["ID_Tiempo"]
+
+            const tiempo2 = tiempo.find(x => x["ID_Tiempo (PK)"] == tiempoAux);
+            metrica["ID_Tiempo"] = tiempo2["ID_Mes"] * 1000 + tiempo2["Semana_del_Año"];
+            return metrica;
+        }
+        metricaArray = metricaArray.map(getNewTime)
+        
+        tiempo =  tiempo.map(obj => ({
+                        ...obj,
+                        "ID_Tiempo (PK)": obj.ID_Mes * 1000 + obj["Semana_del_Año"]
+                        }));
+    </script>
     
     <script>
         // Configuración de la aplicación
@@ -1308,7 +1323,68 @@
             
             //${JSON.stringify(delito)} ${JSON.stringify(localizacion)} ${JSON.stringify(metrica)}
             // Configuración del prompt
-            PROMPT_PREFIX: `
+            PROMPT_PREFIX:`Eres un analista experto en inteligencia de datos criminales. 
+            Tu tarea es analizar la consulta del usuario y devolver ÚNICAMENTE un JSON con los parámetros necesarios 
+            para filtrar la lista llamada 'metrica'.
+
+            Usa las siguientes bases de datos de referencia:
+
+            🔹 Base 1 - Delitos:
+            ${JSON.stringify(delito, null, 2)}
+
+            🔹 Base 2 - Localizaciones:
+            ${JSON.stringify(localizacion, null, 2)}
+
+            🔹 Base 3 - Tiempos:
+            ${JSON.stringify(tiempo, null, 2)}
+
+            ⚠️ MUY IMPORTANTE:
+            Para determinar el valor de "ID_Tiempo":
+            1. Busca en la Base 3 - Tiempos el objeto que cumpla AMBAS condiciones:
+            - "ID_Año" coincide exactamente con el año mencionado.
+            - "Semana_del_Año" coincide exactamente con el número de semana mencionado.
+            2. Usa el valor exacto de su campo "ID_Tiempo (PK)" como "ID_Tiempo".
+            3. No calcules ni estimes el ID_Tiempo. No uses fórmulas, no restes ni sumes 1.
+            4. No asumas que los ID son correlativos entre años. El conteo continúa de un año a otro.
+            5. Si hay varios candidatos (lo cual no debería ocurrir), elige el primero que cumpla ambas condiciones exactas.
+
+
+            El JSON final debe incluir solo los campos relevantes presentes en la estructura de la lista 'metrica':
+            {
+            "ID_Tiempo": number,
+            "ID_Delito": number,
+            "ID_Localizacion_Agg": string,
+            "Nivel_Agregacion": string
+            }
+
+            También puedes incluir el nombre de la métrica solicitada si se menciona explícitamente en la consulta.
+            Las métricas disponibles son:
+            'Frecuencia_Semana_Actual', 
+            'Frecuencia_Semana_Anterior',
+            'Frecuencia_Misma_Semana_AA',
+            'Promedio_Diario_Semanal',
+            'Media_Movil_4S',
+            'Var_Vs_Semana_Anterior',
+            'Var_Vs_Mis_Semana_AA',
+            'Tendencia_Corto_Plazo',
+            'Var%_vs_Semana_Anterior',
+            'Var%_Vs_Mis_Semana_AA'
+
+            📘 Ejemplo:
+            Consulta: "¿Cuál es la frecuencia de Antofagasta para la semana 12 del 2024 de daños?"
+            Salida esperada:
+            {
+            "ID_Tiempo": <valor exacto de 'ID_Tiempo (PK)' donde ID_Año=2024 y Semana_del_Año=12>,
+            "ID_Delito": <ID del delito 'daños'>,
+            "ID_Localizacion_Agg": "R-02",
+            "Nivel_Agregacion": "Región",
+            "metrica": "Frecuencia_Semana_Actual"
+            }
+
+            ⚠️ Responde solo con un JSON válido, sin texto adicional, sin explicaciones, sin comillas triples ni etiquetas Markdown.
+            `,
+
+            PROMPT_PREFIX3: `
                 Eres un analista experto en inteligencia de datos criminales. 
                 Tu tarea es analizar la consulta del usuario y devolver ÚNICAMENTE un JSON con los parámetros necesarios 
                 para filtrar la lista llamada 'metrica'.
@@ -1355,7 +1431,8 @@
                 "metrica": "Frecuencia_Semana_Actual"
                 }
                 IMPORTANTE
-                Ten mucho cuidado en encontrar el ID_Tiempo, verifica 3 veces la Base 3 - Tiempos antes de responder 
+                Ten mucho cuidado en encontrar el ID_Tiempo, verifica 3 veces la Base 3 - Tiempos antes de responder.
+                El ID_Tiempo NO ES LA POSICIÓN DEL REGISTRO, sino el campo de "ID_Tiempo (PK)" dentro de la base tiempo 
                 `.trim(),
 
             /*
