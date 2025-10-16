@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Prompts IA</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para una tipografía limpia -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-theme="light">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <!-- Encabezado de la aplicación -->
+        <header class="text-center mb-12 relative">
+            <!-- Selector de temas -->
+            <div class="absolute top-0 right-0 flex gap-3">
+                <button class="theme-btn active" data-theme="light" title="Tema Claro">
+                    <svg class="w-6 h-6" style="color: #fbbf24" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <button class="theme-btn" data-theme="dark" title="Tema Oscuro">
+                    <svg class="w-6 h-6" style="color: #9ca3af" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button class="theme-btn" data-theme="ocean" title="Tema Océano">
+                    <svg class="w-6 h-6" style="color: #0ea5e9" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <button class="theme-btn" data-theme="forest" title="Tema Bosque">
+                    <svg class="w-6 h-6" style="color: #22c55e" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Generador de Prompts IA</h1>
+            <p class="text-lg text-secondary max-w-2xl mx-auto">Crea prompts efectivos y estructurados para cualquier modelo de IA. Selecciona una plantilla o define tus propios parámetros.</p>
+        </header>
+
+        <!-- Contenedor principal con dos columnas -->
+        <main class="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+
+            <!-- Columna 1: Formulario de Entradas -->
+            <div class="glass-card p-8">
+                <h2 class="text-2xl font-semibold mb-7 text-secondary">1. Define los Parámetros</h2>
+                
+                <!-- Selector de Plantillas -->
+                <div class="mb-7">
+                    <label class="block mb-3 text-sm font-medium text-secondary">Plantillas Predefinidas</label>
+                    <div class="template-dropdown">
+                        <button id="templateToggle" class="w-full bg-input border border-custom rounded-xl p-3 text-primary text-left flex items-center justify-between hover:bg-tertiary transition-all duration-300 shadow-sm">
+                            <span id="selectedTemplate" class="text-tertiary">Selecciona una plantilla...</span>
+                            <svg class="w-5 h-5 text-tertiary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="templateMenu" class="template-menu hidden">
+                            <!-- Las plantillas se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Campos del formulario... -->
+                    <div>
+                        <label for="rol" class="block mb-2.5 text-sm font-medium text-secondary">Rol (Persona)</label>
+                        <input type="text" id="rol" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Experto en marketing, programador, resumidor...">
+                    </div>
+                    <div>
+                        <label for="contexto" class="block mb-2.5 text-sm font-medium text-secondary">Contexto</label>
+                        <textarea id="contexto" rows="4" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Estás preparando un informe para un cliente no técnico sobre las vulnerabilidades de su red."></textarea>
+                    </div>
+                    <div>
+                        <label for="tarea" class="block mb-2.5 text-sm font-medium text-secondary">Tarea Específica</label>
+                        <input type="text" id="tarea" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Analizar y explicar los 3 riesgos más críticos.">
+                    </div>
+                    <div>
+                        <label for="formato" class="block mb-2.5 text-sm font-medium text-secondary">Formato de Salida</label>
+                        <input type="text" id="formato" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Una lista numerada con un párrafo explicativo por punto.">
+                    </div>
+                    <div>
+                        <label for="restricciones" class="block mb-2.5 text-sm font-medium text-secondary">Restricciones y Reglas</label>
+                        <textarea id="restricciones" rows="3" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Tono claro y sencillo, sin jerga técnica. No exceder las 300 palabras."></textarea>
+                    </div>
+                    <button id="generateBtn" class="w-full btn-primary" disabled>
+                        Generación Automática
+                    </button>
+                </div>
+            </div>
+
+            <!-- Columna 2: Salida del Prompt Generado -->
+            <div class="glass-card p-8 flex flex-col">
+                <h2 class="text-2xl font-semibold mb-7 text-secondary">2. Prompt Resultante</h2>
+                <div class="relative flex-grow mb-6">
+                    <div id="outputPrompt" class="w-full h-full bg-tertiary border border-custom rounded-xl p-5 whitespace-pre-wrap overflow-y-auto text-secondary transition-colors duration-300 font-mono text-sm shadow-inner">El prompt generado aparecerá aquí...</div>
+                </div>
+
+                <!-- Sección de Análisis IA -->
+                <div id="analysisResults" class="analysis-card hidden">
+                    <div class="flex justify-between items-start mb-5">
+                        <div>
+                            <h3 class="text-xl font-semibold text-primary mb-2">Análisis de Calidad</h3>
+                            <div class="flex items-baseline gap-3">
+                                <span id="scoreValue" class="score-display">0</span>
+                                <span id="scoreLabel" class="text-lg font-medium text-secondary">--</span>
+                            </div>
+                        </div>
+                        <button id="closeAnalysis" class="text-tertiary hover:text-primary transition-all duration-300 hover:rotate-90">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="progress-bar mb-7">
+                        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+
+                    <div class="mb-7">
+                        <h4 class="font-medium text-primary mb-4">Sugerencias de Mejora</h4>
+                        <div id="suggestionsList" class="space-y-3">
+                            <!-- Las sugerencias se generarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium text-primary mb-4">Palabras Clave Recomendadas</h4>
+                        <div id="keywordsList" class="flex flex-wrap">
+                            <!-- Las palabras clave se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistema de Etiquetas Mejorado -->
+                <div class="mt-5">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-sm font-medium text-secondary">Etiquetas Inteligentes</label>
+                        <button id="extractTagsBtn" class="extract-tags-btn" disabled>
+                            🏷️ Extraer del Prompt
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <div id="tagsContainer" class="tags-container">
+                            <input type="text" id="tagInput" class="tag-input" placeholder="Añadir etiquetas...">
+                        </div>
+                        <div id="tagSuggestions" class="tag-suggestions hidden">
+                            <!-- Las sugerencias se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="main-actions">
+                    <button id="analyzeBtn" class="action-btn analyze">
+                        🧠 Analizar
+                    </button>
+                    <button id="saveBtn" class="action-btn save">
+                        💾 Guardar
+                    </button>
+                    <button id="copyBtn" class="action-btn copy">
+                        📋 Copiar
+                    </button>
+                </div>
+                <p id="feedback"></p>
+
+            </div>
+        </main>
+
+        <section class="max-w-7xl mx-auto mt-16">
+            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">Historial de Prompts Guardados</h2>
+            
+            <!-- Panel de Búsqueda Avanzada -->
+            <div class="search-panel">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="text-xl font-semibold text-primary">Búsqueda Avanzada</h3>
+                    <button id="toggleAdvancedSearch" class="text-sm text-accent-blue hover:text-accent-purple transition-all duration-300 flex items-center">
+                        <span id="toggleText">Mostrar filtros</span>
+                        <svg id="toggleIcon" class="w-4 h-4 inline ml-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Pestañas de búsqueda -->
+                <div class="search-tabs">
+                    <button class="search-tab active" data-tab="basic">Básica</button>
+                    <button class="search-tab" data-tab="semantic">Semántica</button>
+                    <button class="search-tab" data-tab="similarity">Similitud</button>
+                    <button class="search-tab" data-tab="saved">Guardadas</button>
+                </div>
+
+                <!-- Contenido de las pestañas -->
+                <div id="searchTabContent">
+                    <!-- Búsqueda Básica -->
+                    <div id="basicSearch" class="tab-content">
+                        <div class="mb-5">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-tertiary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input id="searchInput" type="text" class="bg-input border border-custom text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 placeholder:text-tertiary transition-all duration-300" placeholder="Buscar prompts...">
+                            </div>
+                        </div>
+
+                        <div id="advancedFilters" class="hidden space-y-5">
+                            <!-- Filtro por etiquetas -->
+                            <div class="filter-group">
+                                <label class="filter-label">Filtrar por etiquetas</label>
+                                <div id="tagFilters" class="flex flex-wrap">
+                                    <!-- Las etiquetas se generarán dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Filtro por fecha -->
+                            <div class="filter-group">
+                                <label class="filter-label">Rango de fechas</label>
+                                <div class="date-range-inputs">
+                                    <input type="date" id="dateFrom" class="date-input">
+                                    <span class="text-tertiary">hasta</span>
+                                    <input type="date" id="dateTo" class="date-input">
+                                </div>
+                            </div>
+
+                            <!-- Filtro por frecuencia de uso -->
+                            <div class="filter-group">
+                                <label class="filter-label">Frecuencia de uso</label>
+                                <div class="flex flex-wrap">
+                                    <span class="filter-chip" data-usage="all">Todos</span>
+                                    <span class="filter-chip" data-usage="frequent">Frecuentes</span>
+                                    <span class="filter-chip" data-usage="recent">Recientes</span>
+                                    <span class="filter-chip" data-usage="never">Sin usar</span>
+                                </div>
+                            </div>
+
+                            <!-- Filtro por calidad -->
+                            <div class="filter-group">
+                                <label class="filter-label">Calidad estimada</label>
+                                <div class="flex flex-wrap">
+                                    <span class="filter-chip" data-quality="all">Todos</span>
+                                    <span class="filter-chip" data-quality="excellent">Excelente (80+)</span>
+                                    <span class="filter-chip" data-quality="good">Buena (60-79)</span>
+                                    <span class="filter-chip" data-quality="needs-improvement">Mejorable (<60)</span>
+                                </div>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="flex gap-3">
+                                <button id="saveSearchBtn" class="px-5 py-2.5 bg-accent-blue text-white rounded-lg hover:bg-accent-purple transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg">
+                                    Guardar búsqueda
+                                </button>
+                                <button id="clearFiltersBtn" class="px-5 py-2.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg">
+                                    Limpiar filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Búsqueda Semántica -->
+                    <div id="semanticSearch" class="tab-content hidden">
+                        <div class="mb-5">
+                            <label class="filter-label">Concepto o intención</label>
+                            <textarea id="semanticInput" rows="3" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary transition-all duration-300" placeholder="Describe lo que buscas en lenguaje natural..."></textarea>
+                        </div>
+                        <div class="mb-5">
+                            <label class="filter-label">Tipo de contenido</label>
+                            <div class="flex flex-wrap">
+                                <span class="filter-chip semantic-type" data-type="marketing">Marketing</span>
+                                <span class="filter-chip semantic-type" data-type="analisis">Análisis</span>
+                                <span class="filter-chip semantic-type" data-type="creativo">Creativo</span>
+                                <span class="filter-chip semantic-type" data-type="tecnico">Técnico</span>
+                                <span class="filter-chip semantic-type" data-type="educacion">Educación</span>
+                            </div>
+                        </div>
+                        <button id="performSemanticSearch" class="px-5 py-2.5 bg-accent-purple text-white rounded-lg hover:bg-purple-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
+                            Buscar por significado
+                        </button>
+                    </div>
+
+                    <!-- Búsqueda por Similitud -->
+                    <div id="similaritySearch" class="tab-content hidden">
+                        <div class="mb-5">
+                            <label class="filter-label">Prompt de referencia</label>
+                            <textarea id="similarityInput" rows="4" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary transition-all duration-300" placeholder="Pega un prompt aquí para encontrar similares..."></textarea>
+                        </div>
+                        <div class="mb-5">
+                            <label class="filter-label">Nivel de similitud</label>
+                            <div class="flex items-center gap-4">
+                                <input type="range" id="similarityThreshold" min="0" max="100" value="50" class="flex-1">
+                                <span id="similarityValue" class="text-sm text-secondary font-medium">50%</span>
+                            </div>
+                        </div>
+                        <button id="performSimilaritySearch" class="px-5 py-2.5 bg-accent-green text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
+                            Encontrar similares
+                        </button>
+                    </div>
+
+                    <!-- Búsquedas Guardadas -->
+                    <div id="savedSearches" class="tab-content hidden">
+                        <div id="savedSearchesList" class="space-y-3">
+                            <!-- Las búsquedas guardadas se mostrarán aquí -->
+                        </div>
+                        <div id="noSavedSearches" class="text-center text-tertiary py-10 hidden">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <p>No tienes búsquedas guardadas aún</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estadísticas de búsqueda -->
+            <div id="searchStats" class="search-stats hidden">
+                <div class="text-sm text-secondary">
+                    <span id="resultCount">0</span> resultados encontrados
+                </div>
+                <div class="text-sm text-secondary">
+                    Ordenado por: <span id="sortBy" class="font-medium">relevancia</span>
+                </div>
+            </div>
+            
+            <div id="tagFilterList" class="mb-7 flex flex-wrap gap-2 justify-center">
+            </div>
+            
+            <div id="savedPromptsList" class="space-y-5">
+            </div>
+        </section>
+
+    </div>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

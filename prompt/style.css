@@ -1,0 +1,1739 @@
+/* Estilos personalizados para el tema */
+:root {
+    --primary: #1e293b;
+    --secondary: #475569;
+    --tertiary: #f8fafc;
+    --accent-blue: #3b82f6;
+    --accent-purple: #8b5cf6;
+    --accent-green: #10b981;
+    --border: #e2e8f0;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    --radius: 1rem;
+    --radius-sm: 0.5rem;
+    --font-primary: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme="dark"] {
+    --primary: #f1f5f9;
+    --secondary: #cbd5e1;
+    --tertiary: #0f172a;
+    --accent-blue: #60a5fa;
+    --accent-purple: #a78bfa;
+    --accent-green: #34d399;
+    --border: #334155;
+    --glass-bg: rgba(30, 41, 59, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="ocean"] {
+    --primary: #f0f9ff;
+    --secondary: #7dd3fc;
+    --tertiary: #082f49;
+    --accent-blue: #0ea5e9;
+    --accent-purple: #6366f1;
+    --accent-green: #14b8a6;
+    --border: #0c4a6e;
+    --glass-bg: rgba(8, 47, 73, 0.8);
+    --glass-border: rgba(14, 165, 233, 0.2);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="forest"] {
+    --primary: #f0fdf4;
+    --secondary: #86efac;
+    --tertiary: #052e16;
+    --accent-blue: #22c55e;
+    --accent-purple: #84cc16;
+    --accent-green: #16a34a;
+    --border: #14532d;
+    --glass-bg: rgba(5, 46, 22, 0.8);
+    --glass-border: rgba(34, 197, 94, 0.2);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--tertiary);
+    color: var(--primary);
+    transition: background-color 0.5s, color 0.5s;
+    background-image: 
+        radial-gradient(at 20% 80%, rgba(var(--accent-blue-rgb, 59, 130, 246), 0.1) 0px, transparent 50%),
+        radial-gradient(at 80% 20%, rgba(var(--accent-purple-rgb, 139, 92, 246), 0.1) 0px, transparent 50%);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.glass-card {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: gradient 3s ease infinite;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.bg-secondary {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+
+.bg-input {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius-sm);
+}
+
+.text-primary {
+    color: var(--primary);
+}
+
+.text-secondary {
+    color: var(--secondary);
+}
+
+.text-tertiary {
+    color: var(--secondary);
+    opacity: 0.7;
+}
+
+.border-custom {
+    border-color: var(--border);
+}
+
+.theme-btn {
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-btn:hover {
+    background-color: var(--border);
+    transform: translateY(-2px);
+}
+
+.theme-btn.active {
+    background-color: var(--border);
+    box-shadow: 0 0 0 2px var(--accent-blue);
+}
+
+.template-dropdown {
+    position: relative;
+}
+
+.template-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: var(--shadow);
+    margin-top: 0.5rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.template-menu:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.template-category {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: inherit;
+    z-index: 1;
+}
+
+.template-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-item:hover {
+    background-color: var(--border);
+    padding-left: 1.25rem;
+}
+
+.template-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple));
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.template-item:hover::before {
+    transform: scaleY(1);
+}
+
+.analysis-card {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow);
+    animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.score-display {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.score-excellent {
+    color: var(--accent-green);
+}
+
+.score-good {
+    color: var(--accent-blue);
+}
+
+.score-needs-improvement {
+    color: #f59e0b;
+}
+
+.progress-bar {
+    height: 0.75rem;
+    background-color: var(--border);
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+    border-radius: 9999px;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    border-radius: 9999px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+}
+
+.suggestion-item:hover {
+    background-color: var(--border);
+}
+
+.suggestion-icon {
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+}
+
+.keyword-chip {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.keyword-chip::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.keyword-chip:hover::before {
+    transform: translateX(0);
+}
+
+.keyword-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    min-height: 2.75rem;
+    transition: all 0.3s ease;
+}
+
+.tags-container:focus-within {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.tag-chip {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.tag-chip.manual {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+}
+
+.tag-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tag-type-indicator {
+    font-size: 0.625rem;
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 0.125rem 0.375rem;
+    border-radius: 9999px;
+    margin-left: 0.375rem;
+}
+
+.tag-remove {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 0.2s;
+}
+
+.tag-remove:hover {
+    transform: rotate(90deg);
+}
+
+.tag-input {
+    border: none;
+    background: transparent;
+    color: var(--primary);
+    outline: none;
+    flex-grow: 1;
+    min-width: 120px;
+    font-size: 0.95rem;
+    font-family: var(--font-primary);
+}
+
+.tag-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: var(--shadow);
+    margin-top: 0.5rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.tag-suggestions:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tag-suggestion-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tag-suggestion-item:hover,
+.tag-suggestion-item.selected {
+    background-color: var(--border);
+    padding-left: 1rem;
+}
+
+.extract-tags-btn {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.extract-tags-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.extract-tags-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.search-panel {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.search-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+}
+
+.search-tab {
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    color: var(--secondary);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.search-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    transition: width 0.3s ease;
+}
+
+.search-tab.active {
+    color: var(--accent-blue);
+}
+
+.search-tab.active::after {
+    width: 100%;
+}
+
+.filter-group {
+    margin-bottom: 1.25rem;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.filter-chip {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-chip.active {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.date-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.date-input {
+    padding: 0.65rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.date-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+.search-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    padding: 0.75rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.prompt-card {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.prompt-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.quality-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.quality-high {
+    background: linear-gradient(to bottom, var(--accent-green), #22c55e);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.quality-medium {
+    background: linear-gradient(to bottom, var(--accent-blue), #60a5fa);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.quality-low {
+    background: linear-gradient(to bottom, #f59e0b, #f97316);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.prompt-header-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.prompt-meta {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 0.875rem;
+    color: var(--secondary);
+}
+
+.prompt-date, .prompt-usage {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.prompt-usage.used {
+    color: var(--accent-green);
+}
+
+.prompt-actions {
+    display: flex;
+    gap: 0.65rem;
+}
+
+.prompt-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--glass-border);
+}
+
+.prompt-action-btn:hover {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.prompt-action-btn.delete:hover {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+}
+
+.prompt-content-section {
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+}
+
+.prompt-section {
+    margin-bottom: 1.25rem;
+}
+
+.prompt-section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.65rem;
+}
+
+.prompt-section-icon {
+    margin-right: 0.65rem;
+    font-size: 1.35rem;
+}
+
+.prompt-section-title {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.prompt-section-content {
+    padding-left: 2.25rem;
+}
+
+.restriction-item {
+    display: flex;
+    margin-bottom: 0.35rem;
+}
+
+.restriction-bullet {
+    margin-right: 0.65rem;
+    color: var(--secondary);
+}
+
+.prompt-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prompt-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.prompt-tag {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--primary);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    border: 1px solid var(--glass-border);
+}
+
+.prompt-badges {
+    display: flex;
+    gap: 0.65rem;
+}
+
+.prompt-badge {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.65rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    gap: 0.35rem;
+    border: 1px solid var(--glass-border);
+}
+
+.badge-similarity {
+    color: var(--accent-purple);
+}
+
+.badge-semantic {
+    color: var(--accent-blue);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    text-align: center;
+    color: var(--secondary);
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+}
+
+.empty-state-icon {
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1.25rem;
+    opacity: 0.5;
+}
+
+.empty-state-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.65rem;
+    color: var(--primary);
+}
+
+.empty-state-description {
+    max-width: 500px;
+}
+
+.search-result-highlight {
+    background-color: rgba(251, 191, 36, 0.3);
+    padding: 0 3px;
+    border-radius: 3px;
+}
+
+.saved-search-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    margin-bottom: 0.65rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saved-search-item:hover {
+    background-color: var(--border);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.saved-search-name {
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.saved-search-query {
+    font-size: 0.875rem;
+    color: var(--secondary);
+}
+
+.prompt-preview {
+    margin-bottom: 1.25rem;
+}
+
+.prompt-preview-item {
+    margin-bottom: 0.65rem;
+    font-size: 0.875rem;
+    display: flex;
+}
+
+.prompt-preview-label {
+    font-weight: 600;
+    margin-right: 0.65rem;
+    min-width: 80px;
+    color: var(--secondary);
+}
+
+.prompt-preview-content {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.expand-btn {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    margin-top: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expand-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Animaciones para botones principales */
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    font-weight: 600;
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--radius);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+/* Mejoras en inputs y textareas */
+input, textarea {
+    transition: all 0.3s ease;
+    font-family: var(--font-primary);
+}
+
+input:focus, textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+/* Efectos de tema en transición */
+.theme-changing {
+    transition: background-color 0.5s, color 0.5s;
+}
+
+/* Estilos para el texto del prompt generado */
+.prompt-header {
+    font-weight: 700;
+    color: var(--accent-blue);
+}
+
+.prompt-content {
+    color: var(--primary);
+    line-height: 1.6;
+}
+
+.prompt-list-item {
+    color: var(--secondary);
+}
+
+/* Animación para tarjetas de prompt */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.prompt-card {
+    animation: slideIn 0.4s ease forwards;
+}
+
+/* Estilos para el output del prompt */
+#outputPrompt {
+    font-family: var(--font-mono);
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Mejoras en los inputs del formulario */
+#rol, #contexto, #tarea, #formato, #restricciones {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en el selector de plantillas */
+#templateToggle {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en los botones de tema */
+.theme-btn {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en los inputs de búsqueda */
+#searchInput, #semanticInput, #similarityInput {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en los inputs de fecha */
+#dateFrom, #dateTo {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en el input de etiquetas */
+#tagInput {
+    background-color: transparent;
+}
+
+/* Mejoras en las etiquetas de filtro */
+.filter-chip {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en las tarjetas de búsqueda guardada */
+.saved-search-item {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en el estado vacío */
+.empty-state {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en el análisis de calidad */
+.analysis-card {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras en la barra de progreso */
+.progress-bar {
+    background-color: var(--border);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Mejoras en las sugerencias */
+.suggestion-item {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en las palabras clave */
+.keyword-chip {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras en el contenedor de etiquetas */
+.tags-container {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en las sugerencias de etiquetas */
+.tag-suggestions {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras en el botón de extraer etiquetas */
+.extract-tags-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras en el panel de búsqueda */
+.search-panel {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras en las pestañas de búsqueda */
+.search-tab {
+    border-bottom: 2px solid transparent;
+}
+
+/* Mejoras en los grupos de filtro */
+.filter-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Mejoras en las etiquetas de filtro */
+.filter-label {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+/* Mejoras en los chips de filtro */
+.filter-chip {
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Mejoras en los inputs de fecha */
+.date-input {
+    border-radius: var(--radius-sm);
+    padding: 0.65rem;
+}
+
+/* Mejoras en las estadísticas de búsqueda */
+.search-stats {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Mejoras en las tarjetas de prompt */
+.prompt-card {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras en el indicador de calidad */
+.quality-indicator {
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+
+/* Mejoras en la sección de encabezado del prompt */
+.prompt-header-section {
+    margin-bottom: 1.5rem;
+}
+
+/* Mejoras en los metadatos del prompt */
+.prompt-meta {
+    gap: 1.5rem;
+}
+
+/* Mejoras en las acciones del prompt */
+.prompt-actions {
+    gap: 0.75rem;
+}
+
+/* Mejoras en los botones de acción del prompt */
+.prompt-action-btn {
+    border-radius: var(--radius-sm);
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+/* Mejoras en la sección de contenido del prompt */
+.prompt-content-section {
+    margin-bottom: 1.5rem;
+}
+
+/* Mejoras en las secciones del prompt */
+.prompt-section {
+    margin-bottom: 1.5rem;
+}
+
+/* Mejoras en el encabezado de la sección del prompt */
+.prompt-section-header {
+    margin-bottom: 0.75rem;
+}
+
+/* Mejoras en el icono de la sección del prompt */
+.prompt-section-icon {
+    margin-right: 0.75rem;
+}
+
+/* Mejoras en el contenido de la sección del prompt */
+.prompt-section-content {
+    padding-left: 2.5rem;
+}
+
+/* Mejoras en los elementos de restricción */
+.restriction-item {
+    margin-bottom: 0.5rem;
+}
+
+/* Mejoras en la viñeta de restricción */
+.restriction-bullet {
+    margin-right: 0.75rem;
+}
+
+/* Mejoras en el pie de página del prompt */
+.prompt-footer {
+    margin-top: 1rem;
+}
+
+/* Mejoras en el contenedor de etiquetas del prompt */
+.prompt-tags-container {
+    gap: 0.5rem;
+}
+
+/* Mejoras en las etiquetas del prompt */
+.prompt-tag {
+    border-radius: 9999px;
+    padding: 0.35rem 0.75rem;
+}
+
+/* Mejoras en las insignias del prompt */
+.prompt-badges {
+    gap: 0.75rem;
+}
+
+/* Mejoras en la insignia del prompt */
+.prompt-badge {
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.75rem;
+}
+
+/* Mejoras en el estado vacío */
+.empty-state {
+    border-radius: var(--radius);
+    padding: 4rem 2rem;
+}
+
+/* Mejoras en el icono del estado vacío */
+.empty-state-icon {
+    width: 6rem;
+    height: 6rem;
+}
+
+/* Mejoras en el título del estado vacío */
+.empty-state-title {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Mejoras en la descripción del estado vacío */
+.empty-state-description {
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+/* Mejoras en el resaltado de resultados de búsqueda */
+.search-result-highlight {
+    border-radius: 3px;
+    padding: 0 4px;
+}
+
+/* Mejoras en los elementos de búsqueda guardada */
+.saved-search-item {
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Mejoras en el nombre de búsqueda guardada */
+.saved-search-name {
+    font-weight: 600;
+}
+
+/* Mejoras en la consulta de búsqueda guardada */
+.saved-search-query {
+    font-size: 0.9rem;
+}
+
+/* Mejoras en la vista previa del prompt */
+.prompt-preview {
+    margin-bottom: 1.5rem;
+}
+
+/* Mejoras en los elementos de vista previa del prompt */
+.prompt-preview-item {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* Mejoras en la etiqueta de vista previa del prompt */
+.prompt-preview-label {
+    font-weight: 600;
+    margin-right: 0.75rem;
+    min-width: 90px;
+}
+
+/* Mejoras en el botón de expandir */
+.expand-btn {
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1.5rem;
+    margin-top: 1rem;
+}
+/* 🔹 Mejoras visuales para los botones Copiar y Eliminar */
+#copyBtn, .prompt-action-btn.copy {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+    transition: all 0.25s ease;
+}
+#copyBtn:hover, .prompt-action-btn.copy:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5);
+}
+#copyBtn:active {
+    transform: scale(0.98);
+}
+
+/* 🔺 Botón Eliminar */
+.prompt-action-btn.delete {
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    transition: all 0.25s ease;
+}
+.prompt-action-btn.delete:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.5);
+}
+.prompt-action-btn.delete:active {
+    transform: scale(0.98);
+}
+
+/* ✨ Animación de retroalimentación al copiar */
+#feedback.show {
+    opacity: 1 !important;
+    color: var(--accent-green);
+    animation: fadeOut 2.5s ease forwards;
+}
+@keyframes fadeOut {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* 💎 Mejoras generales de UI */
+button, .btn-primary {
+    cursor: pointer;
+    transform-origin: center;
+}
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 🧩 Efecto de foco más visible */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* 🌈 Microtransición al cambiar tema */
+body.theme-changing {
+    transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+/* 📦 Transición suave para las tarjetas */
+.prompt-card {
+    transition: all 0.35s ease;
+}
+.prompt-card:hover {
+    transform: translateY(-6px);
+}
+
+/* 🔘 Mejor feedback visual en los botones principales */
+.btn-primary {
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.25), transparent);
+    transition: left 0.5s;
+}
+.btn-primary:hover::after {
+    left: 100%;
+}
+/* 🔧 Corrección visual de los botones Copiar / Eliminar */
+.copy-delete-group {
+    display: flex;
+    gap: 0.75rem; /* Espacio entre botones */
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.copy-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 120px; /* Ajuste de tamaño */
+    text-align: center;
+}
+
+/* 🎨 Estilo Copiar */
+.copy-delete-btn.copy {
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+}
+.copy-delete-btn.copy:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(99,102,241,0.4);
+}
+
+/* 🔥 Estilo Eliminar */
+.copy-delete-btn.delete {
+    background: linear-gradient(135deg, #f97316, #ef4444);
+}
+.copy-delete-btn.delete:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(239,68,68,0.4);
+}
+
+/* Efecto al presionar */
+.copy-delete-btn:active {
+    transform: scale(0.97);
+}
+/* 🌟 BOTONES PRINCIPALES: Analizar, Guardar y Copiar Prompt */
+.main-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Estilo base */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 1rem;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✨ Animación de brillo */
+.action-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.25), transparent);
+    transition: left 0.5s;
+}
+.action-btn:hover::after {
+    left: 100%;
+}
+
+/* 🧠 Analizar */
+.action-btn.analyze {
+    background: linear-gradient(135deg, #10b981, #22c55e);
+}
+.action-btn.analyze:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(16,185,129,0.4);
+}
+
+/* 💾 Guardar */
+.action-btn.save {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+.action-btn.save:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+}
+
+/* 📋 Copiar */
+.action-btn.copy {
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+}
+.action-btn.copy:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(249,115,22,0.4);
+}
+
+/* 🎯 Efecto al hacer clic */
+.action-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* 🌗 Modo oscuro: colores más suaves */
+[data-theme="dark"] .action-btn.analyze {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+[data-theme="dark"] .action-btn.save {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
+[data-theme="dark"] .action-btn.copy {
+    background: linear-gradient(135deg, #d97706, #ea580c);
+}
+
+/* 💬 Feedback al copiar */
+#feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    margin-top: 0.75rem;
+}
+#feedback.show {
+    opacity: 1;
+    color: var(--accent-green);
+    animation: fadeOut 2.5s ease forwards;
+}
+@keyframes fadeOut {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.4s ease forwards;
+    }
+    @keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+.action-btn.loading {
+pointer-events: none;
+opacity: 0.7;
+}
+.action-btn.loading::before {
+content: '';
+width: 1rem;
+height: 1rem;
+border: 2px solid rgba(255,255,255,0.4);
+border-top-color: white;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin-right: 0.5rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Mejoras de tipografía */
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.025em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Encabezado sticky */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+/* Efecto tilt 3D para tarjetas */
+.prompt-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.prompt-card:hover {
+    transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
+}
+
+/* Toast notifications */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--accent-green);
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 1000;
+    animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Contador de caracteres */
+.char-counter {
+    font-size: 0.75rem;
+    color: var(--secondary);
+    text-align: right;
+    margin-top: 0.25rem;
+}
+
+.char-counter.warning {
+    color: #f59e0b;
+}
+
+.char-counter.error {
+    color: #ef4444;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-blue);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-purple);
+}

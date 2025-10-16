@@ -2258,6 +2258,12 @@
                 renderTags();
             }
 
+            // Función para eliminar etiquetas (necesita ser global para funcionar desde el HTML)
+            window.removeTag = function(index) {
+                currentTags.splice(index, 1);
+                renderTags();
+            };
+
             function startEditingTag(index) {
                 currentTags[index].editing = true;
                 renderTags();
