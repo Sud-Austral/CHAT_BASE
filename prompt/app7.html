@@ -1,0 +1,3590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Prompts IA</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para una tipografía limpia -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos personalizados para el tema */
+        :root {
+            --primary: #1e293b;
+            --secondary: #475569;
+            --tertiary: #f8fafc;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --border: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            --radius: 1rem;
+            --radius-sm: 0.5rem;
+            --font-primary: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        [data-theme="dark"] {
+            --primary: #f1f5f9;
+            --secondary: #cbd5e1;
+            --tertiary: #0f172a;
+            --accent-blue: #60a5fa;
+            --accent-purple: #a78bfa;
+            --accent-green: #34d399;
+            --border: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-theme="ocean"] {
+            --primary: #f0f9ff;
+            --secondary: #7dd3fc;
+            --tertiary: #082f49;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #6366f1;
+            --accent-green: #14b8a6;
+            --border: #0c4a6e;
+            --glass-bg: rgba(8, 47, 73, 0.8);
+            --glass-border: rgba(14, 165, 233, 0.2);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        [data-theme="forest"] {
+            --primary: #f0fdf4;
+            --secondary: #86efac;
+            --tertiary: #052e16;
+            --accent-blue: #22c55e;
+            --accent-purple: #84cc16;
+            --accent-green: #16a34a;
+            --border: #14532d;
+            --glass-bg: rgba(5, 46, 22, 0.8);
+            --glass-border: rgba(34, 197, 94, 0.2);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--tertiary);
+            color: var(--primary);
+            transition: background-color 0.5s, color 0.5s;
+            background-image: 
+                radial-gradient(at 20% 80%, rgba(var(--accent-blue-rgb, 59, 130, 246), 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 20%, rgba(var(--accent-purple-rgb, 139, 92, 246), 0.1) 0px, transparent 50%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: gradient 3s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .bg-secondary {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+        
+        .bg-input {
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: var(--radius-sm);
+        }
+        
+        .text-primary {
+            color: var(--primary);
+        }
+        
+        .text-secondary {
+            color: var(--secondary);
+        }
+        
+        .text-tertiary {
+            color: var(--secondary);
+            opacity: 0.7;
+        }
+        
+        .border-custom {
+            border-color: var(--border);
+        }
+        
+        .theme-btn {
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theme-btn:hover {
+            background-color: var(--border);
+            transform: translateY(-2px);
+        }
+        
+        .theme-btn.active {
+            background-color: var(--border);
+            box-shadow: 0 0 0 2px var(--accent-blue);
+        }
+        
+        .template-dropdown {
+            position: relative;
+        }
+        
+        .template-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            margin-top: 0.5rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .template-menu:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .template-category {
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: inherit;
+            z-index: 1;
+        }
+        
+        .template-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .template-item:hover {
+            background-color: var(--border);
+            padding-left: 1.25rem;
+        }
+        
+        .template-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .template-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .analysis-card {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow);
+            animation: slideUp 0.5s ease forwards;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .score-excellent {
+            color: var(--accent-green);
+        }
+        
+        .score-good {
+            color: var(--accent-blue);
+        }
+        
+        .score-needs-improvement {
+            color: #f59e0b;
+        }
+        
+        .progress-bar {
+            height: 0.75rem;
+            background-color: var(--border);
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+            border-radius: 9999px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 9999px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0)
+            );
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        
+        .suggestion-item:hover {
+            background-color: var(--border);
+        }
+        
+        .suggestion-icon {
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+        
+        .keyword-chip {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .keyword-chip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .keyword-chip:hover::before {
+            transform: translateX(0);
+        }
+        
+        .keyword-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            min-height: 2.75rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tags-container:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .tag-chip {
+            display: flex;
+            align-items: center;
+            padding: 0.35rem 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .tag-chip.manual {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+        }
+        
+        .tag-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tag-type-indicator {
+            font-size: 0.625rem;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 0.125rem 0.375rem;
+            border-radius: 9999px;
+            margin-left: 0.375rem;
+        }
+        
+        .tag-remove {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: transform 0.2s;
+        }
+        
+        .tag-remove:hover {
+            transform: rotate(90deg);
+        }
+        
+        .tag-input {
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            outline: none;
+            flex-grow: 1;
+            min-width: 120px;
+            font-size: 0.95rem;
+            font-family: var(--font-primary);
+        }
+        
+        .tag-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            margin-top: 0.5rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .tag-suggestions:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .tag-suggestion-item {
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tag-suggestion-item:hover,
+        .tag-suggestion-item.selected {
+            background-color: var(--border);
+            padding-left: 1rem;
+        }
+        
+        .extract-tags-btn {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.65rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .extract-tags-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .extract-tags-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .search-panel {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .search-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+        
+        .search-tab {
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            color: var(--secondary);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .search-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            transition: width 0.3s ease;
+        }
+        
+        .search-tab.active {
+            color: var(--accent-blue);
+        }
+        
+        .search-tab.active::after {
+            width: 100%;
+        }
+        
+        .filter-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .filter-chip {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .filter-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-chip.active {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .date-range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .date-input {
+            padding: 0.65rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .date-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+        
+        .search-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding: 0.75rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .prompt-card {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .quality-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            border-radius: var(--radius) 0 0 var(--radius);
+        }
+        
+        .quality-high {
+            background: linear-gradient(to bottom, var(--accent-green), #22c55e);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        .quality-medium {
+            background: linear-gradient(to bottom, var(--accent-blue), #60a5fa);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        
+        .quality-low {
+            background: linear-gradient(to bottom, #f59e0b, #f97316);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        
+        .prompt-header-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+        
+        .prompt-meta {
+            display: flex;
+            gap: 1.25rem;
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+        
+        .prompt-date, .prompt-usage {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        .prompt-usage.used {
+            color: var(--accent-green);
+        }
+        
+        .prompt-actions {
+            display: flex;
+            gap: 0.65rem;
+        }
+        
+        .prompt-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: var(--radius-sm);
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .prompt-action-btn:hover {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .prompt-action-btn.delete:hover {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+        
+        .prompt-content-section {
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+        }
+        
+        .prompt-section {
+            margin-bottom: 1.25rem;
+        }
+        
+        .prompt-section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.65rem;
+        }
+        
+        .prompt-section-icon {
+            margin-right: 0.65rem;
+            font-size: 1.35rem;
+        }
+        
+        .prompt-section-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .prompt-section-content {
+            padding-left: 2.25rem;
+        }
+        
+        .restriction-item {
+            display: flex;
+            margin-bottom: 0.35rem;
+        }
+        
+        .restriction-bullet {
+            margin-right: 0.65rem;
+            color: var(--secondary);
+        }
+        
+        .prompt-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .prompt-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+        
+        .prompt-tag {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--primary);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .prompt-badges {
+            display: flex;
+            gap: 0.65rem;
+        }
+        
+        .prompt-badge {
+            display: flex;
+            align-items: center;
+            padding: 0.35rem 0.65rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--primary);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            gap: 0.35rem;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .badge-similarity {
+            color: var(--accent-purple);
+        }
+        
+        .badge-semantic {
+            color: var(--accent-blue);
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1rem;
+            text-align: center;
+            color: var(--secondary);
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .empty-state-icon {
+            width: 5rem;
+            height: 5rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.65rem;
+            color: var(--primary);
+        }
+        
+        .empty-state-description {
+            max-width: 500px;
+        }
+        
+        .search-result-highlight {
+            background-color: rgba(251, 191, 36, 0.3);
+            padding: 0 3px;
+            border-radius: 3px;
+        }
+        
+        .saved-search-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            margin-bottom: 0.65rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .saved-search-item:hover {
+            background-color: var(--border);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .saved-search-name {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .saved-search-query {
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+        
+        .prompt-preview {
+            margin-bottom: 1.25rem;
+        }
+        
+        .prompt-preview-item {
+            margin-bottom: 0.65rem;
+            font-size: 0.875rem;
+            display: flex;
+        }
+        
+        .prompt-preview-label {
+            font-weight: 600;
+            margin-right: 0.65rem;
+            min-width: 80px;
+            color: var(--secondary);
+        }
+        
+        .prompt-preview-content {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .expand-btn {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.65rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            margin-top: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .expand-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Animaciones para botones principales */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            font-weight: 600;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        /* Mejoras en inputs y textareas */
+        input, textarea {
+            transition: all 0.3s ease;
+            font-family: var(--font-primary);
+        }
+        
+        input:focus, textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+        
+        /* Efectos de tema en transición */
+        .theme-changing {
+            transition: background-color 0.5s, color 0.5s;
+        }
+        
+        /* Estilos para el texto del prompt generado */
+        .prompt-header {
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+        
+        .prompt-content {
+            color: var(--primary);
+            line-height: 1.6;
+        }
+        
+        .prompt-list-item {
+            color: var(--secondary);
+        }
+        
+        /* Animación para tarjetas de prompt */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .prompt-card {
+            animation: slideIn 0.4s ease forwards;
+        }
+        
+        /* Estilos para el output del prompt */
+        #outputPrompt {
+            font-family: var(--font-mono);
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Mejoras en los inputs del formulario */
+        #rol, #contexto, #tarea, #formato, #restricciones {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en el selector de plantillas */
+        #templateToggle {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en los botones de tema */
+        .theme-btn {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en los inputs de búsqueda */
+        #searchInput, #semanticInput, #similarityInput {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en los inputs de fecha */
+        #dateFrom, #dateTo {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en el input de etiquetas */
+        #tagInput {
+            background-color: transparent;
+        }
+        
+        /* Mejoras en las etiquetas de filtro */
+        .filter-chip {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en las tarjetas de búsqueda guardada */
+        .saved-search-item {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en el estado vacío */
+        .empty-state {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en el análisis de calidad */
+        .analysis-card {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mejoras en la barra de progreso */
+        .progress-bar {
+            background-color: var(--border);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Mejoras en las sugerencias */
+        .suggestion-item {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en las palabras clave */
+        .keyword-chip {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mejoras en el contenedor de etiquetas */
+        .tags-container {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en las sugerencias de etiquetas */
+        .tag-suggestions {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mejoras en el botón de extraer etiquetas */
+        .extract-tags-btn {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mejoras en el panel de búsqueda */
+        .search-panel {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mejoras en las pestañas de búsqueda */
+        .search-tab {
+            border-bottom: 2px solid transparent;
+        }
+        
+        /* Mejoras en los grupos de filtro */
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Mejoras en las etiquetas de filtro */
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Mejoras en los chips de filtro */
+        .filter-chip {
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Mejoras en los inputs de fecha */
+        .date-input {
+            border-radius: var(--radius-sm);
+            padding: 0.65rem;
+        }
+        
+        /* Mejoras en las estadísticas de búsqueda */
+        .search-stats {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Mejoras en las tarjetas de prompt */
+        .prompt-card {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mejoras en el indicador de calidad */
+        .quality-indicator {
+            border-radius: var(--radius) 0 0 var(--radius);
+        }
+        
+        /* Mejoras en la sección de encabezado del prompt */
+        .prompt-header-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Mejoras en los metadatos del prompt */
+        .prompt-meta {
+            gap: 1.5rem;
+        }
+        
+        /* Mejoras en las acciones del prompt */
+        .prompt-actions {
+            gap: 0.75rem;
+        }
+        
+        /* Mejoras en los botones de acción del prompt */
+        .prompt-action-btn {
+            border-radius: var(--radius-sm);
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        /* Mejoras en la sección de contenido del prompt */
+        .prompt-content-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Mejoras en las secciones del prompt */
+        .prompt-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Mejoras en el encabezado de la sección del prompt */
+        .prompt-section-header {
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Mejoras en el icono de la sección del prompt */
+        .prompt-section-icon {
+            margin-right: 0.75rem;
+        }
+        
+        /* Mejoras en el contenido de la sección del prompt */
+        .prompt-section-content {
+            padding-left: 2.5rem;
+        }
+        
+        /* Mejoras en los elementos de restricción */
+        .restriction-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Mejoras en la viñeta de restricción */
+        .restriction-bullet {
+            margin-right: 0.75rem;
+        }
+        
+        /* Mejoras en el pie de página del prompt */
+        .prompt-footer {
+            margin-top: 1rem;
+        }
+        
+        /* Mejoras en el contenedor de etiquetas del prompt */
+        .prompt-tags-container {
+            gap: 0.5rem;
+        }
+        
+        /* Mejoras en las etiquetas del prompt */
+        .prompt-tag {
+            border-radius: 9999px;
+            padding: 0.35rem 0.75rem;
+        }
+        
+        /* Mejoras en las insignias del prompt */
+        .prompt-badges {
+            gap: 0.75rem;
+        }
+        
+        /* Mejoras en la insignia del prompt */
+        .prompt-badge {
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 0.75rem;
+        }
+        
+        /* Mejoras en el estado vacío */
+        .empty-state {
+            border-radius: var(--radius);
+            padding: 4rem 2rem;
+        }
+        
+        /* Mejoras en el icono del estado vacío */
+        .empty-state-icon {
+            width: 6rem;
+            height: 6rem;
+        }
+        
+        /* Mejoras en el título del estado vacío */
+        .empty-state-title {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Mejoras en la descripción del estado vacío */
+        .empty-state-description {
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        /* Mejoras en el resaltado de resultados de búsqueda */
+        .search-result-highlight {
+            border-radius: 3px;
+            padding: 0 4px;
+        }
+        
+        /* Mejoras en los elementos de búsqueda guardada */
+        .saved-search-item {
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Mejoras en el nombre de búsqueda guardada */
+        .saved-search-name {
+            font-weight: 600;
+        }
+        
+        /* Mejoras en la consulta de búsqueda guardada */
+        .saved-search-query {
+            font-size: 0.9rem;
+        }
+        
+        /* Mejoras en la vista previa del prompt */
+        .prompt-preview {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Mejoras en los elementos de vista previa del prompt */
+        .prompt-preview-item {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Mejoras en la etiqueta de vista previa del prompt */
+        .prompt-preview-label {
+            font-weight: 600;
+            margin-right: 0.75rem;
+            min-width: 90px;
+        }
+        
+        /* Mejoras en el botón de expandir */
+        .expand-btn {
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1.5rem;
+            margin-top: 1rem;
+        }
+        /* 🔹 Mejoras visuales para los botones Copiar y Eliminar */
+        #copyBtn, .prompt-action-btn.copy {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+            transition: all 0.25s ease;
+        }
+        #copyBtn:hover, .prompt-action-btn.copy:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5);
+        }
+        #copyBtn:active {
+            transform: scale(0.98);
+        }
+
+        /* 🔺 Botón Eliminar */
+        .prompt-action-btn.delete {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+            transition: all 0.25s ease;
+        }
+        .prompt-action-btn.delete:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.5);
+        }
+        .prompt-action-btn.delete:active {
+            transform: scale(0.98);
+        }
+
+        /* ✨ Animación de retroalimentación al copiar */
+        #feedback.show {
+            opacity: 1 !important;
+            color: var(--accent-green);
+            animation: fadeOut 2.5s ease forwards;
+        }
+        @keyframes fadeOut {
+            0%, 70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* 💎 Mejoras generales de UI */
+        button, .btn-primary {
+            cursor: pointer;
+            transform-origin: center;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 🧩 Efecto de foco más visible */
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        /* 🌈 Microtransición al cambiar tema */
+        body.theme-changing {
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+
+        /* 📦 Transición suave para las tarjetas */
+        .prompt-card {
+            transition: all 0.35s ease;
+        }
+        .prompt-card:hover {
+            transform: translateY(-6px);
+        }
+
+        /* 🔘 Mejor feedback visual en los botones principales */
+        .btn-primary {
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+        /* 🔧 Corrección visual de los botones Copiar / Eliminar */
+        .copy-delete-group {
+            display: flex;
+            gap: 0.75rem; /* Espacio entre botones */
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .copy-delete-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 120px; /* Ajuste de tamaño */
+            text-align: center;
+        }
+
+        /* 🎨 Estilo Copiar */
+        .copy-delete-btn.copy {
+            background: linear-gradient(135deg, #6366f1, #3b82f6);
+        }
+        .copy-delete-btn.copy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(99,102,241,0.4);
+        }
+
+        /* 🔥 Estilo Eliminar */
+        .copy-delete-btn.delete {
+            background: linear-gradient(135deg, #f97316, #ef4444);
+        }
+        .copy-delete-btn.delete:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(239,68,68,0.4);
+        }
+
+        /* Efecto al presionar */
+        .copy-delete-btn:active {
+            transform: scale(0.97);
+        }
+        /* 🌟 BOTONES PRINCIPALES: Analizar, Guardar y Copiar Prompt */
+        .main-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Estilo base */
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 1rem;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ✨ Animación de brillo */
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s;
+        }
+        .action-btn:hover::after {
+            left: 100%;
+        }
+
+        /* 🧠 Analizar */
+        .action-btn.analyze {
+            background: linear-gradient(135deg, #10b981, #22c55e);
+        }
+        .action-btn.analyze:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(16,185,129,0.4);
+        }
+
+        /* 💾 Guardar */
+        .action-btn.save {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+        }
+        .action-btn.save:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+        }
+
+        /* 📋 Copiar */
+        .action-btn.copy {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+        }
+        .action-btn.copy:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(249,115,22,0.4);
+        }
+
+        /* 🎯 Efecto al hacer clic */
+        .action-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* 🌗 Modo oscuro: colores más suaves */
+        [data-theme="dark"] .action-btn.analyze {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+        [data-theme="dark"] .action-btn.save {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+        }
+        [data-theme="dark"] .action-btn.copy {
+            background: linear-gradient(135deg, #d97706, #ea580c);
+        }
+
+        /* 💬 Feedback al copiar */
+        #feedback {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            margin-top: 0.75rem;
+        }
+        #feedback.show {
+            opacity: 1;
+            color: var(--accent-green);
+            animation: fadeOut 2.5s ease forwards;
+        }
+        @keyframes fadeOut {
+            0%, 70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+
+
+    </style>
+
+    
+</head>
+
+<body data-theme="light">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <!-- Encabezado de la aplicación -->
+        <header class="text-center mb-12 relative">
+            <!-- Selector de temas -->
+            <div class="absolute top-0 right-0 flex gap-3">
+                <button class="theme-btn active" data-theme="light" title="Tema Claro">
+                    <svg class="w-6 h-6" style="color: #fbbf24" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <button class="theme-btn" data-theme="dark" title="Tema Oscuro">
+                    <svg class="w-6 h-6" style="color: #9ca3af" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+                <button class="theme-btn" data-theme="ocean" title="Tema Océano">
+                    <svg class="w-6 h-6" style="color: #0ea5e9" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <button class="theme-btn" data-theme="forest" title="Tema Bosque">
+                    <svg class="w-6 h-6" style="color: #22c55e" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Generador de Prompts IA</h1>
+            <p class="text-lg text-secondary max-w-2xl mx-auto">Crea prompts efectivos y estructurados para cualquier modelo de IA. Selecciona una plantilla o define tus propios parámetros.</p>
+        </header>
+
+        <!-- Contenedor principal con dos columnas -->
+        <main class="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+
+            <!-- Columna 1: Formulario de Entradas -->
+            <div class="bg-secondary p-8 rounded-2xl shadow-2xl border border-custom">
+                <h2 class="text-2xl font-semibold mb-7 text-secondary">1. Define los Parámetros</h2>
+                
+                <!-- Selector de Plantillas -->
+                <div class="mb-7">
+                    <label class="block mb-3 text-sm font-medium text-secondary">Plantillas Predefinidas</label>
+                    <div class="template-dropdown">
+                        <button id="templateToggle" class="w-full bg-input border border-custom rounded-xl p-3 text-primary text-left flex items-center justify-between hover:bg-tertiary transition-all duration-300 shadow-sm">
+                            <span id="selectedTemplate" class="text-tertiary">Selecciona una plantilla...</span>
+                            <svg class="w-5 h-5 text-tertiary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="templateMenu" class="template-menu hidden">
+                            <!-- Las plantillas se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Campos del formulario... -->
+                    <div>
+                        <label for="rol" class="block mb-2.5 text-sm font-medium text-secondary">Rol (Persona)</label>
+                        <input type="text" id="rol" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Experto en marketing, programador, resumidor...">
+                    </div>
+                    <div>
+                        <label for="contexto" class="block mb-2.5 text-sm font-medium text-secondary">Contexto</label>
+                        <textarea id="contexto" rows="4" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Estás preparando un informe para un cliente no técnico sobre las vulnerabilidades de su red."></textarea>
+                    </div>
+                    <div>
+                        <label for="tarea" class="block mb-2.5 text-sm font-medium text-secondary">Tarea Específica</label>
+                        <input type="text" id="tarea" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Analizar y explicar los 3 riesgos más críticos.">
+                    </div>
+                    <div>
+                        <label for="formato" class="block mb-2.5 text-sm font-medium text-secondary">Formato de Salida</label>
+                        <input type="text" id="formato" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Una lista numerada con un párrafo explicativo por punto.">
+                    </div>
+                    <div>
+                        <label for="restricciones" class="block mb-2.5 text-sm font-medium text-secondary">Restricciones y Reglas</label>
+                        <textarea id="restricciones" rows="3" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300 shadow-sm" placeholder="Ej: Tono claro y sencillo, sin jerga técnica. No exceder las 300 palabras."></textarea>
+                    </div>
+                    <button id="generateBtn" class="w-full btn-primary" disabled>
+                        Generación Automática
+                    </button>
+                </div>
+            </div>
+
+            <!-- Columna 2: Salida del Prompt Generado -->
+            <div class="bg-secondary p-8 rounded-2xl shadow-2xl border border-custom flex flex-col">
+                <h2 class="text-2xl font-semibold mb-7 text-secondary">2. Prompt Resultante</h2>
+                <div class="relative flex-grow mb-6">
+                    <div id="outputPrompt" class="w-full h-full bg-tertiary border border-custom rounded-xl p-5 whitespace-pre-wrap overflow-y-auto text-secondary transition-colors duration-300 font-mono text-sm shadow-inner">El prompt generado aparecerá aquí...</div>
+                </div>
+
+                <!-- Sección de Análisis IA -->
+                <div id="analysisResults" class="analysis-card hidden">
+                    <div class="flex justify-between items-start mb-5">
+                        <div>
+                            <h3 class="text-xl font-semibold text-primary mb-2">Análisis de Calidad</h3>
+                            <div class="flex items-baseline gap-3">
+                                <span id="scoreValue" class="score-display">0</span>
+                                <span id="scoreLabel" class="text-lg font-medium text-secondary">--</span>
+                            </div>
+                        </div>
+                        <button id="closeAnalysis" class="text-tertiary hover:text-primary transition-all duration-300 hover:rotate-90">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="progress-bar mb-7">
+                        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+
+                    <div class="mb-7">
+                        <h4 class="font-medium text-primary mb-4">Sugerencias de Mejora</h4>
+                        <div id="suggestionsList" class="space-y-3">
+                            <!-- Las sugerencias se generarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-medium text-primary mb-4">Palabras Clave Recomendadas</h4>
+                        <div id="keywordsList" class="flex flex-wrap">
+                            <!-- Las palabras clave se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistema de Etiquetas Mejorado -->
+                <div class="mt-5">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-sm font-medium text-secondary">Etiquetas Inteligentes</label>
+                        <button id="extractTagsBtn" class="extract-tags-btn" disabled>
+                            🏷️ Extraer del Prompt
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <div id="tagsContainer" class="tags-container">
+                            <input type="text" id="tagInput" class="tag-input" placeholder="Añadir etiquetas...">
+                        </div>
+                        <div id="tagSuggestions" class="tag-suggestions hidden">
+                            <!-- Las sugerencias se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="main-actions">
+                    <button id="analyzeBtn" class="action-btn analyze">
+                        🧠 Analizar
+                    </button>
+                    <button id="saveBtn" class="action-btn save">
+                        💾 Guardar
+                    </button>
+                    <button id="copyBtn" class="action-btn copy">
+                        📋 Copiar
+                    </button>
+                </div>
+                <p id="feedback"></p>
+
+            </div>
+        </main>
+
+        <section class="max-w-7xl mx-auto mt-16">
+            <h2 class="text-3xl font-bold text-center mb-10 gradient-text">Historial de Prompts Guardados</h2>
+            
+            <!-- Panel de Búsqueda Avanzada -->
+            <div class="search-panel">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="text-xl font-semibold text-primary">Búsqueda Avanzada</h3>
+                    <button id="toggleAdvancedSearch" class="text-sm text-accent-blue hover:text-accent-purple transition-all duration-300 flex items-center">
+                        <span id="toggleText">Mostrar filtros</span>
+                        <svg id="toggleIcon" class="w-4 h-4 inline ml-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Pestañas de búsqueda -->
+                <div class="search-tabs">
+                    <button class="search-tab active" data-tab="basic">Básica</button>
+                    <button class="search-tab" data-tab="semantic">Semántica</button>
+                    <button class="search-tab" data-tab="similarity">Similitud</button>
+                    <button class="search-tab" data-tab="saved">Guardadas</button>
+                </div>
+
+                <!-- Contenido de las pestañas -->
+                <div id="searchTabContent">
+                    <!-- Búsqueda Básica -->
+                    <div id="basicSearch" class="tab-content">
+                        <div class="mb-5">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-tertiary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input id="searchInput" type="text" class="bg-input border border-custom text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 placeholder:text-tertiary transition-all duration-300" placeholder="Buscar prompts...">
+                            </div>
+                        </div>
+
+                        <div id="advancedFilters" class="hidden space-y-5">
+                            <!-- Filtro por etiquetas -->
+                            <div class="filter-group">
+                                <label class="filter-label">Filtrar por etiquetas</label>
+                                <div id="tagFilters" class="flex flex-wrap">
+                                    <!-- Las etiquetas se generarán dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Filtro por fecha -->
+                            <div class="filter-group">
+                                <label class="filter-label">Rango de fechas</label>
+                                <div class="date-range-inputs">
+                                    <input type="date" id="dateFrom" class="date-input">
+                                    <span class="text-tertiary">hasta</span>
+                                    <input type="date" id="dateTo" class="date-input">
+                                </div>
+                            </div>
+
+                            <!-- Filtro por frecuencia de uso -->
+                            <div class="filter-group">
+                                <label class="filter-label">Frecuencia de uso</label>
+                                <div class="flex flex-wrap">
+                                    <span class="filter-chip" data-usage="all">Todos</span>
+                                    <span class="filter-chip" data-usage="frequent">Frecuentes</span>
+                                    <span class="filter-chip" data-usage="recent">Recientes</span>
+                                    <span class="filter-chip" data-usage="never">Sin usar</span>
+                                </div>
+                            </div>
+
+                            <!-- Filtro por calidad -->
+                            <div class="filter-group">
+                                <label class="filter-label">Calidad estimada</label>
+                                <div class="flex flex-wrap">
+                                    <span class="filter-chip" data-quality="all">Todos</span>
+                                    <span class="filter-chip" data-quality="excellent">Excelente (80+)</span>
+                                    <span class="filter-chip" data-quality="good">Buena (60-79)</span>
+                                    <span class="filter-chip" data-quality="needs-improvement">Mejorable (<60)</span>
+                                </div>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="flex gap-3">
+                                <button id="saveSearchBtn" class="px-5 py-2.5 bg-accent-blue text-white rounded-lg hover:bg-accent-purple transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg">
+                                    Guardar búsqueda
+                                </button>
+                                <button id="clearFiltersBtn" class="px-5 py-2.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg">
+                                    Limpiar filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Búsqueda Semántica -->
+                    <div id="semanticSearch" class="tab-content hidden">
+                        <div class="mb-5">
+                            <label class="filter-label">Concepto o intención</label>
+                            <textarea id="semanticInput" rows="3" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary transition-all duration-300" placeholder="Describe lo que buscas en lenguaje natural..."></textarea>
+                        </div>
+                        <div class="mb-5">
+                            <label class="filter-label">Tipo de contenido</label>
+                            <div class="flex flex-wrap">
+                                <span class="filter-chip semantic-type" data-type="marketing">Marketing</span>
+                                <span class="filter-chip semantic-type" data-type="analisis">Análisis</span>
+                                <span class="filter-chip semantic-type" data-type="creativo">Creativo</span>
+                                <span class="filter-chip semantic-type" data-type="tecnico">Técnico</span>
+                                <span class="filter-chip semantic-type" data-type="educacion">Educación</span>
+                            </div>
+                        </div>
+                        <button id="performSemanticSearch" class="px-5 py-2.5 bg-accent-purple text-white rounded-lg hover:bg-purple-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
+                            Buscar por significado
+                        </button>
+                    </div>
+
+                    <!-- Búsqueda por Similitud -->
+                    <div id="similaritySearch" class="tab-content hidden">
+                        <div class="mb-5">
+                            <label class="filter-label">Prompt de referencia</label>
+                            <textarea id="similarityInput" rows="4" class="w-full bg-input border border-custom rounded-xl p-3 text-primary placeholder:text-tertiary transition-all duration-300" placeholder="Pega un prompt aquí para encontrar similares..."></textarea>
+                        </div>
+                        <div class="mb-5">
+                            <label class="filter-label">Nivel de similitud</label>
+                            <div class="flex items-center gap-4">
+                                <input type="range" id="similarityThreshold" min="0" max="100" value="50" class="flex-1">
+                                <span id="similarityValue" class="text-sm text-secondary font-medium">50%</span>
+                            </div>
+                        </div>
+                        <button id="performSimilaritySearch" class="px-5 py-2.5 bg-accent-green text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg">
+                            Encontrar similares
+                        </button>
+                    </div>
+
+                    <!-- Búsquedas Guardadas -->
+                    <div id="savedSearches" class="tab-content hidden">
+                        <div id="savedSearchesList" class="space-y-3">
+                            <!-- Las búsquedas guardadas se mostrarán aquí -->
+                        </div>
+                        <div id="noSavedSearches" class="text-center text-tertiary py-10 hidden">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <p>No tienes búsquedas guardadas aún</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estadísticas de búsqueda -->
+            <div id="searchStats" class="search-stats hidden">
+                <div class="text-sm text-secondary">
+                    <span id="resultCount">0</span> resultados encontrados
+                </div>
+                <div class="text-sm text-secondary">
+                    Ordenado por: <span id="sortBy" class="font-medium">relevancia</span>
+                </div>
+            </div>
+            
+            <div id="tagFilterList" class="mb-7 flex flex-wrap gap-2 justify-center">
+            </div>
+            
+            <div id="savedPromptsList" class="space-y-5">
+            </div>
+        </section>
+
+    </div>
+    <script src="data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Referencias a los elementos del DOM
+            const rolInput = document.getElementById('rol');
+            const contextoInput = document.getElementById('contexto');
+            const tareaInput = document.getElementById('tarea');
+            const formatoInput = document.getElementById('formato');
+            const restriccionesInput = document.getElementById('restricciones');
+            const generateBtn = document.getElementById('generateBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const outputPrompt = document.getElementById('outputPrompt');
+            const feedback = document.getElementById('feedback');
+            const savedPromptsList = document.getElementById('savedPromptsList');
+            const searchInput = document.getElementById('searchInput');
+            const tagInput = document.getElementById('tagInput');
+            const tagsContainer = document.getElementById('tagsContainer');
+            const tagSuggestions = document.getElementById('tagSuggestions');
+            const extractTagsBtn = document.getElementById('extractTagsBtn');
+            const tagFilterList = document.getElementById('tagFilterList');
+            const themeButtons = document.querySelectorAll('.theme-btn');
+            const templateToggle = document.getElementById('templateToggle');
+            const templateMenu = document.getElementById('templateMenu');
+            const selectedTemplate = document.getElementById('selectedTemplate');
+            
+            // Elementos del análisis
+            const analysisResults = document.getElementById('analysisResults');
+            const closeAnalysis = document.getElementById('closeAnalysis');
+            const scoreValue = document.getElementById('scoreValue');
+            const scoreLabel = document.getElementById('scoreLabel');
+            const progressFill = document.getElementById('progressFill');
+            const suggestionsList = document.getElementById('suggestionsList');
+            const keywordsList = document.getElementById('keywordsList');
+
+            // Elementos de búsqueda avanzada
+            const toggleAdvancedSearch = document.getElementById('toggleAdvancedSearch');
+            const toggleText = document.getElementById('toggleText');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const advancedFilters = document.getElementById('advancedFilters');
+            const searchTabs = document.querySelectorAll('.search-tab');
+            const searchTabContent = document.getElementById('searchTabContent');
+            const searchStats = document.getElementById('searchStats');
+            const resultCount = document.getElementById('resultCount');
+            const sortBy = document.getElementById('sortBy');
+
+            let savedPrompts = [];
+            let filteredPrompts = [];
+            let activeTagFilter = null;
+            let currentSearchTab = 'basic';
+            let savedSearches = [];
+            let searchFilters = {
+                tags: [],
+                dateFrom: null,
+                dateTo: null,
+                usage: 'all',
+                quality: 'all',
+                searchTerm: '',
+                semanticQuery: '',
+                similarityThreshold: 50
+            };
+
+            // Sistema de etiquetas mejorado
+            let currentTags = [];
+            let tagSuggestionsList = [];
+            let selectedSuggestionIndex = -1;
+
+            // --- Sistema de Temas Mejorado ---
+            const themes = ['light', 'dark', 'ocean', 'forest'];
+            
+            // Cargar tema guardado o usar el predeterminado
+            const savedTheme = localStorage.getItem('selectedTheme') || 'light';
+            setTheme(savedTheme);
+
+            themeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const newTheme = button.dataset.theme;
+                    setTheme(newTheme);
+                    localStorage.setItem('selectedTheme', newTheme);
+                });
+            });
+
+            function setTheme(themeName) {
+                if (!themes.includes(themeName)) return;
+                
+                // Añadir animación de transición
+                document.body.classList.add('theme-changing');
+                
+                setTimeout(() => {
+                    document.body.setAttribute('data-theme', themeName);
+                    
+                    // Actualizar botones activos
+                    themeButtons.forEach(btn => {
+                        if (btn.dataset.theme === themeName) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                    
+                    // Guardar en localStorage
+                    localStorage.setItem('selectedTheme', themeName);
+                    
+                    // Remover animación
+                    setTimeout(() => {
+                        document.body.classList.remove('theme-changing');
+                    }, 300);
+                }, 150);
+            }
+
+            // --- Sistema de Etiquetas Mejorado ---
+            
+            // Base de datos de palabras clave para extracción automática
+            const keywordDatabase = {
+                roles: ['experto', 'especialista', 'analista', 'consultor', 'desarrollador', 'diseñador', 'estratega', 'investigador', 'profesor', 'escritor'],
+                actions: ['analizar', 'crear', 'generar', 'diseñar', 'desarrollar', 'escribir', 'explicar', 'resumir', 'evaluar', 'optimizar'],
+                topics: ['marketing', 'ventas', 'contenido', 'datos', 'código', 'diseño', 'educación', 'negocios', 'tecnología', 'finanzas'],
+                formats: ['lista', 'tabla', 'informe', 'artículo', 'email', 'presentación', 'documento', 'guía'],
+                qualities: ['profesional', 'claro', 'conciso', 'detallado', 'sencillo', 'técnico', 'creativo', 'formal']
+            };
+
+            function extractTagsFromPrompt() {
+                const promptText = outputPrompt.textContent;
+                if (!promptText || promptText === 'El prompt generado aparecerá aquí...') {
+                    showFeedback('Genera un prompt primero para extraer etiquetas', 'yellow');
+                    return;
+                }
+
+                const extractedTags = new Set();
+                const text = promptText.toLowerCase();
+
+                // Extraer palabras clave de cada categoría
+                Object.entries(keywordDatabase).forEach(([category, keywords]) => {
+                    keywords.forEach(keyword => {
+                        if (text.includes(keyword)) {
+                            extractedTags.add(keyword);
+                        }
+                    });
+                });
+
+                // Extraer hashtags existentes
+                const hashtagMatches = text.match(/#\w+/g);
+                if (hashtagMatches) {
+                    hashtagMatches.forEach(tag => extractedTags.add(tag));
+                }
+
+                // Extraer términos específicos del prompt
+                const specificTerms = extractSpecificTerms(promptText);
+                specificTerms.forEach(term => extractedTags.add(term));
+
+                // Convertir a array y limitar a 5 etiquetas
+                const tagsArray = Array.from(extractedTags).slice(0, 5);
+                
+                // Actualizar etiquetas actuales
+                currentTags = tagsArray.map(tag => ({
+                    text: tag.startsWith('#') ? tag : `#${tag}`,
+                    type: 'suggested',
+                    editable: true
+                }));
+
+                renderTags();
+                showFeedback(`Se extrajeron ${currentTags.length} etiquetas del prompt`, 'green');
+            }
+
+            function extractSpecificTerms(text) {
+                const terms = [];
+                
+                // Extraer roles mencionados
+                const roleMatches = text.match(/Actúa como:\s*([^\n]+)/i);
+                if (roleMatches) {
+                    const role = roleMatches[1].trim();
+                    const roleWords = role.split(' ').filter(word => word.length > 3);
+                    terms.push(...roleWords.slice(0, 2));
+                }
+
+                // Extraer palabras clave del contexto
+                const contextMatches = text.match(/CONTEXTO\s*([^\n]+)/i);
+                if (contextMatches) {
+                    const context = contextMatches[1].toLowerCase();
+                    keywordDatabase.topics.forEach(topic => {
+                        if (context.includes(topic)) {
+                            terms.push(topic);
+                        }
+                    });
+                }
+
+                // Extraer palabras clave de la tarea
+                const taskMatches = text.match(/TAREA\s*([^\n]+)/i);
+                if (taskMatches) {
+                    const task = taskMatches[1].toLowerCase();
+                    keywordDatabase.actions.forEach(action => {
+                        if (task.includes(action)) {
+                            terms.push(action);
+                        }
+                    });
+                }
+
+                return [...new Set(terms)];
+            }
+
+            function renderTags() {
+                // Limpiar contenedor excepto el input
+                const input = tagsContainer.querySelector('.tag-input');
+                tagsContainer.innerHTML = '';
+                
+                // Renderizar etiquetas actuales
+                currentTags.forEach((tag, index) => {
+                    const tagElement = createTagElement(tag, index);
+                    tagsContainer.appendChild(tagElement);
+                });
+                
+                // Volver a añadir el input
+                tagsContainer.appendChild(input);
+            }
+
+            function createTagElement(tag, index) {
+                const tagChip = document.createElement('div');
+                tagChip.className = `tag-chip ${tag.type}`;
+                tagChip.dataset.index = index;
+                
+                if (tag.editing) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = tag.text;
+                    input.className = 'tag-edit-input';
+                    input.style.cssText = 'background: transparent; border: none; color: white; outline: none; width: 100px;';
+                    
+                    input.addEventListener('blur', () => finishEditingTag(index));
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            finishEditingTag(index);
+                        } else if (e.key === 'Escape') {
+                            cancelEditingTag(index);
+                        }
+                    });
+                    
+                    tagChip.appendChild(input);
+                    setTimeout(() => input.focus(), 0);
+                } else {
+                    tagChip.innerHTML = `
+                        <span>${tag.text}</span>
+                        ${tag.type === 'suggested' ? '<span class="tag-type-indicator">IA</span>' : ''}
+                        <span class="tag-remove" onclick="removeTag(${index})">×</span>
+                    `;
+                    
+                    tagChip.addEventListener('dblclick', () => startEditingTag(index));
+                }
+                
+                return tagChip;
+            }
+
+            function addTag(text, type = 'manual') {
+                const cleanText = text.trim().startsWith('#') ? text.trim() : `#${text.trim()}`;
+                
+                // Verificar si ya existe
+                if (currentTags.some(tag => tag.text.toLowerCase() === cleanText.toLowerCase())) {
+                    showFeedback('Esta etiqueta ya existe', 'yellow');
+                    return;
+                }
+                
+                currentTags.push({
+                    text: cleanText,
+                    type: type,
+                    editable: true
+                });
+                
+                renderTags();
+                tagInput.value = '';
+                hideTagSuggestions();
+            }
+
+            function removeTag(index) {
+                currentTags.splice(index, 1);
+                renderTags();
+            }
+
+            function startEditingTag(index) {
+                currentTags[index].editing = true;
+                renderTags();
+            }
+
+            function finishEditingTag(index) {
+                const input = tagsContainer.querySelector(`[data-index="${index}"] input`);
+                if (input) {
+                    const newText = input.value.trim();
+                    if (newText && newText !== currentTags[index].text) {
+                        currentTags[index].text = newText.startsWith('#') ? newText : `#${newText}`;
+                    }
+                }
+                currentTags[index].editing = false;
+                renderTags();
+            }
+
+            function cancelEditingTag(index) {
+                currentTags[index].editing = false;
+                renderTags();
+            }
+
+            function showTagSuggestions(query) {
+                if (query.length < 2) {
+                    hideTagSuggestions();
+                    return;
+                }
+                
+                const allSuggestions = [
+                    ...keywordDatabase.roles,
+                    ...keywordDatabase.actions,
+                    ...keywordDatabase.topics,
+                    ...keywordDatabase.formats,
+                    ...keywordDatabase.qualities
+                ];
+                
+                tagSuggestionsList = allSuggestions
+                    .filter(suggestion => 
+                        suggestion.toLowerCase().includes(query.toLowerCase()) &&
+                        !currentTags.some(tag => tag.text === `#${suggestion}`)
+                    )
+                    .slice(0, 5);
+                
+                if (tagSuggestionsList.length > 0) {
+                    renderTagSuggestions();
+                } else {
+                    hideTagSuggestions();
+                }
+            }
+
+            function renderTagSuggestions() {
+                tagSuggestions.innerHTML = '';
+                tagSuggestionsList.forEach((suggestion, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'tag-suggestion-item';
+                    if (index === selectedSuggestionIndex) {
+                        item.classList.add('selected');
+                    }
+                    item.textContent = `#${suggestion}`;
+                    item.addEventListener('click', () => {
+                        addTag(suggestion, 'suggested');
+                        tagInput.value = '';
+                        hideTagSuggestions();
+                    });
+                    tagSuggestions.appendChild(item);
+                });
+                tagSuggestions.classList.remove('hidden');
+            }
+
+            function hideTagSuggestions() {
+                tagSuggestions.classList.add('hidden');
+                selectedSuggestionIndex = -1;
+            }
+
+            // Event listeners para el sistema de etiquetas
+            extractTagsBtn.addEventListener('click', extractTagsFromPrompt);
+
+            tagInput.addEventListener('input', (e) => {
+                showTagSuggestions(e.target.value);
+            });
+
+            tagInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = tagInput.value.trim();
+                    if (value) {
+                        if (selectedSuggestionIndex >= 0) {
+                            addTag(tagSuggestionsList[selectedSuggestionIndex], 'suggested');
+                        } else {
+                            addTag(value, 'manual');
+                        }
+                        tagInput.value = '';
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, tagSuggestionsList.length - 1);
+                    renderTagSuggestions();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+                    renderTagSuggestions();
+                } else if (e.key === 'Escape') {
+                    hideTagSuggestions();
+                }
+            });
+
+            // Cerrar sugerencias al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!tagsContainer.contains(e.target) && !tagSuggestions.contains(e.target)) {
+                    hideTagSuggestions();
+                }
+            });
+
+            
+            // --- Funciones de Plantillas ---
+            function renderTemplateMenu() {
+                templateMenu.innerHTML = '';
+                
+                for (const [categoryKey, category] of Object.entries(predefinedTemplates)) {
+                    // Categoría
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'template-category';
+                    categoryDiv.textContent = category.name;
+                    templateMenu.appendChild(categoryDiv);
+                    
+                    // Plantillas de la categoría
+                    category.templates.forEach(template => {
+                        const templateItem = document.createElement('div');
+                        templateItem.className = 'template-item';
+                        templateItem.innerHTML = `
+                            <div class="font-medium text-primary">${template.name}</div>
+                            <div class="text-xs text-tertiary mt-1">${template.rol}</div>
+                        `;
+                        templateItem.addEventListener('click', () => selectTemplate(template));
+                        templateMenu.appendChild(templateItem);
+                    });
+                }
+            }
+
+            function selectTemplate(template) {
+                rolInput.value = template.rol;
+                contextoInput.value = template.contexto;
+                tareaInput.value = template.tarea;
+                formatoInput.value = template.formato;
+                restriccionesInput.value = template.restricciones;
+                
+                selectedTemplate.textContent = template.name;
+                selectedTemplate.classList.remove('text-tertiary');
+                selectedTemplate.classList.add('text-primary');
+                
+                templateMenu.classList.add('hidden');
+                generatePrompt();
+                
+                showFeedback(`Plantilla "${template.name}" aplicada`, 'blue');
+            }
+
+            // Toggle del menú de plantillas
+            templateToggle.addEventListener('click', () => {
+                templateMenu.classList.toggle('hidden');
+                // Rotar el icono de flecha
+                const icon = templateToggle.querySelector('svg');
+                if (!templateMenu.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    icon.style.transform = 'rotate(0)';
+                }
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!templateToggle.contains(e.target) && !templateMenu.contains(e.target)) {
+                    templateMenu.classList.add('hidden');
+                    const icon = templateToggle.querySelector('svg');
+                    icon.style.transform = 'rotate(0)';
+                }
+            });
+
+            // --- Sistema de Búsqueda Avanzada ---
+            
+            // Toggle de filtros avanzados
+            toggleAdvancedSearch.addEventListener('click', () => {
+                const isHidden = advancedFilters.classList.contains('hidden');
+                advancedFilters.classList.toggle('hidden');
+                toggleText.textContent = isHidden ? 'Ocultar filtros' : 'Mostrar filtros';
+                toggleIcon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0)';
+            });
+
+            // Sistema de pestañas
+            searchTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    switchSearchTab(tabName);
+                });
+            });
+
+            function switchSearchTab(tabName) {
+                currentSearchTab = tabName;
+                
+                // Actualizar pestañas activas
+                searchTabs.forEach(t => t.classList.remove('active'));
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Ocultar todo el contenido
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Mostrar contenido seleccionado
+                document.getElementById(`${tabName}Search`).classList.remove('hidden');
+                
+                // Cargar contenido específico si es necesario
+                if (tabName === 'saved') {
+                    renderSavedSearches();
+                }
+            }
+
+            // Búsqueda semántica
+            const semanticKeywords = {
+                marketing: ['marketing', 'publicidad', 'ventas', 'cliente', 'campaña', 'contenido', 'redes sociales', 'estrategia'],
+                analisis: ['analizar', 'datos', 'estadísticas', 'informe', 'métricas', 'evaluar', 'resultado'],
+                creativo: ['crear', 'diseñar', 'innovar', 'idea', 'brainstorming', 'concepto', 'original'],
+                tecnico: ['código', 'programar', 'desarrollar', 'técnico', 'sistema', 'función', 'algoritmo'],
+                educacion: ['enseñar', 'aprender', 'explicar', 'concepto', 'lección', 'educativo', 'formación']
+            };
+
+            function performSemanticSearch() {
+                const query = document.getElementById('semanticInput').value.toLowerCase();
+                const selectedTypes = Array.from(document.querySelectorAll('.semantic-type.active')).map(el => el.dataset.type);
+                
+                if (!query && selectedTypes.length === 0) {
+                    showFeedback('Ingresa un concepto o selecciona un tipo de contenido', 'yellow');
+                    return;
+                }
+                
+                let results = savedPrompts.filter(prompt => {
+                    let score = 0;
+                    const text = prompt.text.toLowerCase();
+                    
+                    // Calcular puntuación semántica
+                    for (const [type, keywords] of Object.entries(semanticKeywords)) {
+                        if (selectedTypes.length === 0 || selectedTypes.includes(type)) {
+                            keywords.forEach(keyword => {
+                                if (text.includes(keyword)) score += 10;
+                            });
+                        }
+                    }
+                    
+                    // Búsqueda por coincidencias parciales
+                    const queryWords = query.split(' ');
+                    queryWords.forEach(word => {
+                        if (word.length > 2 && text.includes(word)) score += 5;
+                    });
+                    
+                    prompt.semanticScore = score;
+                    return score > 0;
+                });
+                
+                // Ordenar por puntuación semántica
+                results.sort((a, b) => b.semanticScore - a.semanticScore);
+                
+                filteredPrompts = results;
+                renderSavedPrompts(results);
+                updateSearchStats(results.length, 'relevancia semántica');
+                
+                if (results.length === 0) {
+                    showFeedback('No se encontraron resultados semánticamente relacionados', 'yellow');
+                } else {
+                    showFeedback(`Se encontraron ${results.length} resultados por similitud semántica`, 'green');
+                }
+            }
+
+            // Búsqueda por similitud
+            function calculateSimilarity(text1, text2) {
+                const words1 = text1.toLowerCase().split(' ');
+                const words2 = text2.toLowerCase().split(' ');
+                const intersection = words1.filter(word => words2.includes(word));
+                const union = [...new Set([...words1, ...words2])];
+                return intersection.length / union.length;
+            }
+
+            function performSimilaritySearch() {
+                const referenceText = document.getElementById('similarityInput').value;
+                const threshold = parseInt(document.getElementById('similarityThreshold').value) / 100;
+                
+                if (!referenceText) {
+                    showFeedback('Ingresa un prompt de referencia', 'yellow');
+                    return;
+                }
+                
+                let results = savedPrompts.filter(prompt => {
+                    const similarity = calculateSimilarity(referenceText, prompt.text);
+                    prompt.similarity = similarity;
+                    return similarity >= threshold;
+                });
+                
+                // Ordenar por similitud
+                results.sort((a, b) => b.similarity - a.similarity);
+                
+                filteredPrompts = results;
+                renderSavedPrompts(results);
+                updateSearchStats(results.length, 'similitud');
+                
+                if (results.length === 0) {
+                    showFeedback('No se encontraron prompts similares', 'yellow');
+                } else {
+                    showFeedback(`Se encontraron ${results.length} prompts similares`, 'green');
+                }
+            }
+
+            // Actualizar valor del slider de similitud
+            document.getElementById('similarityThreshold').addEventListener('input', (e) => {
+                document.getElementById('similarityValue').textContent = `${e.target.value}%`;
+            });
+
+            // Guardar búsqueda
+            document.getElementById('saveSearchBtn').addEventListener('click', () => {
+                const searchName = prompt('Nombre para esta búsqueda:');
+                if (!searchName) return;
+                
+                const searchToSave = {
+                    id: Date.now(),
+                    name: searchName,
+                    filters: { ...searchFilters },
+                    timestamp: new Date().toISOString(),
+                    tab: currentSearchTab
+                };
+                
+                savedSearches.push(searchToSave);
+                localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
+                showFeedback('Búsqueda guardada exitosamente', 'green');
+            });
+
+            // Renderizar búsquedas guardadas
+            function renderSavedSearches() {
+                const container = document.getElementById('savedSearchesList');
+                const noResults = document.getElementById('noSavedSearches');
+                
+                if (savedSearches.length === 0) {
+                    container.innerHTML = '';
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+                
+                noResults.classList.add('hidden');
+                container.innerHTML = '';
+                
+                savedSearches.forEach(search => {
+                    const item = document.createElement('div');
+                    item.className = 'saved-search-item';
+                    item.innerHTML = `
+                        <div>
+                            <div class="saved-search-name">${search.name}</div>
+                            <div class="saved-search-query">Guardado: ${new Date(search.timestamp).toLocaleDateString()}</div>
+                        </div>
+                        <button class="text-red-500 hover:text-red-700 transition-colors duration-300" onclick="deleteSavedSearch(${search.id})">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    `;
+                    item.addEventListener('click', (e) => {
+                        if (!e.target.closest('button')) {
+                            loadSavedSearch(search);
+                        }
+                    });
+                    container.appendChild(item);
+                });
+            }
+
+            // Cargar búsqueda guardada
+            function loadSavedSearch(search) {
+                searchFilters = { ...search.filters };
+                currentSearchTab = search.tab;
+                
+                // Aplicar filtros
+                applyAllFilters();
+                
+                // Cambiar a la pestaña correspondiente
+                switchSearchTab(search.tab);
+                
+                showFeedback(`Búsqueda "${search.name}" cargada`, 'green');
+            }
+
+            // Eliminar búsqueda guardada
+            window.deleteSavedSearch = function(id) {
+                savedSearches = savedSearches.filter(s => s.id !== id);
+                localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
+                renderSavedSearches();
+                showFeedback('Búsqueda eliminada', 'green');
+            };
+
+            // Event listeners para búsqueda semántica y similitud
+            document.getElementById('performSemanticSearch').addEventListener('click', performSemanticSearch);
+            document.getElementById('performSimilaritySearch').addEventListener('click', performSimilaritySearch);
+
+            // Event listeners para filtros de tipo semántico
+            document.querySelectorAll('.semantic-type').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chip.classList.toggle('active');
+                });
+            });
+
+            // Actualizar estadísticas de búsqueda
+            function updateSearchStats(count, sortMethod) {
+                searchStats.classList.remove('hidden');
+                resultCount.textContent = count;
+                sortBy.textContent = sortMethod;
+            }
+
+            // --- Sistema de Análisis IA-Powered ---
+            const actionKeywords = [
+                'analiza', 'compara', 'crea', 'resume', 'explica', 'genera', 'evalúa', 
+                'diseña', 'identifica', 'propón', 'optimiza', 'traduce', 'clasifica',
+                'organiza', 'prioriza', 'sintetiza', 'interpreta', 'modifica', 'mejora'
+            ];
+
+            function performPromptAnalysis() {
+                const promptData = {
+                    rol: rolInput.value.trim(),
+                    contexto: contextoInput.value.trim(),
+                    tarea: tareaInput.value.trim(),
+                    formato: formatoInput.value.trim(),
+                    restricciones: restriccionesInput.value.trim()
+                };
+
+                const analysis = analyzePromptQuality(promptData);
+                displayAnalysisResults(analysis);
+            }
+
+            function analyzePromptQuality(data) {
+                let score = 0;
+                const suggestions = [];
+                const foundKeywords = new Set();
+
+                // Análisis del Rol (20 puntos)
+                if (data.rol) {
+                    score += 15;
+                    if (data.rol.length > 10) score += 5;
+                } else {
+                    suggestions.push({
+                        type: 'error',
+                        icon: '❌',
+                        text: 'Define un rol claro para la IA (ej: "Experto en marketing digital").'
+                    });
+                }
+
+                // Análisis del Contexto (25 puntos)
+                if (data.contexto) {
+                    score += 15;
+                    if (data.contexto.length > 50) score += 10;
+                } else {
+                    suggestions.push({
+                        type: 'error',
+                        icon: '❌',
+                        text: 'Añade contexto para ayudar a la IA a entender la situación.'
+                    });
+                }
+
+                // Análisis de la Tarea (30 puntos)
+                if (data.tarea) {
+                    score += 20;
+                    if (data.tarea.length > 20) score += 5;
+                    
+                    // Buscar palabras de acción
+                    const tareaLower = data.tarea.toLowerCase();
+                    let hasActionKeyword = false;
+                    actionKeywords.forEach(keyword => {
+                        if (tareaLower.includes(keyword)) {
+                            hasActionKeyword = true;
+                            foundKeywords.add(keyword);
+                        }
+                    });
+                    
+                    if (hasActionKeyword) score += 5;
+                    else {
+                        suggestions.push({
+                            type: 'warning',
+                            icon: '⚠️',
+                            text: 'Usa verbos de acción claros como "analiza", "crea" o "explica".'
+                        });
+                    }
+                } else {
+                    suggestions.push({
+                        type: 'error',
+                        icon: '❌',
+                        text: 'Especifica claramente la tarea que debe realizar la IA.'
+                    });
+                }
+
+                // Análisis del Formato (15 puntos)
+                if (data.formato) {
+                    score += 10;
+                    if (data.formato.length > 15) score += 5;
+                } else {
+                    suggestions.push({
+                        type: 'warning',
+                        icon: '⚠️',
+                        text: 'Define el formato de salida para obtener resultados consistentes.'
+                    });
+                }
+
+                // Análisis de Restricciones (10 puntos)
+                if (data.restricciones) {
+                    score += 10;
+                } else {
+                    suggestions.push({
+                        type: 'tip',
+                        icon: '💡',
+                        text: 'Considera añadir restricciones como tono, longitud o formato.'
+                    });
+                }
+
+                // Longitud total del prompt
+                const totalLength = Object.values(data).join('').length;
+                if (totalLength < 100) {
+                    suggestions.push({
+                        type: 'warning',
+                        icon: '⚠️',
+                        text: 'El prompt parece muy corto. Añade más detalles para mejores resultados.'
+                    });
+                } else if (totalLength > 1000) {
+                    suggestions.push({
+                        type: 'tip',
+                        icon: '💡',
+                        text: 'El prompt es muy largo. Considera ser más conciso para evitar confusión.'
+                    });
+                }
+
+                // Generar palabras clave recomendadas
+                const recommendedKeywords = actionKeywords.filter(keyword => !foundKeywords.has(keyword)).slice(0, 8);
+
+                return {
+                    score: Math.min(100, Math.max(0, score)),
+                    suggestions,
+                    recommendedKeywords
+                };
+            }
+
+            function displayAnalysisResults(analysis) {
+                // Actualizar puntuación
+                scoreValue.textContent = analysis.score;
+                
+                // Determinar etiqueta y color
+                let label, colorClass;
+                if (analysis.score >= 80) {
+                    label = 'Excelente';
+                    colorClass = 'score-excellent';
+                } else if (analysis.score >= 60) {
+                    label = 'Bueno';
+                    colorClass = 'score-good';
+                } else {
+                    label = 'Necesita Mejoras';
+                    colorClass = 'score-needs-improvement';
+                }
+                
+                scoreLabel.textContent = label;
+                scoreValue.className = `score-display ${colorClass}`;
+                
+                // Animar barra de progreso
+                setTimeout(() => {
+                    progressFill.style.width = `${analysis.score}%`;
+                }, 100);
+                
+                // Mostrar sugerencias
+                suggestionsList.innerHTML = '';
+                if (analysis.suggestions.length === 0) {
+                    suggestionsList.innerHTML = '<div class="suggestion-item"><span class="suggestion-icon">✅</span><span class="text-secondary">¡Tu prompt está muy bien estructurado!</span></div>';
+                } else {
+                    analysis.suggestions.forEach(suggestion => {
+                        const item = document.createElement('div');
+                        item.className = 'suggestion-item';
+                        item.innerHTML = `
+                            <span class="suggestion-icon">${suggestion.icon}</span>
+                            <span class="text-secondary">${suggestion.text}</span>
+                        `;
+                        suggestionsList.appendChild(item);
+                    });
+                }
+                
+                // Mostrar palabras clave
+                keywordsList.innerHTML = '';
+                analysis.recommendedKeywords.forEach(keyword => {
+                    const chip = document.createElement('span');
+                    chip.className = 'keyword-chip';
+                    chip.textContent = keyword;
+                    chip.addEventListener('click', () => {
+                        tareaInput.value += ` ${keyword}`;
+                        generatePrompt();
+                    });
+                    keywordsList.appendChild(chip);
+                });
+                
+                // Mostrar panel de análisis
+                analysisResults.classList.remove('hidden');
+                analysisResults.classList.add('analysis-visible');
+            }
+
+            // Event listener para el botón de análisis
+            analyzeBtn.addEventListener('click', performPromptAnalysis);
+            
+            // Event listener para cerrar análisis
+            closeAnalysis.addEventListener('click', () => {
+                analysisResults.classList.add('hidden');
+                progressFill.style.width = '0%';
+            });
+
+            const templatesByKeyword = {
+                marketing: {
+                    rol: 'Experto en marketing digital y estratega de contenido',
+                    contexto: 'Estás creando una campaña para un nuevo producto de software B2B que aumenta la productividad. El público objetivo son gerentes de proyecto y dueños de pequeñas empresas.',
+                    tarea: 'Genera 5 ideas para posts de blog que destaquen los beneficios clave del producto, incluyendo un título atractivo y una breve descripción para cada uno.',
+                    formato: 'Una lista numerada. Cada elemento debe tener el formato: "Título: [Título del post]\nDescripción: [Breve párrafo]"',
+                    restricciones: 'El tono debe ser profesional pero accesible. Enfócate en la resolución de problemas, no en características técnicas. Máximo 100 palabras por descripción.'
+                },
+                resumidor: {
+                    rol: 'Asistente de investigación experto en síntesis de información',
+                    contexto: 'Se te proporcionará un artículo o un texto largo. El objetivo es extraer la información más importante para alguien que no tiene tiempo de leerlo completo.',
+                    tarea: 'Resume el texto proporcionado en puntos clave.',
+                    formato: 'Una lista con viñetas (bullet points) con los puntos más importantes.',
+                    restricciones: 'El resumen no debe exceder las 150 palabras. Mantén un tono neutral y objetivo. No incluyas opiniones personales.'
+                },
+                programador: {
+                    rol: 'Programador Senior experto en Python y buenas prácticas',
+                    contexto: 'Un desarrollador junior necesita ayuda para implementar una funcionalidad específica. Busca un código limpio, eficiente y bien comentado.',
+                    tarea: 'Escribe una función en Python que ordene una lista de diccionarios por una clave específica.',
+                    formato: 'Un bloque de código Python. Incluye comentarios explicando cada parte del código y un ejemplo de uso.',
+                    restricciones: 'Sigue las convenciones de estilo PEP 8. La solución debe ser robusta y manejar posibles errores (ej: clave no encontrada).'
+                },
+                creativo: {
+                    rol: 'Facilitador de brainstorming y experto en creatividad',
+                    contexto: 'Un equipo está atascado y necesita nuevas ideas para un proyecto. El ambiente debe ser de apertura y sin juicios para fomentar la creatividad.',
+                    tarea: 'Genera una lluvia de ideas sobre el tema: "nuevos usos para los drones en la agricultura".',
+                    formato: 'Una lista desordenada de ideas, sin importar lo descabelladas que parezcan.',
+                    restricciones: 'No autocensures. Cantidad sobre calidad en esta fase. El objetivo es generar al menos 15 ideas diversas.'
+                }
+            };
+
+            // --- Funciones Principales ---
+            const generatePrompt = () => {
+                const rol = rolInput.value.trim() || '[ROL NO ESPECIFICADO]';
+                const contexto = contextoInput.value.trim() || '[CONTEXTO NO ESPECIFICADO]';
+                const tarea = tareaInput.value.trim() || '[TAREA NO ESPECIFICADA]';
+                const formato = formatoInput.value.trim() || '[FORMATO NO ESPECIFICADO]';
+                const restricciones = restriccionesInput.value.trim() || '[SIN RESTRICCIONES]';
+
+                const restrictionsHtml = restricciones.split('\n').map(line => 
+                    `<div><span class="prompt-list-item">-</span> <span class="prompt-content">${line.trim()}</span></div>`
+                ).join('');
+
+                const promptHtml = `
+                    <div><span class="prompt-header">### ROL</span></div>
+                    <div class="prompt-content">Actúa como: ${rol}</div>
+                    <br>
+                    <div><span class="prompt-header">### CONTEXTO</span></div>
+                    <div class="prompt-content">${contexto}</div>
+                    <br>
+                    <div><span class="prompt-header">### TAREA</span></div>
+                    <div class="prompt-content">Realiza la siguiente tarea: ${tarea}</div>
+                    <br>
+                    <div><span class="prompt-header">### FORMATO DE SALIDA</span></div>
+                    <div class="prompt-content">Presenta la respuesta en el siguiente formato: ${formato}</div>
+                    <br>
+                    <div><span class="prompt-header">### RESTRICCIONES</span></div>
+                    <div>Asegúrate de seguir estas reglas:</div>
+                    ${restrictionsHtml}
+                `.trim();
+                
+                outputPrompt.innerHTML = promptHtml;
+                
+                // Habilitar botón de extraer etiquetas
+                extractTagsBtn.disabled = false;
+            };
+            
+            const showFeedback = (message, color = 'green') => {
+                feedback.textContent = message;
+                feedback.className = `text-center text-sm mt-3 h-6 opacity-100 transition-opacity duration-300 text-${color}-400`;
+                setTimeout(() => { feedback.style.opacity = '0'; }, 2500);
+            };
+            
+            const copyToClipboard = (textToCopy) => {
+                if (!textToCopy || textToCopy === 'El prompt generado aparecerá aquí...') return;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showFeedback('¡Prompt copiado al portapapeles!');
+                }).catch(err => {
+                    console.error('Error al copiar:', err);
+                    showFeedback('Error al copiar', 'red');
+                });
+            };
+
+            const saveCurrentPrompt = () => {
+                const textToSave = outputPrompt.textContent;
+                if (!textToSave || textToSave === 'El prompt generado aparecerá aquí...') return;
+                if (savedPrompts.some(p => p.text === textToSave)) {
+                    showFeedback('Este prompt ya está guardado', 'yellow');
+                    return;
+                }
+
+                const tags = currentTags.map(tag => tag.text);
+
+                const newPrompt = { 
+                    id: Date.now(), 
+                    text: textToSave, 
+                    tags: tags,
+                    timestamp: new Date().toISOString(),
+                    usageCount: 0,
+                    lastUsed: null
+                };
+                savedPrompts.unshift(newPrompt);
+                savePromptsToStorage();
+                
+                currentTags = [];
+                renderTags();
+                applyAllFilters();
+                renderTagFilters();
+                showFeedback('¡Prompt guardado en el historial!');
+            };
+
+            const deletePrompt = (id) => {
+                savedPrompts = savedPrompts.filter(p => p.id !== id);
+                savePromptsToStorage();
+                applyAllFilters();
+                renderTagFilters();
+            };
+
+            // Función para determinar la calidad del prompt
+            function getPromptQuality(prompt) {
+                const textLength = prompt.text.length;
+                let score = 50;
+                
+                if (textLength > 200) score += 20;
+                if (prompt.text.includes('ROL')) score += 15;
+                if (prompt.text.includes('CONTEXTO')) score += 15;
+                
+                if (score >= 80) return 'high';
+                if (score >= 60) return 'medium';
+                return 'low';
+            }
+
+            // Función para formatear fecha relativa
+            function getRelativeTime(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 0) return 'Hoy';
+                if (diffDays === 1) return 'Ayer';
+                if (diffDays < 7) return `Hace ${diffDays} días`;
+                if (diffDays < 30) return `Hace ${Math.floor(diffDays / 7)} semanas`;
+                if (diffDays < 365) return `Hace ${Math.floor(diffDays / 30)} meses`;
+                return `Hace ${Math.floor(diffDays / 365)} años`;
+            }
+
+            // Función para formatear el texto del prompt con el nuevo diseño
+            function formatPromptText(text) {
+                // Extraer secciones del prompt
+                const sections = {
+                    rol: text.match(/### ROL\s*\n(.*?)(?=\n###|\n\n|$)/s),
+                    contexto: text.match(/### CONTEXTO\s*\n(.*?)(?=\n###|\n\n|$)/s),
+                    tarea: text.match(/### TAREA\s*\n(.*?)(?=\n###|\n\n|$)/s),
+                    formato: text.match(/### FORMATO DE SALIDA\s*\n(.*?)(?=\n###|\n\n|$)/s),
+                    restricciones: text.match(/### RESTRICCIONES\s*\n([\s\S]*?)$/s)
+                };
+
+                let formattedHtml = '<div class="prompt-text">';
+
+                // Sección ROL
+                if (sections.rol) {
+                    const rolContent = sections.rol[1].replace(/^Actúa como:\s*/i, '').trim();
+                    formattedHtml += `
+                        <div class="prompt-section">
+                            <div class="prompt-section-header">
+                                <div class="prompt-section-icon icon-rol">👤</div>
+                                <h4 class="prompt-section-title">Rol</h4>
+                            </div>
+                            <div class="prompt-section-content">
+                                <strong>${rolContent}</strong>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Sección CONTEXTO
+                if (sections.contexto) {
+                    const contextoContent = sections.contexto[1].trim();
+                    formattedHtml += `
+                        <div class="prompt-section">
+                            <div class="prompt-section-header">
+                                <div class="prompt-section-icon icon-contexto">🌍</div>
+                                <h4 class="prompt-section-title">Contexto</h4>
+                            </div>
+                            <div class="prompt-section-content">
+                                ${contextoContent}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Sección TAREA
+                if (sections.tarea) {
+                    const tareaContent = sections.tarea[1].replace(/^Realiza la siguiente tarea:\s*/i, '').trim();
+                    formattedHtml += `
+                        <div class="prompt-section">
+                            <div class="prompt-section-header">
+                                <div class="prompt-section-icon icon-tarea">🎯</div>
+                                <h4 class="prompt-section-title">Tarea</h4>
+                            </div>
+                            <div class="prompt-section-content">
+                                <strong>${tareaContent}</strong>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Sección FORMATO
+                if (sections.formato) {
+                    const formatoContent = sections.formato[1].replace(/^Presenta la respuesta en el siguiente formato:\s*/i, '').trim();
+                    formattedHtml += `
+                        <div class="prompt-section">
+                            <div class="prompt-section-header">
+                                <div class="prompt-section-icon icon-formato">📋</div>
+                                <h4 class="prompt-section-title">Formato</h4>
+                            </div>
+                            <div class="prompt-section-content">
+                                ${formatoContent}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Sección RESTRICCIONES
+                if (sections.restricciones) {
+                    const restriccionesContent = sections.restricciones[1].replace(/^Asegúrate de seguir estas reglas:\s*/i, '').trim();
+                    const restrictions = restriccionesContent.split('\n').filter(line => line.trim());
+                    
+                    formattedHtml += `
+                        <div class="prompt-section">
+                            <div class="prompt-section-header">
+                                <div class="prompt-section-icon icon-restricciones">⚡</div>
+                                <h4 class="prompt-section-title">Restricciones</h4>
+                            </div>
+                            <div class="prompt-section-content">
+                                ${restrictions.map(restriction => `
+                                    <div class="restriction-item">
+                                        <span class="restriction-bullet">•</span>
+                                        <span class="restriction-text">${restriction.replace(/^-\s*/, '').trim()}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                formattedHtml += '</div>';
+                return formattedHtml;
+            }
+            
+            const renderSavedPrompts = (promptsToRender = savedPrompts) => {
+                savedPromptsList.innerHTML = '';
+                
+                if (promptsToRender.length === 0) {
+                    if (searchInput.value.trim() !== '' || activeTagFilter) {
+                        savedPromptsList.innerHTML = `
+                            <div class="empty-state">
+                                <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="empty-state-title">No se encontraron prompts</div>
+                                <div class="empty-state-description">
+                                    No hay prompts que coincidan con los filtros aplicados. Intenta ajustar tu búsqueda o filtros.
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        savedPromptsList.innerHTML = `
+                            <div class="empty-state">
+                                <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                </svg>
+                                <div class="empty-state-title">Aún no tienes prompts guardados</div>
+                                <div class="empty-state-description">
+                                    Comienza creando tu primer prompt y guárdalo para tener acceso rápido a él más tarde.
+                                </div>
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+                
+                promptsToRender.forEach((prompt, index) => {
+                    const quality = getPromptQuality(prompt);
+                    const relativeTime = getRelativeTime(prompt.timestamp);
+                    
+                    // Resaltar términos de búsqueda
+                    let highlightedText = prompt.text;
+                    if (searchFilters.searchTerm) {
+                        const regex = new RegExp(`(${searchFilters.searchTerm})`, 'gi');
+                        highlightedText = highlightedText.replace(regex, '<span class="search-result-highlight">$1</span>');
+                    }
+                    
+                    // Extraer secciones para la vista previa
+                    const rolMatch = prompt.text.match(/### ROL\s*\n(.*?)(?=\n###|\n\n|$)/s);
+                    const rolText = rolMatch ? rolMatch[1].replace(/^Actúa como:\s*/i, '').trim() : '';
+
+                    const contextoMatch = prompt.text.match(/### CONTEXTO\s*\n(.*?)(?=\n###|\n\n|$)/s);
+                    const contextoText = contextoMatch ? contextoMatch[1].trim() : '';
+
+                    const tareaMatch = prompt.text.match(/### TAREA\s*\n(.*?)(?=\n###|\n\n|$)/s);
+                    const tareaText = tareaMatch ? tareaMatch[1].replace(/^Realiza la siguiente tarea:\s*/i, '').trim() : '';
+                    
+                    const similarityBadge = prompt.similarity ? 
+                        `<div class="prompt-badge badge-similarity">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            ${Math.round(prompt.similarity * 100)}% similar
+                        </div>` : '';
+                    
+                    const semanticScore = prompt.semanticScore ? 
+                        `<div class="prompt-badge badge-semantic">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                            </svg>
+                            Score: ${prompt.semanticScore}
+                        </div>` : '';
+
+                    const tagsHtml = prompt.tags && prompt.tags.length > 0 
+                        ? `<div class="prompt-tags-container">
+                            ${prompt.tags.map(tag => `<span class="prompt-tag">${tag}</span>`).join('')}
+                           </div>`
+                        : '<div class="prompt-tags-container"><span class="text-tertiary text-xs">Sin etiquetas</span></div>';
+
+                    const card = document.createElement('div');
+                    card.className = 'prompt-card';
+                    card.style.animationDelay = `${index * 0.05}s`;
+                    
+                    card.innerHTML = `
+                        <div class="quality-indicator quality-${quality}"></div>
+                        
+                        <div class="prompt-header-section">
+                            <div class="prompt-meta">
+                                <div class="prompt-date">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    ${relativeTime}
+                                </div>
+                                <div class="prompt-usage ${prompt.usageCount > 0 ? 'used' : ''}">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    Usado ${prompt.usageCount || 0} veces
+                                </div>
+                            </div>
+                            <div class="prompt-actions copy-delete-group">
+                                <button class="prompt-action-btn copy copy-delete-btn" data-copy-id="${prompt.id}">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Copiar
+                                </button>
+                                <button class="prompt-action-btn delete copy-delete-btn" data-delete-id="${prompt.id}">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="prompt-preview">
+                            <div class="prompt-preview-item">
+                                <div class="prompt-preview-label">Rol:</div>
+                                <div class="prompt-preview-content">${rolText}</div>
+                            </div>
+                            <div class="prompt-preview-item">
+                                <div class="prompt-preview-label">Contexto:</div>
+                                <div class="prompt-preview-content">${contextoText}</div>
+                            </div>
+                            <div class="prompt-preview-item">
+                                <div class="prompt-preview-label">Tarea:</div>
+                                <div class="prompt-preview-content">${tareaText}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="prompt-content-section hidden">
+                            ${formatPromptText(highlightedText)}
+                        </div>
+                        
+                        <div class="prompt-footer">
+                            ${tagsHtml}
+                            <div class="prompt-badges">
+                                ${similarityBadge}
+                                ${semanticScore}
+                            </div>
+                        </div>
+                        
+                        <button class="expand-btn" data-prompt-id="${prompt.id}">Ver más</button>
+                    `;
+                    
+                    savedPromptsList.appendChild(card);
+                });
+            };
+
+            const renderTagFilters = () => {
+                const allTags = new Set();
+                savedPrompts.forEach(prompt => {
+                    if (prompt.tags) {
+                        prompt.tags.forEach(tag => allTags.add(tag));
+                    }
+                });
+
+                tagFilterList.innerHTML = '';
+                if (allTags.size === 0) return;
+
+                const allButton = document.createElement('button');
+                allButton.textContent = 'Todos';
+                allButton.className = `px-3 py-1.5 text-xs rounded-full border ${!activeTagFilter ? 'bg-blue-600 text-white border-blue-600' : 'bg-secondary text-secondary border-custom hover:bg-tertiary'} transition-all duration-300 shadow-sm`;
+                allButton.addEventListener('click', () => filterByTag(null));
+                tagFilterList.appendChild(allButton);
+
+                allTags.forEach(tag => {
+                    const button = document.createElement('button');
+                    button.textContent = tag;
+                    button.className = `px-3 py-1.5 text-xs rounded-full border ${activeTagFilter === tag ? 'bg-blue-600 text-white border-blue-600' : 'bg-secondary text-secondary border-custom hover:bg-tertiary'} transition-all duration-300 shadow-sm`;
+                    button.addEventListener('click', () => filterByTag(tag));
+                    tagFilterList.appendChild(button);
+                });
+            };
+            
+            const filterByTag = (tag) => {
+                activeTagFilter = activeTagFilter === tag ? null : tag;
+                renderTagFilters();
+                applyAllFilters();
+            };
+
+            // Aplicar todos los filtros
+            const applyAllFilters = () => {
+                let promptsToFilter = [...savedPrompts];
+
+                // Filtro por término de búsqueda
+                if (searchFilters.searchTerm) {
+                    promptsToFilter = promptsToFilter.filter(prompt => 
+                        prompt.text.toLowerCase().includes(searchFilters.searchTerm.toLowerCase())
+                    );
+                }
+
+                // Filtro por etiquetas
+                if (searchFilters.tags.length > 0) {
+                    promptsToFilter = promptsToFilter.filter(prompt => 
+                        prompt.tags && searchFilters.tags.some(tag => prompt.tags.includes(tag))
+                    );
+                }
+
+                // Filtro por etiqueta activa (sistema antiguo)
+                if (activeTagFilter) {
+                    promptsToFilter = promptsToFilter.filter(prompt => 
+                        prompt.tags && prompt.tags.includes(activeTagFilter)
+                    );
+                }
+
+                // Filtro por fecha
+                if (searchFilters.dateFrom) {
+                    const fromDate = new Date(searchFilters.dateFrom);
+                    promptsToFilter = promptsToFilter.filter(prompt => 
+                        new Date(prompt.timestamp) >= fromDate
+                    );
+                }
+
+                if (searchFilters.dateTo) {
+                    const toDate = new Date(searchFilters.dateTo);
+                    toDate.setHours(23, 59, 59, 999);
+                    promptsToFilter = promptsToFilter.filter(prompt => 
+                        new Date(prompt.timestamp) <= toDate
+                    );
+                }
+
+                // Filtro por uso
+                const now = new Date();
+                switch (searchFilters.usage) {
+                    case 'frequent':
+                        promptsToFilter = promptsToFilter.filter(p => p.usageCount > 5);
+                        break;
+                    case 'recent':
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        promptsToFilter = promptsToFilter.filter(p => 
+                            p.lastUsed && new Date(p.lastUsed) >= weekAgo
+                        );
+                        break;
+                    case 'never':
+                        promptsToFilter = promptsToFilter.filter(p => p.usageCount === 0);
+                        break;
+                }
+
+                // Filtro por calidad (simulado)
+                if (searchFilters.quality !== 'all') {
+                    promptsToFilter = promptsToFilter.filter(prompt => {
+                        // Simular análisis de calidad basado en longitud y estructura
+                        const textLength = prompt.text.length;
+                        let estimatedScore = 50;
+                        
+                        if (textLength > 200) estimatedScore += 20;
+                        if (prompt.text.includes('ROL')) estimatedScore += 15;
+                        if (prompt.text.includes('CONTEXTO')) estimatedScore += 15;
+                        
+                        switch (searchFilters.quality) {
+                            case 'excellent':
+                                return estimatedScore >= 80;
+                            case 'good':
+                                return estimatedScore >= 60 && estimatedScore < 80;
+                            case 'needs-improvement':
+                                return estimatedScore < 60;
+                        }
+                    });
+                }
+                
+                filteredPrompts = promptsToFilter;
+                renderSavedPrompts(filteredPrompts);
+                
+                // Actualizar estadísticas
+                if (searchFilters.searchTerm || searchFilters.tags.length > 0 || 
+                    searchFilters.dateFrom || searchFilters.dateTo || 
+                    searchFilters.usage !== 'all' || searchFilters.quality !== 'all') {
+                    updateSearchStats(filteredPrompts.length, 'relevancia');
+                } else {
+                    searchStats.classList.add('hidden');
+                }
+            };
+
+            const savePromptsToStorage = () => {
+                localStorage.setItem('aiPromptGeneratorHistory', JSON.stringify(savedPrompts));
+            };
+
+            const loadPromptsFromStorage = () => {
+                const stored = localStorage.getItem('aiPromptGeneratorHistory');
+                if (stored) {
+                    savedPrompts = JSON.parse(stored);
+                }
+                
+                // Cargar búsquedas guardadas
+                const savedSearchesStored = localStorage.getItem('savedSearches');
+                if (savedSearchesStored) {
+                    savedSearches = JSON.parse(savedSearchesStored);
+                }
+                
+                renderTagFilters();
+                applyAllFilters();
+            };
+
+            const applyTemplate = () => {
+                const rolValue = rolInput.value.toLowerCase();
+                let matchedKeyword = null;
+
+                for (const keyword in templatesByKeyword) {
+                    if (rolValue.includes(keyword)) {
+                        matchedKeyword = keyword;
+                        break;
+                    }
+                }
+
+                if (matchedKeyword && templatesByKeyword[matchedKeyword]) {
+                    if (!contextoInput.value && !tareaInput.value && !formatoInput.value && !restriccionesInput.value) {
+                        const templateData = templatesByKeyword[matchedKeyword];
+                        contextoInput.value = templateData.contexto;
+                        tareaInput.value = templateData.tarea;
+                        formatoInput.value = templateData.formato;
+                        restriccionesInput.value = templateData.restricciones;
+                        showFeedback(`Plantilla "${matchedKeyword}" aplicada.`, 'blue');
+                    }
+                }
+            };
+            
+            // --- Event Listeners ---
+            const debounce = (func, delay) => {
+                let timeoutId;
+                return (...args) => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        func.apply(this, args);
+                    }, delay);
+                };
+            };
+
+            const debouncedGenerate = debounce(generatePrompt, 500);
+
+            rolInput.addEventListener('input', () => {
+                applyTemplate();
+                debouncedGenerate();
+            });
+            contextoInput.addEventListener('input', debouncedGenerate);
+            tareaInput.addEventListener('input', debouncedGenerate);
+            formatoInput.addEventListener('input', debouncedGenerate);
+            restriccionesInput.addEventListener('input', debouncedGenerate);
+
+            generateBtn.disabled = true;
+            
+            saveBtn.addEventListener('click', saveCurrentPrompt);
+            copyBtn.addEventListener('click', () => copyToClipboard(outputPrompt.textContent));
+
+            // Event listeners para búsqueda avanzada
+            searchInput.addEventListener('input', debounce((e) => {
+                searchFilters.searchTerm = e.target.value;
+                applyAllFilters();
+            }, 300));
+
+            // Filtros de etiquetas
+            function renderTagCheckboxes() {
+                const container = document.getElementById('tagFilters');
+                const allTags = new Set();
+                
+                savedPrompts.forEach(prompt => {
+                    if (prompt.tags) {
+                        prompt.tags.forEach(tag => allTags.add(tag));
+                    }
+                });
+
+                container.innerHTML = '';
+                
+                // Botón "Todas"
+                const allChip = document.createElement('span');
+                allChip.className = 'filter-chip active';
+                allChip.textContent = 'Todas';
+                allChip.addEventListener('click', () => {
+                    searchFilters.tags = [];
+                    document.querySelectorAll('#tagFilters .filter-chip').forEach(chip => {
+                        chip.classList.remove('active');
+                    });
+                    allChip.classList.add('active');
+                    applyAllFilters();
+                });
+                container.appendChild(allChip);
+
+                allTags.forEach(tag => {
+                    const chip = document.createElement('span');
+                    chip.className = 'filter-chip';
+                    chip.textContent = tag;
+                    chip.addEventListener('click', () => {
+                        chip.classList.toggle('active');
+                        
+                        if (chip.classList.contains('active')) {
+                            if (!searchFilters.tags.includes(tag)) {
+                                searchFilters.tags.push(tag);
+                            }
+                        } else {
+                            searchFilters.tags = searchFilters.tags.filter(t => t !== tag);
+                        }
+                        
+                        applyAllFilters();
+                    });
+                    container.appendChild(chip);
+                });
+            }
+
+            // Filtros de uso
+            document.querySelectorAll('[data-usage]').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('[data-usage]').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    searchFilters.usage = chip.dataset.usage;
+                    applyAllFilters();
+                });
+            });
+
+            // Filtros de calidad
+            document.querySelectorAll('[data-quality]').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('[data-quality]').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    searchFilters.quality = chip.dataset.quality;
+                    applyAllFilters();
+                });
+            });
+
+            // Filtros de fecha
+            document.getElementById('dateFrom').addEventListener('change', (e) => {
+                searchFilters.dateFrom = e.target.value;
+                applyAllFilters();
+            });
+
+            document.getElementById('dateTo').addEventListener('change', (e) => {
+                searchFilters.dateTo = e.target.value;
+                applyAllFilters();
+            });
+
+            // Botón limpiar filtros
+            document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+                searchFilters = {
+                    tags: [],
+                    dateFrom: null,
+                    dateTo: null,
+                    usage: 'all',
+                    quality: 'all',
+                    searchTerm: '',
+                    semanticQuery: '',
+                    similarityThreshold: 50
+                };
+                
+                searchInput.value = '';
+                document.getElementById('dateFrom').value = '';
+                document.getElementById('dateTo').value = '';
+                document.getElementById('semanticInput').value = '';
+                document.getElementById('similarityInput').value = '';
+                
+                document.querySelectorAll('.filter-chip').forEach(chip => {
+                    chip.classList.remove('active');
+                });
+                document.querySelector('[data-usage="all"]').classList.add('active');
+                document.querySelector('[data-quality="all"]').classList.add('active');
+                
+                applyAllFilters();
+                showFeedback('Filtros limpiados', 'green');
+            });
+
+            savedPromptsList.addEventListener('click', (e) => {
+                const copyButton = e.target.closest('.prompt-action-btn.copy');
+                const deleteButton = e.target.closest('.prompt-action-btn.delete');
+                const expandButton = e.target.closest('.expand-btn');
+
+                if (copyButton) {
+                    const promptId = Number(copyButton.dataset.copyId);
+                    const promptToCopy = savedPrompts.find(p => p.id === promptId);
+                    if (promptToCopy) {
+                        copyToClipboard(promptToCopy.text);
+                        // Actualizar contador de uso
+                        promptToCopy.usageCount = (promptToCopy.usageCount || 0) + 1;
+                        promptToCopy.lastUsed = new Date().toISOString();
+                        savePromptsToStorage();
+                        renderSavedPrompts(filteredPrompts);
+                    }
+                }
+
+                if (deleteButton) {
+                    const promptId = Number(deleteButton.dataset.deleteId);
+                    deletePrompt(promptId);
+                }
+
+                if (expandButton) {
+                    const promptId = Number(expandButton.dataset.promptId);
+                    const card = expandButton.closest('.prompt-card');
+                    const contentSection = card.querySelector('.prompt-content-section');
+                    
+                    if (contentSection.classList.contains('hidden')) {
+                        contentSection.classList.remove('hidden');
+                        expandButton.textContent = 'Ver menos';
+                    } else {
+                        contentSection.classList.add('hidden');
+                        expandButton.textContent = 'Ver más';
+                    }
+                }
+            });
+
+            // Carga inicial
+            renderTemplateMenu();
+            loadPromptsFromStorage();
+            renderTagCheckboxes();
+        });
+    </script>
+</body>
+</html>
