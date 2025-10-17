@@ -2557,10 +2557,11 @@
                 // ====================================================
                 // 🧮 2️⃣ FILTRAR datos
                 // ====================================================
+                console.log("Antes",new Date())
                 const datosFiltrados = metricaArray.filter(item =>
                     Object.entries(parametros).every(([key, value]) => item[key] === value)
                 );
-
+                console.log("Despues",new Date())
                 if (!datosFiltrados.length) {
                     throw new Error("No se encontraron datos con los parámetros generados.");
                 }

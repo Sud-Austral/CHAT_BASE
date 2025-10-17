@@ -1,4 +1,4 @@
-const delito =[
+const delito = [
  {
   "ID_Delito (PK)": 1,
   "Nombre_Delito": "AMENAZAS CON ARMAS",

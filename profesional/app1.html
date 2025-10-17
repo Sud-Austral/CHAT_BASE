@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impacto de la IA en Profesiones Chilenas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Variables CSS para colores y diseño */
+        :root {
+            --color-cat-1: #10b981; /* Verde - Bajo riesgo */
+            --color-cat-2: #3b82f6; /* Azul claro - Acelerador */
+            --color-cat-3: #eab308; /* Amarillo - Co-piloto */
+            --color-cat-4: #f97316; /* Naranja - Riesgo moderado */
+            --color-cat-5: #ef4444; /* Rojo - Riesgo crítico */
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --bg-tertiary: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --border-color: #d1d5db;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            --transition: all 0.3s ease;
+        }
+
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav li {
+            margin-left: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background-color: var(--bg-primary);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            background-color: var(--bg-primary);
+            border-radius: 8px 8px 0 0;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .tab-button.active {
+            color: var(--text-primary);
+            border-bottom: 3px solid var(--color-cat-3);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            background-color: var(--bg-primary);
+            border-radius: 0 0 8px 8px;
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Filters Section */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .range-container input {
+            flex: 1;
+        }
+
+        .range-value {
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        th.sortable::after {
+            content: '⇅';
+            position: absolute;
+            right: 0.5rem;
+            opacity: 0.5;
+        }
+
+        th.sort-asc::after {
+            content: '↑';
+            opacity: 1;
+        }
+
+        th.sort-desc::after {
+            content: '↓';
+            opacity: 1;
+        }
+
+        tr:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .category-1 {
+            background-color: var(--color-cat-1);
+        }
+
+        .category-2 {
+            background-color: var(--color-cat-2);
+        }
+
+        .category-3 {
+            background-color: var(--color-cat-3);
+        }
+
+        .category-4 {
+            background-color: var(--color-cat-4);
+        }
+
+        .category-5 {
+            background-color: var(--color-cat-5);
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dashboard-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .equivalent-list {
+            list-style-type: none;
+        }
+
+        .equivalent-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .equivalent-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Comparison Styles */
+        .comparison-container {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
+        .comparison-container.active {
+            display: block;
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .comparison-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .comparison-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .comparison-chart {
+            height: 250px;
+            margin-bottom: 1rem;
+        }
+
+        /* Checkbox for comparison */
+        .compare-checkbox {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav li {
+                margin: 0 0.75rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-results {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Impacto IA en Profesiones</div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-tab="table">Tabla</a></li>
+                        <li><a href="#" class="nav-link" data-tab="dashboard">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-tab="comparison">Comparador</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Impacto de la Inteligencia Artificial en Profesiones Chilenas</h1>
+                <p>Explora cómo la IA está transformando el mercado laboral en Chile y descubre las oportunidades y desafíos para diferentes profesiones.</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <div class="tabs-nav">
+            <button class="tab-button active" data-tab="table">Tabla de Profesiones</button>
+            <button class="tab-button" data-tab="dashboard">Dashboard Visual</button>
+            <button class="tab-button" data-tab="comparison">Comparador de Profesiones</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Tabla de Profesiones -->
+            <div class="tab-pane active" id="table-tab">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="category-filter">Categoría de Impacto</label>
+                        <select id="category-filter">
+                            <option value="">Todas las categorías</option>
+                            <option value="1">1. Expansión y crecimiento / Bajo riesgo</option>
+                            <option value="2">2. Oportunidad controlada / Acelerador</option>
+                            <option value="3">3. Transformación híbrida / Co-piloto</option>
+                            <option value="4">4. Alta reconversión / Riesgo moderado</option>
+                            <option value="5">5. Riesgo crítico / Sustitución estructural</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="isia-range">Rango de ISIA</label>
+                        <div class="range-container">
+                            <input type="range" id="isia-min" min="-10" max="10" step="0.1" value="-10">
+                            <span class="range-value" id="isia-min-value">-10</span>
+                            <span>a</span>
+                            <input type="range" id="isia-max" min="-10" max="10" step="0.1" value="10">
+                            <span class="range-value" id="isia-max-value">10</span>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label for="search-input">Buscar Profesión</label>
+                        <input type="text" id="search-input" placeholder="Nombre de profesión...">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="professions-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="profession">Profesión</th>
+                                <th class="sortable" data-sort="at">Automatización (A_t)</th>
+                                <th class="sortable" data-sort="rh">Habilidades Humanas (R_h)</th>
+                                <th class="sortable" data-sort="ci">Integración (C_i)</th>
+                                <th class="sortable" data-sort="isia">ISIA</th>
+                                <th class="sortable" data-sort="category">Categoría de Impacto</th>
+                                <th>Comparar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Las filas se generarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Dashboard Visual -->
+            <div class="tab-pane" id="dashboard-tab">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-professions">0</div>
+                        <div class="stat-label">Total de Profesiones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-at">0</div>
+                        <div class="stat-label">Promedio Automatización</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-rh">0</div>
+                        <div class="stat-label">Promedio Habilidades Humanas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-isia">0</div>
+                        <div class="stat-label">Promedio ISIA</div>
+                    </div>
+                </div>
+
+                <div class="dashboard">
+                    <div class="dashboard-card">
+                        <h3>Distribución por Categoría de Impacto</h3>
+                        <div class="chart-container">
+                            <canvas id="category-distribution-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Automatización vs Habilidades Humanas</h3>
+                        <div class="chart-container">
+                            <canvas id="at-rh-scatter-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>TOP 10 Profesiones por ISIA</h3>
+                        <div class="chart-container">
+                            <canvas id="top-isia-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparador de Profesiones -->
+            <div class="tab-pane" id="comparison-tab">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="comparison-search-1">Profesión 1</label>
+                        <select id="comparison-select-1">
+                            <option value="">Selecciona una profesión</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="comparison-search-2">Profesión 2</label>
+                        <select id="comparison-select-2">
+                            <option value="">Selecciona una profesión</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="comparison-search-3">Profesión 3 (Opcional)</label>
+                        <select id="comparison-select-3">
+                            <option value="">Selecciona una profesión</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="comparison-container" id="comparison-results">
+                    <div class="comparison-header">
+                        <h3>Resultados de la Comparación</h3>
+                        <button id="clear-comparison">Limpiar Comparación</button>
+                    </div>
+                    <div class="comparison-results" id="comparison-cards">
+                        <!-- Las tarjetas de comparación se generarán dinámicamente -->
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Comparación de Métricas</h3>
+                        <div class="chart-container">
+                            <canvas id="comparison-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Vista Detallada -->
+    <div class="modal" id="profession-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Detalles de la Profesión</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- El contenido se generará dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de profesiones (parseados de la tabla CSV)
+        const professionsData = [
+            {
+                "Profesion": "Ingreso de datos / tareas administrativas",
+                "A_t": 9,
+                "R_h": 2,
+                "C_i": 3,
+                "ISIA": 5.5,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad; Ingeniería Informática/Software; Ingeniería de Datos; Ciencia de Datos/Estadística",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte); Ingeniería Industrial; Matemática; Física; Diseño (UX/UI)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad; Ingeniería en Informática y Sistemas; Estadística / Ciencia de Datos",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad; 0610 Tecnologías de la información y la comunicación (TIC); 0542 Estadística",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED); Ingeniería Industrial; Matemática (por validar SIES/CNED); Física (por validar SIES/CNED); Diseño (UX/UI) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F; 0714 Ingeniería industrial y procesos"
+            },
+            {
+                "Profesion": "Contador auditor / servicios contables",
+                "A_t": 9,
+                "R_h": 4,
+                "C_i": 6,
+                "ISIA": 2.9,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Servicio al cliente (call center / chat)",
+                "A_t": 8,
+                "R_h": 4,
+                "C_i": 5,
+                "ISIA": 2.4,
+                "Categoria": "3. Transformación híbrida / Co-piloto",
+                "Categoria_num": 3,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Asistente legal / investigación documental",
+                "A_t": 8,
+                "R_h": 6,
+                "C_i": 4,
+                "ISIA": 1.4,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Derecho",
+                "Profesiones_equivalentes_Complementarias": "Administración Pública; Contador Auditor (tributario)",
+                "SIES_CNED_Nucleo": "Derecho",
+                "CINE_F_Nucleo": "0421 Derecho",
+                "SIES_CNED_Complementarias": "Administración Pública; Contador Público y Auditor",
+                "CINE_F_Complementarias": "0413 Administración pública; 0411 Contabilidad y fiscalidad"
+            },
+            {
+                "Profesion": "Marketing digital (performance, contenidos)",
+                "A_t": 9,
+                "R_h": 4,
+                "C_i": 8,
+                "ISIA": 2.1,
+                "Categoria": "3. Transformación híbrida / Co-piloto",
+                "Categoria_num": 3,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Administración de empresas / RR.HH. (back-office)",
+                "A_t": 8,
+                "R_h": 5,
+                "C_i": 7,
+                "ISIA": 0.9,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Administración de Empresas; Técnico en Administración; Contador Auditor",
+                "Profesiones_equivalentes_Complementarias": "Ingeniería Comercial; Ingeniería en Control de Gestión",
+                "SIES_CNED_Nucleo": "Administración Pública y de Empresas; Técnico en Administración de Empresas; Contador Público y Auditor",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Ingeniería Comercial; Ingeniería en Control de Gestión",
+                "CINE_F_Complementarias": "0410 Administración y gestión"
+            },
+            {
+                "Profesion": "Periodismo / redacción de contenido",
+                "A_t": 7,
+                "R_h": 5,
+                "C_i": 7,
+                "ISIA": 0,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Periodismo/Comunicación Social; Publicidad/Marketing",
+                "Profesiones_equivalentes_Complementarias": "Letras/Lingüística; Diseño (Contenido)",
+                "SIES_CNED_Nucleo": "Periodismo y Comunicación Social; Publicidad y Marketing",
+                "CINE_F_Nucleo": "0321 Periodismo e información; 0414 Marketing y publicidad",
+                "SIES_CNED_Complementarias": "Lengua y Literatura; Diseño (Contenido) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0232 Literatura y lingüística; por validar CINE-F"
+            },
+            {
+                "Profesion": "Diseño gráfico (branding y UX)",
+                "A_t": 8,
+                "R_h": 6,
+                "C_i": 8,
+                "ISIA": -0.2,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Derecho (litigación y asesoría integral)",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 6,
+                "ISIA": -1.9,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho",
+                "Profesiones_equivalentes_Complementarias": "Administración Pública; Contador Auditor (tributario)",
+                "SIES_CNED_Nucleo": "Derecho",
+                "CINE_F_Nucleo": "0421 Derecho",
+                "SIES_CNED_Complementarias": "Administración Pública; Contador Público y Auditor",
+                "CINE_F_Complementarias": "0413 Administración pública; 0411 Contabilidad y fiscalidad"
+            },
+            {
+                "Profesion": "Psicología clínica / terapia ocupacional",
+                "A_t": 3,
+                "R_h": 9,
+                "C_i": 4,
+                "ISIA": -5.2,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Técnico en electricidad / mantención industrial",
+                "A_t": 2,
+                "R_h": 10,
+                "C_i": 3,
+                "ISIA": -6.4,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Ingeniero de software / desarrollador",
+                "A_t": 6,
+                "R_h": 6,
+                "C_i": 9,
+                "ISIA": -2.4,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software; Ingeniería de Datos; Ciencia de Datos/Estadística",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología; Ingeniería Industrial; Matemática; Física; Diseño (UX/UI)",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas; Estadística / Ciencia de Datos",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC); 0542 Estadística",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología; Ingeniería Industrial; Matemática (por validar SIES/CNED); Física (por validar SIES/CNED); Diseño (UX/UI) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra; 0714 Ingeniería industrial y procesos; por validar CINE-F"
+            },
+            {
+                "Profesion": "Analista de datos / científico de datos",
+                "A_t": 7,
+                "R_h": 6,
+                "C_i": 9,
+                "ISIA": -1.5,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Ingeniería Informática/Software; Ingeniería de Datos; Ciencia de Datos/Estadística",
+                "Profesiones_equivalentes_Complementarias": "Ingeniería Industrial; Matemática; Física; Diseño (UX/UI)",
+                "SIES_CNED_Nucleo": "Ingeniería en Informática y Sistemas; Estadística / Ciencia de Datos",
+                "CINE_F_Nucleo": "0610 Tecnologías de la información y la comunicación (TIC); 0542 Estadística",
+                "SIES_CNED_Complementarias": "Ingeniería Industrial; Matemática (por validar SIES/CNED); Física (por validar SIES/CNED); Diseño (UX/UI) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0714 Ingeniería industrial y procesos; por validar CINE-F"
+            },
+            {
+                "Profesion": "Arquitectura / BIM",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 8,
+                "ISIA": -2.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Enfermería / TENS",
+                "A_t": 4,
+                "R_h": 9,
+                "C_i": 6,
+                "ISIA": -5.1,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Medicina (clínica general / especialidades)",
+                "A_t": 4,
+                "R_h": 10,
+                "C_i": 7,
+                "ISIA": -6.2,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Docencia escolar (básica/media)",
+                "A_t": 5,
+                "R_h": 9,
+                "C_i": 7,
+                "ISIA": -4.6,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Pedagogías; Educación Parvularia/Básica/Media",
+                "Profesiones_equivalentes_Complementarias": "Psicopedagogía; Psicología Educacional; Administración Educacional",
+                "SIES_CNED_Nucleo": "Pedagogías (Básica/Media/Parvularia)",
+                "CINE_F_Nucleo": "0110 Educación",
+                "SIES_CNED_Complementarias": "Psicopedagogía (por validar SIES/CNED); Psicología; Administración Educacional (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F; 0313 Psicología"
+            },
+            {
+                "Profesion": "Docencia superior (universitaria/TP)",
+                "A_t": 6,
+                "R_h": 8,
+                "C_i": 8,
+                "ISIA": -3.4,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Pedagogías; Educación Parvularia/Básica/Media",
+                "Profesiones_equivalentes_Complementarias": "Psicopedagogía; Psicología Educacional; Administración Educacional",
+                "SIES_CNED_Nucleo": "Pedagogías (Básica/Media/Parvularia)",
+                "CINE_F_Nucleo": "0110 Educación",
+                "SIES_CNED_Complementarias": "Psicopedagogía (por validar SIES/CNED); Psicología; Administración Educacional (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F; 0313 Psicología"
+            },
+            {
+                "Profesion": "Abastecimiento / logística (planificación)",
+                "A_t": 7,
+                "R_h": 6,
+                "C_i": 7,
+                "ISIA": -0.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Ingeniería en Logística; Ingeniería Industrial; Administración de Empresas",
+                "Profesiones_equivalentes_Complementarias": "Ingeniería Comercial; Ingeniería en Operaciones",
+                "SIES_CNED_Nucleo": "Ingeniería en Logística; Ingeniería Industrial; Administración Pública y de Empresas",
+                "CINE_F_Nucleo": "0415 Gestión de transporte y logística; 0714 Ingeniería industrial y procesos; 0410 Administración y gestión",
+                "SIES_CNED_Complementarias": "Ingeniería Comercial; Ingeniería en Operaciones (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; por validar CINE-F"
+            },
+            {
+                "Profesion": "Ventas consultivas B2B",
+                "A_t": 6,
+                "R_h": 8,
+                "C_i": 7,
+                "ISIA": -3,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Atención de salud no presencial (teletriage)",
+                "A_t": 7,
+                "R_h": 7,
+                "C_i": 7,
+                "ISIA": -1.4,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Kinesiología; Fonoaudiología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Kinesiología; Fonoaudiología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación"
+            },
+            {
+                "Profesion": "Operaciones bancarias y riesgo (back-office)",
+                "A_t": 8,
+                "R_h": 6,
+                "C_i": 8,
+                "ISIA": -0.2,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Ingeniero civil (proyectos / PMO)",
+                "A_t": 5,
+                "R_h": 8,
+                "C_i": 7,
+                "ISIA": -3.9,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Minería: operación de planta / control de procesos",
+                "A_t": 5,
+                "R_h": 8,
+                "C_i": 6,
+                "ISIA": -3.5,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Técnico en administración / secretaría ejecutiva",
+                "A_t": 8,
+                "R_h": 4,
+                "C_i": 5,
+                "ISIA": 2.4,
+                "Categoria": "3. Transformación híbrida / Co-piloto",
+                "Categoria_num": 3,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Digitador/a de datos",
+                "A_t": 9,
+                "R_h": 2,
+                "C_i": 3,
+                "ISIA": 5.5,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad; Ingeniería Informática/Software; Ingeniería de Datos; Ciencia de Datos/Estadística",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte); Ingeniería Industrial; Matemática; Física; Diseño (UX/UI)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad; Ingeniería en Informática y Sistemas; Estadística / Ciencia de Datos",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad; 0610 Tecnologías de la información y la comunicación (TIC); 0542 Estadística",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED); Ingeniería Industrial; Matemática (por validar SIES/CNED); Física (por validar SIES/CNED); Diseño (UX/UI) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F; 0714 Ingeniería industrial y procesos"
+            },
+            {
+                "Profesion": "Transcriptor/a de audio a texto",
+                "A_t": 9,
+                "R_h": 2,
+                "C_i": 3,
+                "ISIA": 5.5,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Operador/a de back-office simple (formularios, ingreso masivo)",
+                "A_t": 9,
+                "R_h": 3,
+                "C_i": 3,
+                "ISIA": 4.8,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Auxiliar administrativo/a estándar",
+                "A_t": 8,
+                "R_h": 3,
+                "C_i": 4,
+                "ISIA": 3.5,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Agente de televentas altamente guionadas",
+                "A_t": 8,
+                "R_h": 3,
+                "C_i": 4,
+                "ISIA": 3.5,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Corrector/a ortográfico/a básico/a",
+                "A_t": 9,
+                "R_h": 3,
+                "C_i": 5,
+                "ISIA": 4,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Operador/a de help desk nivel 1 (script)",
+                "A_t": 8,
+                "R_h": 3,
+                "C_i": 5,
+                "ISIA": 3.1,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Capturista de encuestas online",
+                "A_t": 9,
+                "R_h": 2,
+                "C_i": 4,
+                "ISIA": 5.1,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Documentalista repetitivo (indexación simple)",
+                "A_t": 9,
+                "R_h": 3,
+                "C_i": 4,
+                "ISIA": 4.4,
+                "Categoria": "5. Riesgo crítico / Sustitución estructural",
+                "Categoria_num": 5,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Operador/a de cobranza masiva automatizable (script)",
+                "A_t": 8,
+                "R_h": 3,
+                "C_i": 5,
+                "ISIA": 3.1,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Técnico en Administración; Técnico en Secretariado Ejecutivo; Técnico en Contabilidad",
+                "Profesiones_equivalentes_Complementarias": "Administración de Empresas; Ingeniería Comercial; Contador Auditor; Periodismo/Comunicación; Técnico en Informática (Soporte)",
+                "SIES_CNED_Nucleo": "Técnico en Administración de Empresas; Técnico en Secretariado; Técnico en Contabilidad",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0416 Secretariado y trabajo de oficina; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Administración Pública y de Empresas; Ingeniería Comercial; Contador Público y Auditor; Periodismo y Comunicación Social; Técnico en Informática (Soporte) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad; 0321 Periodismo e información; por validar CINE-F"
+            },
+            {
+                "Profesion": "Contabilidad tributaria y reporting estándar",
+                "A_t": 9,
+                "R_h": 4,
+                "C_i": 6,
+                "ISIA": 2.9,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Analista de cumplimiento normativo (reglas claras)",
+                "A_t": 8,
+                "R_h": 5,
+                "C_i": 6,
+                "ISIA": 1.3,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Ejecutivo/a de atención al cliente omnicanal",
+                "A_t": 8,
+                "R_h": 4,
+                "C_i": 6,
+                "ISIA": 2,
+                "Categoria": "3. Transformación híbrida / Co-piloto",
+                "Categoria_num": 3,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Redactor/a SEO y contenidos de marketing",
+                "A_t": 9,
+                "R_h": 4,
+                "C_i": 8,
+                "ISIA": 2.1,
+                "Categoria": "3. Transformación híbrida / Co-piloto",
+                "Categoria_num": 3,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Diseñador/a de piezas gráficas estándar",
+                "A_t": 8,
+                "R_h": 5,
+                "C_i": 7,
+                "ISIA": 0.9,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Traductor/a general (no especializado)",
+                "A_t": 9,
+                "R_h": 4,
+                "C_i": 7,
+                "ISIA": 2.5,
+                "Categoria": "4. Alta reconversión / Riesgo moderado",
+                "Categoria_num": 4,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Analista de riesgo operativo (tareas repetitivas)",
+                "A_t": 8,
+                "R_h": 5,
+                "C_i": 7,
+                "ISIA": 0.9,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Asistente legal paralegal (documentación masiva)",
+                "A_t": 8,
+                "R_h": 5,
+                "C_i": 6,
+                "ISIA": 1.3,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Analista de soporte TI nivel 1–2",
+                "A_t": 7,
+                "R_h": 5,
+                "C_i": 7,
+                "ISIA": 0,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Ejecutivo/a de cobranzas con negociación básica",
+                "A_t": 8,
+                "R_h": 4,
+                "C_i": 6,
+                "ISIA": 2,
+                "Categoria": "3. Transformación híbrida / Co-piloto",
+                "Categoria_num": 3,
+                "Profesiones_equivalentes_Nucleo": "Contador Auditor; Publicidad/Marketing; Diseño Gráfico; Traducción/Interpretación; Técnico Jurídico; Técnico/Ingeniería en Informática (Soporte); Administración de Empresas; Ingeniería en Finanzas; Ingeniería en Control de Gestión",
+                "Profesiones_equivalentes_Complementarias": "Derecho; Periodismo/Comunicación; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "SIES_CNED_Nucleo": "Contador Público y Auditor; Publicidad y Marketing; Diseño Gráfico; Traducción e Interpretación; Técnico Jurídico (por validar SIES/CNED); Técnico en Informática / Redes y Soporte; Administración Pública y de Empresas; Ingeniería/Administración en Finanzas; Ingeniería en Control de Gestión",
+                "CINE_F_Nucleo": "0411 Contabilidad y fiscalidad; 0414 Marketing y publicidad; 0210 Artes; 0231 Lenguas extranjeras; por validar CINE-F; 0610 TIC; 0410 Administración y gestión; 0412 Finanzas, banca y seguros",
+                "SIES_CNED_Complementarias": "Derecho; Periodismo y Comunicación Social; Ingeniería Comercial; Ingeniería Industrial; Trabajo Social",
+                "CINE_F_Complementarias": "0421 Derecho; 0321 Periodismo e información; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0923 Trabajo social y orientación"
+            },
+            {
+                "Profesion": "Abogado/a corporativo (contratos, due diligence)",
+                "A_t": 7,
+                "R_h": 6,
+                "C_i": 7,
+                "ISIA": -0.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho",
+                "Profesiones_equivalentes_Complementarias": "Administración Pública; Contador Auditor (tributario)",
+                "SIES_CNED_Nucleo": "Derecho",
+                "CINE_F_Nucleo": "0421 Derecho",
+                "SIES_CNED_Complementarias": "Administración Pública; Contador Público y Auditor",
+                "CINE_F_Complementarias": "0413 Administración pública; 0411 Contabilidad y fiscalidad"
+            },
+            {
+                "Profesion": "Periodista de investigación con análisis de datos",
+                "A_t": 7,
+                "R_h": 6,
+                "C_i": 7,
+                "ISIA": -0.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho; Periodismo/Comunicación; Publicidad/Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología Organizacional; Ingeniería Civil/Industrial; Ingeniería en Logística; Ingeniería Informática; Ingeniería Informática/Software; Ingeniería de Datos; Ciencia de Datos/Estadística",
+                "Profesiones_equivalentes_Complementarias": "Sociología; Economía; Diseño (UX); Matemática/Estadística; Administración Pública; Ingeniería Industrial; Matemática; Física; Diseño (UX/UI)",
+                "SIES_CNED_Nucleo": "Derecho; Periodismo y Comunicación Social; Publicidad y Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología; Ingeniería Civil; Ingeniería en Logística; Ingeniería en Informática y Sistemas; Estadística / Ciencia de Datos",
+                "CINE_F_Nucleo": "0421 Derecho; 0321 Periodismo e información; 0414 Marketing y publicidad; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0731 Arquitectura y urbanismo; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0415 Gestión de transporte y logística; 0610 Tecnologías de la información y la comunicación (TIC); 0542 Estadística",
+                "SIES_CNED_Complementarias": "Sociología (por validar SIES/CNED); Economía (por validar SIES/CNED); Diseño (UX) (por validar SIES/CNED); Matemática/Estadística (por validar SIES/CNED); Administración Pública; Ingeniería Industrial; Matemática (por validar SIES/CNED); Física (por validar SIES/CNED); Diseño (UX/UI) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F; 0413 Administración pública; 0714 Ingeniería industrial y procesos"
+            },
+            {
+                "Profesion": "Planner de medios y performance",
+                "A_t": 8,
+                "R_h": 5,
+                "C_i": 8,
+                "ISIA": 0.5,
+                "Categoria": "2. Oportunidad controlada / Acelerador",
+                "Categoria_num": 2,
+                "Profesiones_equivalentes_Nucleo": "Derecho; Periodismo/Comunicación; Publicidad/Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología Organizacional; Ingeniería Civil/Industrial; Ingeniería en Logística; Ingeniería Informática",
+                "Profesiones_equivalentes_Complementarias": "Sociología; Economía; Diseño (UX); Matemática/Estadística; Administración Pública",
+                "SIES_CNED_Nucleo": "Derecho; Periodismo y Comunicación Social; Publicidad y Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología; Ingeniería Civil; Ingeniería en Logística; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0421 Derecho; 0321 Periodismo e información; 0414 Marketing y publicidad; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0731 Arquitectura y urbanismo; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0415 Gestión de transporte y logística; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Sociología (por validar SIES/CNED); Economía (por validar SIES/CNED); Diseño (UX) (por validar SIES/CNED); Matemática/Estadística (por validar SIES/CNED); Administración Pública",
+                "CINE_F_Complementarias": "por validar CINE-F; 0413 Administración pública"
+            },
+            {
+                "Profesion": "Product manager (digital)",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 8,
+                "ISIA": -2.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho; Periodismo/Comunicación; Publicidad/Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología Organizacional; Ingeniería Civil/Industrial; Ingeniería en Logística; Ingeniería Informática",
+                "Profesiones_equivalentes_Complementarias": "Sociología; Economía; Diseño (UX); Matemática/Estadística; Administración Pública",
+                "SIES_CNED_Nucleo": "Derecho; Periodismo y Comunicación Social; Publicidad y Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología; Ingeniería Civil; Ingeniería en Logística; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0421 Derecho; 0321 Periodismo e información; 0414 Marketing y publicidad; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0731 Arquitectura y urbanismo; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0415 Gestión de transporte y logística; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Sociología (por validar SIES/CNED); Economía (por validar SIES/CNED); Diseño (UX) (por validar SIES/CNED); Matemática/Estadística (por validar SIES/CNED); Administración Pública",
+                "CINE_F_Complementarias": "por validar CINE-F; 0413 Administración pública"
+            },
+            {
+                "Profesion": "Analista financiero / FP&A",
+                "A_t": 7,
+                "R_h": 6,
+                "C_i": 8,
+                "ISIA": -1.1,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho; Periodismo/Comunicación; Publicidad/Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología Organizacional; Ingeniería Civil/Industrial; Ingeniería en Logística; Ingeniería Informática",
+                "Profesiones_equivalentes_Complementarias": "Sociología; Economía; Diseño (UX); Matemática/Estadística; Administración Pública",
+                "SIES_CNED_Nucleo": "Derecho; Periodismo y Comunicación Social; Publicidad y Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología; Ingeniería Civil; Ingeniería en Logística; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0421 Derecho; 0321 Periodismo e información; 0414 Marketing y publicidad; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0731 Arquitectura y urbanismo; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0415 Gestión de transporte y logística; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Sociología (por validar SIES/CNED); Economía (por validar SIES/CNED); Diseño (UX) (por validar SIES/CNED); Matemática/Estadística (por validar SIES/CNED); Administración Pública",
+                "CINE_F_Complementarias": "por validar CINE-F; 0413 Administración pública"
+            },
+            {
+                "Profesion": "Arquitecto/a BIM con automatización",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 8,
+                "ISIA": -2.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Por validar con SIES/CNED",
+                "Profesiones_equivalentes_Complementarias": "Por validar con SIES/CNED",
+                "SIES_CNED_Nucleo": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Nucleo": "por validar CINE-F",
+                "SIES_CNED_Complementarias": "Por validar con SIES/CNED (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "por validar CINE-F"
+            },
+            {
+                "Profesion": "Consultor/a de RR.HH. (talento y analítica)",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 7,
+                "ISIA": -2.3,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Administración de Empresas; Técnico en Administración; Contador Auditor",
+                "Profesiones_equivalentes_Complementarias": "Ingeniería Comercial; Ingeniería en Control de Gestión",
+                "SIES_CNED_Nucleo": "Administración Pública y de Empresas; Técnico en Administración de Empresas; Contador Público y Auditor",
+                "CINE_F_Nucleo": "0410 Administración y gestión; 0411 Contabilidad y fiscalidad",
+                "SIES_CNED_Complementarias": "Ingeniería Comercial; Ingeniería en Control de Gestión",
+                "CINE_F_Complementarias": "0410 Administración y gestión"
+            },
+            {
+                "Profesion": "KAM / Ejecutivo/a de cuentas con IA para prospección",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 7,
+                "ISIA": -2.3,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho; Periodismo/Comunicación; Publicidad/Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología Organizacional; Ingeniería Civil/Industrial; Ingeniería en Logística; Ingeniería Informática",
+                "Profesiones_equivalentes_Complementarias": "Sociología; Economía; Diseño (UX); Matemática/Estadística; Administración Pública",
+                "SIES_CNED_Nucleo": "Derecho; Periodismo y Comunicación Social; Publicidad y Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología; Ingeniería Civil; Ingeniería en Logística; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0421 Derecho; 0321 Periodismo e información; 0414 Marketing y publicidad; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0731 Arquitectura y urbanismo; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0415 Gestión de transporte y logística; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Sociología (por validar SIES/CNED); Economía (por validar SIES/CNED); Diseño (UX) (por validar SIES/CNED); Matemática/Estadística (por validar SIES/CNED); Administración Pública",
+                "CINE_F_Complementarias": "por validar CINE-F; 0413 Administración pública"
+            },
+            {
+                "Profesion": "Abastecimiento / logística avanzada (S&OP)",
+                "A_t": 7,
+                "R_h": 6,
+                "C_i": 7,
+                "ISIA": -0.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Derecho; Periodismo/Comunicación; Publicidad/Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología Organizacional; Ingeniería Civil/Industrial; Ingeniería en Logística; Ingeniería Informática",
+                "Profesiones_equivalentes_Complementarias": "Sociología; Economía; Diseño (UX); Matemática/Estadística; Administración Pública",
+                "SIES_CNED_Nucleo": "Derecho; Periodismo y Comunicación Social; Publicidad y Marketing; Ingeniería Comercial; Ingeniería Industrial; Arquitectura; Psicología; Ingeniería Civil; Ingeniería en Logística; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0421 Derecho; 0321 Periodismo e información; 0414 Marketing y publicidad; 0410 Administración y gestión; 0714 Ingeniería industrial y procesos; 0731 Arquitectura y urbanismo; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0415 Gestión de transporte y logística; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Sociología (por validar SIES/CNED); Economía (por validar SIES/CNED); Diseño (UX) (por validar SIES/CNED); Matemática/Estadística (por validar SIES/CNED); Administración Pública",
+                "CINE_F_Complementarias": "por validar CINE-F; 0413 Administración pública"
+            },
+            {
+                "Profesion": "Ingeniero/a de procesos (mejora continua + analytics)",
+                "A_t": 6,
+                "R_h": 7,
+                "C_i": 8,
+                "ISIA": -2.7,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Ingeniería en Minas/Metalurgia; Técnico en Minas",
+                "Profesiones_equivalentes_Complementarias": "Ingeniería Civil Mecánica; Ingeniería Química; Geología",
+                "SIES_CNED_Nucleo": "Ingeniería en Minas y Metalurgia; Técnico en Minas",
+                "CINE_F_Nucleo": "0722 Minería y extracción",
+                "SIES_CNED_Complementarias": "Ingeniería Civil; Ingeniería Química (por validar SIES/CNED); Geología",
+                "CINE_F_Complementarias": "0730 Arquitectura e ingeniería civil; por validar CINE-F; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Médico/a especialista con soporte diagnóstico IA",
+                "A_t": 4,
+                "R_h": 10,
+                "C_i": 8,
+                "ISIA": -6.6,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Enfermería/TENS con documentación asistida",
+                "A_t": 4,
+                "R_h": 9,
+                "C_i": 7,
+                "ISIA": -5.5,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Docente escolar con co-docencia IA (planificación/evaluación)",
+                "A_t": 5,
+                "R_h": 9,
+                "C_i": 8,
+                "ISIA": -5,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Docente universitario con copilotos de investigación",
+                "A_t": 6,
+                "R_h": 8,
+                "C_i": 9,
+                "ISIA": -3.8,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Psicólogo/a clínico con herramientas de apoyo",
+                "A_t": 3,
+                "R_h": 9,
+                "C_i": 5,
+                "ISIA": -5.6,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Ingeniero/a civil (proyecto/PMO con IA)",
+                "A_t": 5,
+                "R_h": 8,
+                "C_i": 8,
+                "ISIA": -4.3,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Técnico/a eléctrico y mantención predictiva",
+                "A_t": 3,
+                "R_h": 9,
+                "C_i": 6,
+                "ISIA": -6,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Minería: operación y control avanzado (sala control)",
+                "A_t": 5,
+                "R_h": 8,
+                "C_i": 7,
+                "ISIA": -3.9,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Ventas consultivas B2B con IA para propuesta de valor",
+                "A_t": 6,
+                "R_h": 8,
+                "C_i": 8,
+                "ISIA": -3.4,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Medicina; Enfermería/TENS; Pedagogías; Psicología; Ingeniería Civil/Industrial; Técnico/Ingeniería Eléctrica y Mantenimiento; Ingeniería en Minas/Metalurgia; Ingeniería Comercial; Ingeniería Informática/Software",
+                "Profesiones_equivalentes_Complementarias": "Tecnologías Médicas; Fonoaudiología; Kinesiología; Trabajo Social; Administración de Empresas; Geología",
+                "SIES_CNED_Nucleo": "Medicina; Enfermería / Técnico en Enfermería; Pedagogías (Básica/Media/Parvularia); Psicología; Ingeniería Civil; Técnico en Electricidad / Mantenimiento Industrial; Ingeniería en Minas y Metalurgia; Ingeniería Comercial; Ingeniería en Informática y Sistemas",
+                "CINE_F_Nucleo": "0912 Medicina; 0913 Enfermería y atención a pacientes; 0110 Educación; 0313 Psicología; 0730 Arquitectura e ingeniería civil; 0713 Electricidad y energía; 0722 Minería y extracción; 0410 Administración y gestión; 0610 Tecnologías de la información y la comunicación (TIC)",
+                "SIES_CNED_Complementarias": "Tecnología Médica; Fonoaudiología; Kinesiología; Trabajo Social; Administración Pública y de Empresas; Geología",
+                "CINE_F_Complementarias": "0914 Diagnóstico y tratamiento médico; 0915 Terapia y rehabilitación; 0923 Trabajo social y orientación; 0410 Administración y gestión; 0532 Ciencias de la Tierra"
+            },
+            {
+                "Profesion": "Ingeniero/a de software con agentes de desarrollo",
+                "A_t": 6,
+                "R_h": 6,
+                "C_i": 10,
+                "ISIA": -2.8,
+                "Categoria": "1. Expansión y crecimiento / Bajo riesgo",
+                "Categoria_num": 1,
+                "Profesiones_equivalentes_Nucleo": "Ingeniería Informática/Software; Ingeniería de Datos; Ciencia de Datos/Estadística",
+                "Profesiones_equivalentes_Complementarias": "Ingeniería Industrial; Matemática; Física; Diseño (UX/UI)",
+                "SIES_CNED_Nucleo": "Ingeniería en Informática y Sistemas; Estadística / Ciencia de Datos",
+                "CINE_F_Nucleo": "0610 Tecnologías de la información y la comunicación (TIC); 0542 Estadística",
+                "SIES_CNED_Complementarias": "Ingeniería Industrial; Matemática (por validar SIES/CNED); Física (por validar SIES/CNED); Diseño (UX/UI) (por validar SIES/CNED)",
+                "CINE_F_Complementarias": "0714 Ingeniería industrial y procesos; por validar CINE-F"
+            }
+        ];
+
+        // Variables globales
+        let filteredProfessions = [...professionsData];
+        let sortColumn = null;
+        let sortDirection = 'asc';
+        let comparisonProfessions = [];
+        let charts = {};
+
+        // Función para inicializar la aplicación
+        function initApp() {
+            setupEventListeners();
+            populateComparisonSelects();
+            renderTable();
+            updateDashboard();
+        }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Navegación por tabs
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabName = e.target.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const tabName = e.target.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Filtros
+            document.getElementById('category-filter').addEventListener('change', applyFilters);
+            document.getElementById('isia-min').addEventListener('input', updateRangeValues);
+            document.getElementById('isia-max').addEventListener('input', updateRangeValues);
+            document.getElementById('search-input').addEventListener('input', applyFilters);
+
+            // Ordenamiento de tabla
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    const column = th.getAttribute('data-sort');
+                    sortTable(column);
+                });
+            });
+
+            // Modal
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('profession-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'profession-modal') {
+                    closeModal();
+                }
+            });
+
+            // Comparador
+            document.getElementById('comparison-select-1').addEventListener('change', updateComparison);
+            document.getElementById('comparison-select-2').addEventListener('change', updateComparison);
+            document.getElementById('comparison-select-3').addEventListener('change', updateComparison);
+            document.getElementById('clear-comparison').addEventListener('click', clearComparison);
+        }
+
+        // Cambiar entre tabs
+        function switchTab(tabName) {
+            // Actualizar navegación
+            document.querySelectorAll('.nav-link, .tab-button').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-tab') === tabName) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Actualizar contenido
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            // Actualizar dashboard si es necesario
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Actualizar valores de los rangos
+        function updateRangeValues() {
+            const minRange = document.getElementById('isia-min');
+            const maxRange = document.getElementById('isia-max');
+            const minValue = document.getElementById('isia-min-value');
+            const maxValue = document.getElementById('isia-max-value');
+
+            minValue.textContent = minRange.value;
+            maxValue.textContent = maxRange.value;
+
+            // Asegurar que el mínimo no sea mayor que el máximo
+            if (parseFloat(minRange.value) > parseFloat(maxRange.value)) {
+                if (minRange.id === 'isia-min') {
+                    maxRange.value = minRange.value;
+                    maxValue.textContent = minRange.value;
+                } else {
+                    minRange.value = maxRange.value;
+                    minValue.textContent = maxRange.value;
+                }
+            }
+
+            applyFilters();
+        }
+
+        // Aplicar filtros
+        function applyFilters() {
+            const categoryFilter = document.getElementById('category-filter').value;
+            const isiaMin = parseFloat(document.getElementById('isia-min').value);
+            const isiaMax = parseFloat(document.getElementById('isia-max').value);
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            filteredProfessions = professionsData.filter(profession => {
+                // Filtro por categoría
+                if (categoryFilter && profession.Categoria_num !== parseInt(categoryFilter)) {
+                    return false;
+                }
+
+                // Filtro por rango de ISIA
+                if (profession.ISIA < isiaMin || profession.ISIA > isiaMax) {
+                    return false;
+                }
+
+                // Filtro por búsqueda
+                if (searchTerm && !profession.Profesion.toLowerCase().includes(searchTerm)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            renderTable();
+        }
+
+        // Ordenar tabla
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+
+            // Actualizar clases CSS para indicar ordenamiento
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.getAttribute('data-sort') === column) {
+                    th.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
+
+            // Ordenar datos
+            filteredProfessions.sort((a, b) => {
+                let aVal = a[column];
+                let bVal = b[column];
+
+                // Convertir a número si es posible
+                if (!isNaN(aVal) && !isNaN(bVal)) {
+                    aVal = parseFloat(aVal);
+                    bVal = parseFloat(bVal);
+                }
+
+                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            renderTable();
+        }
+
+        // Renderizar tabla
+        function renderTable() {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = '';
+
+            filteredProfessions.forEach(profession => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><a href="#" class="profession-link" data-id="${profession.Profesion}">${profession.Profesion}</a></td>
+                    <td>${profession.A_t}</td>
+                    <td>${profession.R_h}</td>
+                    <td>${profession.C_i}</td>
+                    <td>${profession.ISIA}</td>
+                    <td><span class="category-badge category-${profession.Categoria_num}">${profession.Categoria}</span></td>
+                    <td><input type="checkbox" class="compare-checkbox" data-id="${profession.Profesion}"></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Agregar event listeners para los enlaces de profesión
+            document.querySelectorAll('.profession-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const professionName = e.target.getAttribute('data-id');
+                    showProfessionDetails(professionName);
+                });
+            });
+
+            // Agregar event listeners para los checkboxes de comparación
+            document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const professionName = e.target.getAttribute('data-id');
+                    if (e.target.checked) {
+                        addToComparison(professionName);
+                    } else {
+                        removeFromComparison(professionName);
+                    }
+                });
+            });
+        }
+
+        // Mostrar detalles de profesión en modal
+        function showProfessionDetails(professionName) {
+            const profession = professionsData.find(p => p.Profesion === professionName);
+            if (!profession) return;
+
+            document.getElementById('modal-title').textContent = profession.Profesion;
+
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3>Métricas de Impacto</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.A_t}</div>
+                            <div class="metric-label">Automatización (A_t)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.R_h}</div>
+                            <div class="metric-label">Habilidades Humanas (R_h)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.C_i}</div>
+                            <div class="metric-label">Integración (C_i)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.ISIA}</div>
+                            <div class="metric-label">ISIA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Categoría de Impacto</h3>
+                    <p><span class="category-badge category-${profession.Categoria_num}">${profession.Categoria}</span></p>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Profesiones Equivalentes Núcleo</h3>
+                    <ul class="equivalent-list">
+                        ${profession.Profesiones_equivalentes_Nucleo.split(';').map(item => `<li>${item.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Profesiones Equivalentes Complementarias</h3>
+                    <ul class="equivalent-list">
+                        ${profession.Profesiones_equivalentes_Complementarias.split(';').map(item => `<li>${item.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Códigos SIES/CNED Núcleo</h3>
+                    <ul class="equivalent-list">
+                        ${profession.SIES_CNED_Nucleo.split(';').map(item => `<li>${item.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Códigos CINE-F Núcleo</h3>
+                    <ul class="equivalent-list">
+                        ${profession.CINE_F_Nucleo.split(';').map(item => `<li>${item.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Códigos SIES/CNED Complementarias</h3>
+                    <ul class="equivalent-list">
+                        ${profession.SIES_CNED_Complementarias.split(';').map(item => `<li>${item.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Códigos CINE-F Complementarias</h3>
+                    <ul class="equivalent-list">
+                        ${profession.CINE_F_Complementarias.split(';').map(item => `<li>${item.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Gráfico de Métricas</h3>
+                    <div class="chart-container">
+                        <canvas id="profession-radar-chart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('profession-modal').classList.add('active');
+
+            // Crear gráfico radar
+            setTimeout(() => {
+                createRadarChart(profession);
+            }, 100);
+        }
+
+        // Crear gráfico radar para profesión
+        function createRadarChart(profession) {
+            const ctx = document.getElementById('profession-radar-chart').getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (charts.professionRadar) {
+                charts.professionRadar.destroy();
+            }
+
+            charts.professionRadar = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Automatización (A_t)', 'Habilidades Humanas (R_h)', 'Integración (C_i)'],
+                    datasets: [{
+                        label: profession.Profesion,
+                        data: [profession.A_t, profession.R_h, profession.C_i],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('profession-modal').classList.remove('active');
+            
+            // Destruir gráfico radar si existe
+            if (charts.professionRadar) {
+                charts.professionRadar.destroy();
+            }
+        }
+
+        // Actualizar dashboard
+        function updateDashboard() {
+            // Actualizar estadísticas
+            document.getElementById('total-professions').textContent = professionsData.length;
+            
+            const avgAt = (professionsData.reduce((sum, p) => sum + p.A_t, 0) / professionsData.length).toFixed(1);
+            document.getElementById('avg-at').textContent = avgAt;
+            
+            const avgRh = (professionsData.reduce((sum, p) => sum + p.R_h, 0) / professionsData.length).toFixed(1);
+            document.getElementById('avg-rh').textContent = avgRh;
+            
+            const avgIsia = (professionsData.reduce((sum, p) => sum + p.ISIA, 0) / professionsData.length).toFixed(1);
+            document.getElementById('avg-isia').textContent = avgIsia;
+
+            // Crear gráficos
+            createCategoryDistributionChart();
+            createAtRhScatterChart();
+            createTopIsiaChart();
+        }
+
+        // Crear gráfico de distribución por categoría
+        function createCategoryDistributionChart() {
+            const ctx = document.getElementById('category-distribution-chart').getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (charts.categoryDistribution) {
+                charts.categoryDistribution.destroy();
+            }
+
+            // Contar profesiones por categoría
+            const categoryCounts = [0, 0, 0, 0, 0];
+            professionsData.forEach(profession => {
+                categoryCounts[profession.Categoria_num - 1]++;
+            });
+
+            charts.categoryDistribution = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        'Bajo riesgo',
+                        'Acelerador',
+                        'Co-piloto',
+                        'Riesgo moderado',
+                        'Riesgo crítico'
+                    ],
+                    datasets: [{
+                        data: categoryCounts,
+                        backgroundColor: [
+                            '#10b981', // Verde
+                            '#3b82f6', // Azul claro
+                            '#eab308', // Amarillo
+                            '#f97316', // Naranja
+                            '#ef4444'  // Rojo
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Crear gráfico de dispersión Automatización vs Habilidades Humanas
+        function createAtRhScatterChart() {
+            const ctx = document.getElementById('at-rh-scatter-chart').getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (charts.atRhScatter) {
+                charts.atRhScatter.destroy();
+            }
+
+            // Preparar datos para el gráfico de dispersión
+            const scatterData = professionsData.map(profession => ({
+                x: profession.A_t,
+                y: profession.R_h,
+                profession: profession.Profesion,
+                category: profession.Categoria_num
+            }));
+
+            charts.atRhScatter = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Profesiones',
+                        data: scatterData,
+                        backgroundColor: scatterData.map(point => {
+                            switch(point.category) {
+                                case 1: return '#10b981'; // Verde
+                                case 2: return '#3b82f6'; // Azul claro
+                                case 3: return '#eab308'; // Amarillo
+                                case 4: return '#f97316'; // Naranja
+                                case 5: return '#ef4444'; // Rojo
+                                default: return '#888888';
+                            }
+                        })
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Automatización (A_t)'
+                            },
+                            min: 0,
+                            max: 10
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Habilidades Humanas (R_h)'
+                            },
+                            min: 0,
+                            max: 10
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.profession;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Crear gráfico TOP 10 profesiones por ISIA
+        function createTopIsiaChart() {
+            const ctx = document.getElementById('top-isia-chart').getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (charts.topIsia) {
+                charts.topIsia.destroy();
+            }
+
+            // Ordenar profesiones por ISIA (de mayor a menor) y tomar las 10 primeras
+            const topProfessions = [...professionsData]
+                .sort((a, b) => b.ISIA - a.ISIA)
+                .slice(0, 10)
+                .reverse();
+
+            charts.topIsia = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: topProfessions.map(p => p.Profesion),
+                    datasets: [{
+                        label: 'ISIA',
+                        data: topProfessions.map(p => p.ISIA),
+                        backgroundColor: topProfessions.map(p => {
+                            switch(p.Categoria_num) {
+                                case 1: return '#10b981'; // Verde
+                                case 2: return '#3b82f6'; // Azul claro
+                                case 3: return '#eab308'; // Amarillo
+                                case 4: return '#f97316'; // Naranja
+                                case 5: return '#ef4444'; // Rojo
+                                default: return '#888888';
+                            }
+                        })
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'ISIA'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Llenar selects de comparación
+        function populateComparisonSelects() {
+            const selects = [
+                document.getElementById('comparison-select-1'),
+                document.getElementById('comparison-select-2'),
+                document.getElementById('comparison-select-3')
+            ];
+
+            selects.forEach(select => {
+                // Guardar la opción seleccionada actualmente
+                const selectedValue = select.value;
+                
+                // Limpiar el select excepto la primera opción
+                select.innerHTML = '<option value="">Selecciona una profesión</option>';
+                
+                // Agregar opciones de profesiones
+                professionsData.forEach(profession => {
+                    const option = document.createElement('option');
+                    option.value = profession.Profesion;
+                    option.textContent = profession.Profesion;
+                    select.appendChild(option);
+                });
+                
+                // Restaurar la selección anterior si es posible
+                if (selectedValue) {
+                    select.value = selectedValue;
+                }
+            });
+        }
+
+        // Agregar a comparación
+        function addToComparison(professionName) {
+            if (comparisonProfessions.length >= 3) {
+                alert('Solo puedes comparar hasta 3 profesiones a la vez');
+                return;
+            }
+
+            if (!comparisonProfessions.includes(professionName)) {
+                comparisonProfessions.push(professionName);
+                updateComparisonUI();
+            }
+        }
+
+        // Eliminar de comparación
+        function removeFromComparison(professionName) {
+            comparisonProfessions = comparisonProfessions.filter(p => p !== professionName);
+            updateComparisonUI();
+        }
+
+        // Actualizar comparación desde selects
+        function updateComparison() {
+            const select1 = document.getElementById('comparison-select-1').value;
+            const select2 = document.getElementById('comparison-select-2').value;
+            const select3 = document.getElementById('comparison-select-3').value;
+
+            comparisonProfessions = [];
+            
+            if (select1) comparisonProfessions.push(select1);
+            if (select2) comparisonProfessions.push(select2);
+            if (select3) comparisonProfessions.push(select3);
+
+            updateComparisonUI();
+        }
+
+        // Actualizar UI de comparación
+        function updateComparisonUI() {
+            const comparisonContainer = document.getElementById('comparison-results');
+            
+            if (comparisonProfessions.length === 0) {
+                comparisonContainer.classList.remove('active');
+                return;
+            }
+
+            comparisonContainer.classList.add('active');
+            
+            // Actualizar checkboxes en la tabla
+            document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+                const professionName = checkbox.getAttribute('data-id');
+                checkbox.checked = comparisonProfessions.includes(professionName);
+            });
+
+            // Actualizar selects
+            const selects = [
+                document.getElementById('comparison-select-1'),
+                document.getElementById('comparison-select-2'),
+                document.getElementById('comparison-select-3')
+            ];
+
+            selects.forEach((select, index) => {
+                if (index < comparisonProfessions.length) {
+                    select.value = comparisonProfessions[index];
+                } else {
+                    select.value = '';
+                }
+            });
+
+            // Renderizar tarjetas de comparación
+            renderComparisonCards();
+            
+            // Actualizar gráfico de comparación
+            updateComparisonChart();
+        }
+
+        // Renderizar tarjetas de comparación
+        function renderComparisonCards() {
+            const container = document.getElementById('comparison-cards');
+            container.innerHTML = '';
+
+            comparisonProfessions.forEach(professionName => {
+                const profession = professionsData.find(p => p.Profesion === professionName);
+                if (!profession) return;
+
+                const card = document.createElement('div');
+                card.className = 'comparison-card';
+                card.innerHTML = `
+                    <h3>${profession.Profesion}</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.A_t}</div>
+                            <div class="metric-label">Automatización</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.R_h}</div>
+                            <div class="metric-label">Habilidades Humanas</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.C_i}</div>
+                            <div class="metric-label">Integración</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">${profession.ISIA}</div>
+                            <div class="metric-label">ISIA</div>
+                        </div>
+                    </div>
+                    <p><span class="category-badge category-${profession.Categoria_num}">${profession.Categoria}</span></p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Actualizar gráfico de comparación
+        function updateComparisonChart() {
+            const ctx = document.getElementById('comparison-chart').getContext('2d');
+            
+            // Destruir gráfico anterior si existe
+            if (charts.comparison) {
+                charts.comparison.destroy();
+            }
+
+            // Preparar datos para el gráfico
+            const labels = ['Automatización (A_t)', 'Habilidades Humanas (R_h)', 'Integración (C_i)', 'ISIA'];
+            const datasets = comparisonProfessions.map((professionName, index) => {
+                const profession = professionsData.find(p => p.Profesion === professionName);
+                if (!profession) return null;
+
+                const colors = [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)'
+                ];
+
+                const borderColors = [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ];
+
+                return {
+                    label: profession.Profesion,
+                    data: [profession.A_t, profession.R_h, profession.C_i, profession.ISIA],
+                    backgroundColor: colors[index],
+                    borderColor: borderColors[index],
+                    borderWidth: 1
+                };
+            }).filter(dataset => dataset !== null);
+
+            charts.comparison = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Limpiar comparación
+        function clearComparison() {
+            comparisonProfessions = [];
+            
+            // Limpiar selects
+            document.getElementById('comparison-select-1').value = '';
+            document.getElementById('comparison-select-2').value = '';
+            document.getElementById('comparison-select-3').value = '';
+            
+            // Limpiar checkboxes
+            document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            updateComparisonUI();
+        }
+
+        // Inicializar aplicación cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

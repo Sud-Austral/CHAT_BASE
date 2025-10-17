@@ -1,0 +1,165 @@
+1. Profesión
+Descripción: Nombre del puesto laboral o área profesional analizada.
+Ejemplo: "Ingreso de datos / tareas administrativas", "Psicología clínica / terapia ocupacional".
+2. A_t (Automatización)
+Descripción: Nivel de exposición a la automatización (incluyendo IA).
+Escala: Probablemente de 1 a 10 (donde 10 = máxima automatización).
+Interpretación: Mide qué tan fácilmente las tareas de la profesión pueden ser realizadas por sistemas automatizados.
+Ejemplo: "Digitador/a de datos" tiene 9 (muy alta automatizable).
+3. R_h (Habilidades Humanas)
+Descripción: Dependencia de habilidades humanas (empatía, creatividad, pensamiento crítico, etc.).
+Escala: Probablemente de 1 a 10 (donde 10 = máxima dependencia de habilidades humanas).
+Interpretación: Indica cuánto requiere la profesión de capacidades intrínsecamente humanas difíciles de automatizar.
+Ejemplo: "Psicología clínica" tiene 9 (altamente dependiente de habilidades humanas).
+4. C_i (Integración)
+Descripción: Potencial de integración con IA/automatización como herramienta de apoyo.
+Escala: Probablemente de 1 a 10 (donde 10 = máxima integración posible).
+Interpretación: Mide qué tan bien la profesión puede usar la IA para mejorar su productividad (sin ser reemplazada).
+Ejemplo: "Ingeniero de software" tiene 9 (alta integración con IA).
+5. ISIA (5 años)
+Descripción: Índice de Sustitución por IA a 5 años.
+Escala: Valores numéricos (positivos y negativos).
+Interpretación:
+Positivo: Riesgo de sustitución (ej: 5.5 = alto riesgo).
+Negativo: Oportunidad de crecimiento (ej: -6.4 = la IA crea demanda).
+Cercano a 0: Impacto neutro o transformación híbrida.
+Ejemplo: "Digitador/a de datos" tiene 5.5 (alto riesgo), mientras "Médico especialista" tiene -6.6 (oportunidad).
+6. Categoría de Impacto
+Descripción: Clasificación del riesgo/oportunidad basada en el ISIA y otras métricas.
+Categorías:
+Expansión y crecimiento / Bajo riesgo (ISIA negativo).
+Oportunidad controlada / Acelerador (ISIA ligeramente negativo o neutro).
+Transformación híbrida / Co-piloto (ISIA cercano a 0).
+Alta reconversión / Riesgo moderado (ISIA positivo moderado).
+Riesgo crítico / Sustitución estructural (ISIA alto positivo).
+Ejemplo: "Ingeniero civil" es Categoría 1, mientras "Operador de back-office simple" es Categoría 5.
+7. Profesiones equivalentes (Núcleo)
+Descripción: Profesiones con competencias similares que podrían transitar hacia la misma área o viceversa.
+Enfoque: "Núcleo" = habilidades directamente transferibles.
+Ejemplo: Para "Marketing digital", incluye "Diseño Gráfico" y "Administración de Empresas".
+8. Profesiones equivalentes (Complementarias)
+Descripción: Profesiones con habilidades secundarias que podrían apoyar o complementar la profesión principal.
+Enfoque: "Complementarias" = habilidades no centrales pero útiles.
+Ejemplo: Para "Marketing digital", incluye "Derecho" y "Trabajo Social".
+9. SIES/CNED Núcleo
+Descripción: Códigos oficiales de formación profesional (Chile) asociados a las profesiones del "Núcleo".
+SIES/CNED: Sistema de clasificación de carreras del Ministerio de Educación chileno.
+Ejemplo: "Ingeniería en Informática y Sistemas" tiene código 0610.
+10. CINE-F Núcleo
+Descripción: Códigos internacionales de formación (UNESCO) para las profesiones del "Núcleo".
+CINE-F: Clasificación Internacional Normalizada de la Educación.
+Ejemplo: "Ingeniería en Informática" tiene código 0610 (Tecnologías de la información).
+11. SIES/CNED Complementarias
+Descripción: Códigos SIES/CNED para las profesiones "Complementarias".
+Ejemplo: "Ingeniería Industrial" (complementaria en varias filas) tiene código 0714.
+12. CINE-F Complementarias
+Descripción: Códigos CINE-F para las profesiones "Complementarias".
+Ejemplo: "Trabajo Social" tiene código 0923.
+ 13: "Explicación de Valores" que detalle la lógica detrás de los números en las columnas clave 
+ (A_t, R_h, C_i, ISIA, Categoría de Impacto) para cada profesión. Esta explicación se basa en la naturaleza 
+ de las tareas y el contexto de automatización/IA.
+
+ Profesión
+Medicina
+Enfermería
+Odontología
+Psicología
+Tecnología Médica
+Kinesiología
+Fonoaudiología
+Nutrición y Dietética
+Obstetricia y Puericultura
+Terapia Ocupacional
+Química y Farmacia
+Bioquímica
+Biología Marina
+Optometría
+Medicina Veterinaria
+Ingeniería Civil
+Ingeniería Industrial
+Ingeniería en Informática
+Ingeniería Comercial
+Ingeniería en Minas
+Ingeniería Química
+Ingeniería en Electricidad
+Ingeniería en Mecánica
+Ingeniería en Construcción
+Ingeniería en Alimentos
+Ingeniería en Telecomunicaciones
+Ingeniería en Biotecnología
+Ingeniería en Materiales
+Ingeniería en Ambiental
+Ingeniería en Prevención de Riesgos
+Derecho
+Trabajo Social
+Sociología
+Antropología
+Ciencia Política
+Relaciones Internacionales
+Periodismo
+Psicopedagogía
+Filosofía
+Historia
+Geografía
+Arqueología
+Bibliotecología
+Traducción e Interpretación
+Lingüística
+Pedagogía en Educación Básica
+Pedagogía en Educación Media
+Pedagogía en Educación Parvularia
+Pedagogía en Inglés
+Pedagogía en Historia y Geografía
+Pedagogía en Matemáticas
+Pedagogía en Ciencias Naturales
+Pedagogía en Artes Visuales
+Pedagogía en Música
+Educación Diferencial
+Orientación Educacional
+Contador Auditor
+Administración de Empresas
+Administración Pública
+Economía
+Ingeniería Comercial
+Auditoría
+Control de Gestión
+Logística y Transporte
+Marketing
+Ingeniería en Finanzas
+Actuaría
+Comercio Internacional
+Gestión de Turismo
+Administración de Recursos Humanos
+Arquitectura
+Diseño Gráfico
+Diseño Industrial
+Diseño de Interiores
+Arte
+Cine
+Teatro
+Música
+Publicidad
+Comunicación Audiovisual
+Diseño de Vestuario
+Fotografía
+Danza
+Biología
+Química
+Física
+Matemáticas
+Estadística
+Agronomía
+Ingeniería Forestal
+Geología
+Oceanografía
+Ingeniería en Acuicultura
+Ingeniería Agrícola
+Horticultura
+Vitivinicultura
+Técnico en Enfermería
+Técnico en Administración
+Técnico en Contabilidad
+Técnico en Programación
+
+llename esta tabla con las profesiones que te doy.
+Dame el resultado en csv con separador de ",", ten mucho cuidado de no poner alguna coma al interior del codigo
