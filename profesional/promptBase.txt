@@ -59,7 +59,7 @@ Ejemplo: "Trabajo Social" tiene código 0923.
  (A_t, R_h, C_i, ISIA, Categoría de Impacto) para cada profesión. Esta explicación se basa en la naturaleza 
  de las tareas y el contexto de automatización/IA.
 
- Profesión
+Profesión
 Medicina
 Enfermería
 Odontología
