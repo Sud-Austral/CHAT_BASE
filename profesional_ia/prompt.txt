@@ -1,0 +1,46 @@
+Nombre,Definición
+Categoría,Clasificación general de la profesión (por ejemplo: Salud, Tecnología, Educación, Ingeniería, etc.).
+Número,Identificador único o índice de la profesión dentro del dataset.
+Profesión,Nombre de la profesión o título (por ejemplo: “Ingeniero en Informática”, “Médico General”).
+Empleabilidad al 1° Año,Porcentaje de egresados que logran empleo dentro del primer año tras titularse.
+Sueldo Promedio 4° Año,Ingreso mensual promedio (en moneda local) que obtiene un profesional con 4 años de experiencia.
+Sector,Tipo de sector en el que se desempeña la profesión (Público, Privado, Mixto, Autónomo, etc.).
+A_t_scaled,Indicador normalizado (0 a 1 o 0 a 10) del riesgo de automatización tecnológica.
+R_h_scaled,Indicador normalizado del grado de reemplazo humano posible por IA.
+C_i_scaled,Indicador normalizado del grado de complejidad intelectual o creatividad requerida (más alto = menos automatizable).
+ISIA_new,Índice Sintético de Impacto de la IA: métrica global combinada de los efectos esperados de la IA sobre la profesión.
+Categoría de Riesgo_new,Clasificación textual del riesgo (“Bajo”, “Medio”, “Alto”) según el ISIA.
+Demanda Anual Actual,Cantidad estimada de vacantes o contrataciones anuales actualmente disponibles.
+Demanda Anual Proyectada en 5 años con adopción de IA,Estimación de cuántas vacantes existirán en 5 años considerando la automatización y transformación del mercado.
+Oferta Actual,Número estimado de profesionales egresados o activos en el mercado laboral.
+Recomendación de Estudio,Consejo general (por ejemplo: “Alta conveniencia”, “Estudiar con enfoque digital”).
+Cambios Curriculares IA,Sugerencias sobre cómo adaptar los programas académicos frente a la adopción de IA.
+Tendencia de Empleo (5 años),Variación porcentual esperada del empleo en la profesión en los próximos 5 años.
+Nivel de Digitalización Actual,Escala de 0 a 10 que mide cuánto depende hoy la profesión de herramientas digitales o automatización.
+Adaptabilidad a IA (A_i),Medida de qué tan fácilmente la profesión puede integrar IA para mejorar productividad (no reemplazar).
+Requerimiento de Reentrenamiento (%),Porcentaje de profesionales que deberán adquirir nuevas competencias en los próximos 5 años.
+Satisfacción Laboral Promedio,Nivel medio de satisfacción reportado por los profesionales (escala 1–10).
+Nivel de Educación Requerido,Grado académico necesario para ejercer (Técnico, Licenciatura, Magíster, Doctorado, etc.).
+Duración Promedio de la Carrera (años),Duración típica del programa formativo.
+Edad Promedio de Ingreso Laboral,Edad promedio al inicio de la carrera profesional.
+Brecha de Género Laboral (%),Diferencia porcentual entre hombres y mujeres ocupando la profesión.
+Remuneración IA-Optimizada (Proyección),Sueldo estimado si la IA incrementa productividad sin reducir empleo.
+Remuneración con Desplazamiento por IA (Proyección),Sueldo estimado si la IA reduce la demanda de trabajadores humanos.
+Probabilidad de Sustitución por IA (%),Estimación directa del riesgo de reemplazo total o parcial por sistemas automatizados.
+Índice de Creatividad Requerida,Escala (1–10) que mide la necesidad de pensamiento creativo original en la profesión.
+Índice de Interacción Humana,Grado en que la profesión depende de interacción interpersonal, empatía o comunicación.
+IA como Complemento (%),Porcentaje de tareas que pueden mejorarse (no reemplazarse) con apoyo de IA.
+IA como Sustituto (%),Porcentaje de tareas que podrían ser reemplazadas directamente por IA.
+Tasa de Innovación del Sector,Velocidad con que el sector adopta nuevas tecnologías o prácticas (0–10).
+Demanda Global Estimada (5 años),Proyección de la demanda de profesionales a nivel global.
+Nivel de Regulación/Ética Relevante,Nivel de regulación ética o legal que podría limitar la automatización (0–10).
+Índice de Estabilidad Laboral,Estimación (0–10) de la estabilidad laboral considerando el impacto tecnológico y la volatilidad económica.
+Empleabilidad en 5 años,Proyección del porcentaje de empleabilidad dentro del primer año de egreso en un horizonte de 5 años.
+Empleabilidad en 10 años,Proyección del porcentaje de empleabilidad dentro del primer año de egreso en un horizonte de 10 años.
+Empleabilidad en 15 años,Proyección del porcentaje de empleabilidad dentro del primer año de egreso en un horizonte de 15 años.
+Demanda Anual en 5 años,Estimación del número total de vacantes o contrataciones en un horizonte de 5 años.
+Demanda Anual en 10 años,Estimación del número total de vacantes o contrataciones en un horizonte de 10 años.
+Demanda Anual en 15 años,Estimación del número total de vacantes o contrataciones en un horizonte de 15 años.
+Sueldo Promedio 4° Año en 5 años,Proyección del sueldo promedio a 4 años de experiencia en un horizonte de 5 años.
+Sueldo Promedio 4° Año en 10 años,Proyección del sueldo promedio a 4 años de experiencia en un horizonte de 10 años.
+Sueldo Promedio 4° Año en 15 años,Proyección del sueldo promedio a 4 años de experiencia en un horizonte de 15 años.

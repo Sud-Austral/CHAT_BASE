@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Profesiones - Impacto IA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-bg: #f9fafb;
+            --card-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            --hover-shadow: 0 15px 35px rgba(0,0,0,0.18);
+            --filter-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+            --dark-mode-bg: #1a202c;
+            --dark-mode-card: #2d3748;
+            --dark-mode-text: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--dark-color);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-mode-bg);
+            color: var(--dark-mode-text);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3.5rem 0;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25);
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-container .form-control {
+            padding: 0.85rem 1rem 0.85rem 3.2rem;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-container .form-control:focus {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .search-container .input-group-text {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            z-index: 10;
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        body.dark-mode .stat-card {
+            background: var(--dark-mode-card);
+            color: var(--dark-mode-text);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 3px 0 0 3px;
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: var(--success-color);
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: var(--warning-color);
+        }
+
+        .stat-card:nth-child(4)::before {
+            background: var(--danger-color);
+        }
+
+        .stat-icon {
+            font-size: 2.8rem;
+            margin-bottom: 0.85rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            background: linear-gradient(135deg, var(--dark-color) 0%, #4b5563 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode .stat-value {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        body.dark-mode .stat-label {
+            color: #a0aec0;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        body.dark-mode .filter-section {
+            background: var(--dark-mode-card);
+            color: var(--dark-mode-text);
+        }
+
+        .filter-btn {
+            padding: 0.65rem 1.5rem;
+            margin: 0.35rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        body.dark-mode .filter-btn {
+            background: var(--dark-mode-bg);
+            border-color: #4a5568;
+            color: var(--dark-mode-text);
+        }
+
+        .filter-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            transition: width 0.4s ease;
+            z-index: -1;
+            border-radius: 50px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+        }
+
+        body.dark-mode .filter-btn:hover {
+            color: white;
+        }
+
+        .filter-btn.active {
+            background-color: transparent;
+            color: white;
+            border-color: transparent;
+            box-shadow: var(--filter-shadow);
+        }
+
+        .filter-btn.active::before {
+            width: 100%;
+        }
+
+        .profession-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        body.dark-mode .profession-card {
+            background: var(--dark-mode-card);
+            color: var(--dark-mode-text);
+        }
+
+        .profession-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .card-header {
+            padding: 1.8rem;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-bottom: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        body.dark-mode .card-header {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .profession-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.6rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .profession-title {
+            color: var(--dark-mode-text);
+        }
+
+        .profession-category {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .card-body {
+            padding: 1.8rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 1.2rem;
+            background-color: #f9fafb;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        body.dark-mode .metric-item {
+            background-color: #2d3748;
+        }
+
+        .metric-item:hover {
+            background-color: #f3f4f6;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        }
+
+        body.dark-mode .metric-item:hover {
+            background-color: #4a5568;
+        }
+
+        .metric-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        body.dark-mode .metric-label {
+            color: #a0aec0;
+        }
+
+        .ia-impact {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        body.dark-mode .ia-impact {
+            border-top: 1px solid #4a5568;
+        }
+
+        .impact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .impact-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        body.dark-mode .impact-title {
+            color: var(--dark-mode-text);
+        }
+
+        .impact-value {
+            font-weight: 700;
+            padding: 0.3rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+        }
+
+        .impact-bar-container {
+            height: 12px;
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .impact-bar-container {
+            background-color: #4a5568;
+        }
+
+        .impact-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--warning-color) 50%, var(--danger-color) 100%);
+            transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 0.3rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .risk-expansion {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success-color);
+        }
+
+        .risk-moderate {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning-color);
+        }
+
+        .risk-high {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--danger-color);
+        }
+
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--dark-mode-card);
+            color: var(--dark-mode-text);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            border: none;
+            padding: 1.8rem;
+            position: relative;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        body.dark-mode .modal-body {
+            background: var(--dark-mode-card);
+            color: var(--dark-mode-text);
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .detail-section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid #e5e7eb;
+            position: relative;
+        }
+
+        body.dark-mode .detail-section-title {
+            color: var(--dark-mode-text);
+            border-bottom: 2px solid #4a5568;
+        }
+
+        .detail-section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.2s ease;
+        }
+
+        body.dark-mode .detail-row {
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .detail-row:hover {
+            background-color: rgba(99, 102, 241, 0.03);
+            margin: 0 -0.5rem;
+            padding: 0.85rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .detail-row:hover {
+            background-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        body.dark-mode .detail-label {
+            color: #a0aec0;
+        }
+
+        .detail-value {
+            color: var(--dark-color);
+            font-weight: 600;
+            max-width: 60%;
+            text-align: right;
+        }
+
+        body.dark-mode .detail-value {
+            color: var(--dark-mode-text);
+        }
+
+        .recommendation-box {
+            background-color: rgba(99, 102, 241, 0.08);
+            border-left: 5px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .recommendation-box {
+            background-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .recommendation-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+        }
+
+        .recommendation-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.6rem;
+            font-size: 1.1rem;
+        }
+
+        .recommendation-text {
+            color: var(--dark-color);
+            line-height: 1.7;
+        }
+
+        body.dark-mode .recommendation-text {
+            color: var(--dark-mode-text);
+        }
+
+        .curriculum-changes {
+            background-color: rgba(16, 185, 129, 0.08);
+            border-left: 5px solid var(--success-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .curriculum-changes {
+            background-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .curriculum-changes:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+        }
+
+        .curriculum-title {
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 0.6rem;
+            font-size: 1.1rem;
+        }
+
+        .curriculum-text {
+            color: var(--dark-color);
+            line-height: 1.7;
+        }
+
+        body.dark-mode .curriculum-text {
+            color: var(--dark-mode-text);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem;
+            color: #6b7280;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .no-results {
+            background: var(--dark-mode-card);
+            color: #a0aec0;
+        }
+
+        .no-results i {
+            font-size: 4.5rem;
+            margin-bottom: 1.2rem;
+            color: #d1d5db;
+        }
+
+        body.dark-mode .no-results i {
+            color: #4a5568;
+        }
+
+        .no-results h4 {
+            font-weight: 700;
+            color: #4b5563;
+            margin-bottom: 0.8rem;
+        }
+
+        body.dark-mode .no-results h4 {
+            color: #cbd5e0;
+        }
+
+        /* Animación de entrada para las tarjetas */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profession-card {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .profession-card:nth-child(1) { animation-delay: 0.1s; }
+        .profession-card:nth-child(2) { animation-delay: 0.2s; }
+        .profession-card:nth-child(3) { animation-delay: 0.3s; }
+        .profession-card:nth-child(4) { animation-delay: 0.4s; }
+        .profession-card:nth-child(5) { animation-delay: 0.5s; }
+        .profession-card:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Nuevos estilos para las funcionalidades añadidas */
+        .dashboard-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            height: 300px;
+            position: relative;
+        }
+
+        body.dark-mode .chart-container {
+            background: var(--dark-mode-card);
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .chart-title {
+            color: var(--dark-mode-text);
+        }
+
+        .advanced-filters {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        body.dark-mode .advanced-filters {
+            background: var(--dark-mode-card);
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .filter-label {
+            color: var(--dark-mode-text);
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        body.dark-mode .range-slider {
+            background: #4a5568;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .range-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        body.dark-mode .range-values {
+            color: #a0aec0;
+        }
+
+        .sort-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sort-select {
+            border-radius: 50px;
+            border: 2px solid #e5e7eb;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .sort-select {
+            background: var(--dark-mode-bg);
+            border-color: #4a5568;
+            color: var(--dark-mode-text);
+        }
+
+        .sort-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+        }
+
+        .sort-direction {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-direction:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .page-btn {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: var(--dark-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .page-btn {
+            background: var(--dark-mode-bg);
+            border-color: #4a5568;
+            color: var(--dark-mode-text);
+        }
+
+        .page-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .page-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .comparison-panel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        body.dark-mode .comparison-panel {
+            background: var(--dark-mode-card);
+        }
+
+        .comparison-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .comparison-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .comparison-title {
+            color: var(--dark-mode-text);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.75rem;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        body.dark-mode .comparison-table th,
+        body.dark-mode .comparison-table td {
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .comparison-table th {
+            background: #f9fafb;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .comparison-table th {
+            background: #2d3748;
+            color: var(--dark-mode-text);
+        }
+
+        .comparison-table td {
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .comparison-table td {
+            color: var(--dark-mode-text);
+        }
+
+        .profession-checkbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-btn {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .view-btn {
+            background: var(--dark-mode-bg);
+            border-color: #4a5568;
+            color: var(--dark-mode-text);
+        }
+
+        .view-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .table-view {
+            display: none;
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .table-view th,
+        .table-view td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        body.dark-mode .table-view th,
+        body.dark-mode .table-view td {
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .table-view th {
+            background: #f9fafb;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        body.dark-mode .table-view th {
+            background: #2d3748;
+            color: var(--dark-mode-text);
+        }
+
+        .table-view tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        body.dark-mode .table-view tr:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: var(--dark-color);
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            cursor: help;
+            margin-left: 0.25rem;
+        }
+
+        body.dark-mode .tooltip-icon {
+            background: #4a5568;
+            color: var(--dark-mode-text);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .metric-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .hero-section {
+                padding: 2.5rem 0;
+                border-radius: 0 0 20px 20px;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .filter-btn {
+                padding: 0.5rem 1.2rem;
+                margin: 0.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .profession-title {
+                font-size: 1.3rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .dashboard-charts {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container hero-content">
+            <h1 class="text-center mb-3 fw-bold">Análisis de Profesiones en la Era de la IA</h1>
+            <p class="text-center mb-4 fs-5">Explora el impacto de la inteligencia artificial en diferentes carreras profesionales</p>
+            <div class="search-container">
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar profesión...">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Dashboard con Gráficos -->
+        <div class="dashboard-charts" id="dashboardCharts">
+            <div class="chart-container">
+                <h3 class="chart-title">Distribución por Categoría</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Top 10 Salarios Promedio</h3>
+                <canvas id="salaryChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Tendencia de Demanda</h3>
+                <canvas id="demandChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Estadísticas Generales -->
+        <div class="stats-container" id="statsContainer">
+            <!-- Las estadísticas se generarán dinámicamente -->
+        </div>
+
+        <!-- Filtros Avanzados -->
+        <div class="advanced-filters">
+            <h5 class="mb-3 fw-bold">Filtros Avanzados</h5>
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="filter-group">
+                        <label class="filter-label">Categoría</label>
+                        <select class="form-select" id="categoryFilter">
+                            <option value="Todas">Todas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="filter-group">
+                        <label class="filter-label">Rango Salarial (CLP)</label>
+                        <input type="range" class="range-slider" id="salaryRange" min="0" max="5000000" step="100000" value="5000000">
+                        <div class="range-values">
+                            <span>$0</span>
+                            <span id="salaryValue">$5,000,000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="filter-group">
+                        <label class="filter-label">Empleabilidad (%)</label>
+                        <input type="range" class="range-slider" id="employabilityRange" min="0" max="100" step="5" value="100">
+                        <div class="range-values">
+                            <span>0%</span>
+                            <span id="employabilityValue">100%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="filter-group">
+                        <label class="filter-label">Riesgo IA</label>
+                        <select class="form-select" id="riskFilter">
+                            <option value="Todas">Todas</option>
+                            <option value="Expansión">Expansión</option>
+                            <option value="Moderado">Moderado</option>
+                            <option value="Alto Riesgo">Alto Riesgo</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles de Ordenamiento -->
+        <div class="sort-controls">
+            <label class="filter-label">Ordenar por:</label>
+            <select class="sort-select" id="sortSelect">
+                <option value="salary">Salario</option>
+                <option value="employability">Empleabilidad</option>
+                <option value="demand">Demanda</option>
+                <option value="risk">Impacto IA</option>
+            </select>
+            <button class="sort-direction" id="sortDirection">
+                <i class="bi bi-arrow-down"></i>
+            </button>
+        </div>
+
+        <!-- Panel de Comparación -->
+        <div class="comparison-panel" id="comparisonPanel">
+            <div class="comparison-header">
+                <h3 class="comparison-title">Comparación de Profesiones</h3>
+                <button class="btn btn-sm btn-outline-secondary" id="clearComparison">Limpiar</button>
+            </div>
+            <div class="table-responsive">
+                <table class="comparison-table" id="comparisonTable">
+                    <thead>
+                        <tr>
+                            <th>Profesión</th>
+                            <th>Categoría</th>
+                            <th>Salario</th>
+                            <th>Empleabilidad</th>
+                            <th>Demanda Actual</th>
+                            <th>Demanda 5 años</th>
+                            <th>Impacto IA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonTableBody">
+                        <!-- Las filas se generarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Toggle de Vista -->
+        <div class="view-toggle">
+            <button class="view-btn active" id="cardViewBtn">
+                <i class="bi bi-grid-3x3-gap"></i>
+            </button>
+            <button class="view-btn" id="tableViewBtn">
+                <i class="bi bi-list-ul"></i>
+            </button>
+        </div>
+
+        <!-- Vista de Tarjetas -->
+        <div id="cardViewContainer" class="row">
+            <!-- Las tarjetas se generarán dinámicamente -->
+        </div>
+
+        <!-- Vista de Tabla -->
+        <table class="table-view" id="tableView">
+            <thead>
+                <tr>
+                    <th>Profesión</th>
+                    <th>Categoría</th>
+                    <th>Salario</th>
+                    <th>Empleabilidad</th>
+                    <th>Demanda Actual</th>
+                    <th>Impacto IA</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Las filas se generarán dinámicamente -->
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <div class="pagination-container">
+            <div class="pagination" id="pagination">
+                <!-- Los botones se generarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles -->
+    <div class="modal fade" id="professionModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Detalles de la Profesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Los detalles se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de Cambio de Tema -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="bi bi-moon-stars"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="registros.js"></script>
+
+    <script>
+        // Variables globales
+        let filteredProfessions = [...profesionArray];
+        let activeCategory = 'Todas';
+        let currentPage = 1;
+        const itemsPerPage = 12;
+        let sortField = 'salary';
+        let sortDirection = 'desc';
+        let comparisonList = [];
+        let currentView = 'card';
+        let isDarkMode = false;
+
+        // Formatear moneda
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Obtener categorías únicas
+        function getUniqueCategories() {
+            const categories = profesionArray.map(p => p.categoria);
+            return ['Todas', ...new Set(categories)];
+        }
+
+        // Generar estadísticas generales
+        function generateStats() {
+            const statsContainer = document.getElementById('statsContainer');
+            const totalProfessions = profesionArray.length;
+            const avgEmployability = Math.round(profesionArray.reduce((sum, p) => sum + (p.empleabilidad_1_ano * 100), 0) / totalProfessions);
+            const avgSalary = Math.round(profesionArray.reduce((sum, p) => sum + p.sueldo_promedio_4_ano, 0) / totalProfessions);
+            const avgDemand = Math.round(profesionArray.reduce((sum, p) => sum + p.demanda_anual_actual, 0) / totalProfessions);
+
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon text-primary">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <div class="stat-value">${totalProfessions}</div>
+                    <div class="stat-label">Profesiones Analizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-success">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <div class="stat-value">${avgEmployability}%</div>
+                    <div class="stat-label">Empleabilidad Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-warning">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div class="stat-value">${formatCurrency(avgSalary)}</div>
+                    <div class="stat-label">Salario Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-info">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="stat-value">${avgDemand.toLocaleString()}</div>
+                    <div class="stat-label">Demanda Promedio</div>
+                </div>
+            `;
+        }
+
+        // Generar filtros de categoría
+        function generateCategoryFilters() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categories = getUniqueCategories();
+
+            categoryFilter.innerHTML = categories.map(cat => 
+                `<option value="${cat}" ${cat === 'Todas' ? 'selected' : ''}>${cat}</option>`
+            ).join('');
+        }
+
+        // Generar gráficos del dashboard
+        function generateDashboardCharts() {
+            // Gráfico de distribución por categoría
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            const categoryData = {};
+            
+            profesionArray.forEach(p => {
+                if (categoryData[p.categoria]) {
+                    categoryData[p.categoria]++;
+                } else {
+                    categoryData[p.categoria] = 1;
+                }
+            });
+            
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: [
+                            '#6366f1',
+                            '#8b5cf6',
+                            '#ec4899',
+                            '#f43f5e',
+                            '#f59e0b',
+                            '#10b981',
+                            '#06b6d4',
+                            '#0ea5e9'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de top 10 salarios
+            const salaryCtx = document.getElementById('salaryChart').getContext('2d');
+            const topSalaries = [...profesionArray]
+                .sort((a, b) => b.sueldo_promedio_4_ano - a.sueldo_promedio_4_ano)
+                .slice(0, 10);
+            
+            new Chart(salaryCtx, {
+                type: 'bar',
+                data: {
+                    labels: topSalaries.map(p => p.profesion),
+                    datasets: [{
+                        label: 'Salario Promedio',
+                        data: topSalaries.map(p => p.sueldo_promedio_4_ano),
+                        backgroundColor: '#6366f1',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de tendencia de demanda
+            const demandCtx = document.getElementById('demandChart').getContext('2d');
+            const categories = [...new Set(profesionArray.map(p => p.categoria))].slice(0, 5);
+            
+            const datasets = categories.map((category, index) => {
+                const professionsInCategory = profesionArray.filter(p => p.categoria === category);
+                const avgDemandCurrent = professionsInCategory.reduce((sum, p) => sum + p.demanda_anual_actual, 0) / professionsInCategory.length;
+                const avgDemandFuture = professionsInCategory.reduce((sum, p) => sum + p.demanda_anual_5_anos_ia, 0) / professionsInCategory.length;
+                
+                return {
+                    label: category,
+                    data: [avgDemandCurrent, avgDemandFuture],
+                    borderColor: [
+                        '#6366f1',
+                        '#8b5cf6',
+                        '#ec4899',
+                        '#f43f5e',
+                        '#f59e0b'
+                    ][index],
+                    backgroundColor: [
+                        '#6366f1',
+                        '#8b5cf6',
+                        '#ec4899',
+                        '#f43f5e',
+                        '#f59e0b'
+                    ][index],
+                    tension: 0.4
+                };
+            });
+            
+            new Chart(demandCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Actual', '5 años'],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Aplicar filtros avanzados
+        function applyAdvancedFilters() {
+            const category = document.getElementById('categoryFilter').value;
+            const maxSalary = parseInt(document.getElementById('salaryRange').value);
+            const minEmployability = parseInt(document.getElementById('employabilityRange').value);
+            const risk = document.getElementById('riskFilter').value;
+            
+            filteredProfessions = profesionArray.filter(p => {
+                const categoryMatch = category === 'Todas' || p.categoria === category;
+                const salaryMatch = p.sueldo_promedio_4_ano <= maxSalary;
+                const employabilityMatch = (p.empleabilidad_1_ano * 100) >= minEmployability;
+                const riskMatch = risk === 'Todas' || p.categoria_riesgo_new === risk;
+                
+                return categoryMatch && salaryMatch && employabilityMatch && riskMatch;
+            });
+            
+            // Aplicar ordenamiento
+            applySorting();
+            
+            // Resetear paginación
+            currentPage = 1;
+            
+            // Renderizar vista actual
+            renderCurrentView();
+        }
+
+        // Aplicar ordenamiento
+        function applySorting() {
+            filteredProfessions.sort((a, b) => {
+                let valueA, valueB;
+                
+                switch (sortField) {
+                    case 'salary':
+                        valueA = a.sueldo_promedio_4_ano;
+                        valueB = b.sueldo_promedio_4_ano;
+                        break;
+                    case 'employability':
+                        valueA = a.empleabilidad_1_ano;
+                        valueB = b.empleabilidad_1_ano;
+                        break;
+                    case 'demand':
+                        valueA = a.demanda_anual_actual;
+                        valueB = b.demanda_anual_actual;
+                        break;
+                    case 'risk':
+                        valueA = a.isia_new;
+                        valueB = b.isia_new;
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                if (sortDirection === 'asc') {
+                    return valueA - valueB;
+                } else {
+                    return valueB - valueA;
+                }
+            });
+        }
+
+        // Renderizar vista actual
+        function renderCurrentView() {
+            if (currentView === 'card') {
+                renderCardView();
+            } else {
+                renderTableView();
+            }
+            
+            renderPagination();
+        }
+
+        // Renderizar vista de tarjetas
+        function renderCardView() {
+            const container = document.getElementById('cardViewContainer');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedProfessions = filteredProfessions.slice(start, end);
+            
+            if (paginatedProfessions.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="no-results">
+                            <i class="bi bi-search"></i>
+                            <h4>No se encontraron profesiones</h4>
+                            <p>Intenta con otra búsqueda o categoría</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = paginatedProfessions.map((profession, index) => {
+                // Calcular porcentaje de riesgo basado en ISIA
+                const riskPercentage = Math.min(100, Math.max(0, Math.abs(profession.isia_new) * 10));
+                
+                // Determinar clase de riesgo
+                let riskClass = "risk-moderate";
+                if (profession.categoria_riesgo_new.includes("Expansión")) {
+                    riskClass = "risk-expansion";
+                } else if (profession.categoria_riesgo_new.includes("Alto") || profession.categoria_riesgo_new.includes("Riesgo")) {
+                    riskClass = "risk-high";
+                }
+                
+                // Verificar si está en la lista de comparación
+                const isChecked = comparisonList.some(p => p.profesion === profession.profesion);
+                
+                return `
+                    <div class="col-lg-6 col-xl-4">
+                        <div class="profession-card" onclick="showProfessionDetails('${profession.profesion}')">
+                            <input type="checkbox" class="profession-checkbox" 
+                                   ${isChecked ? 'checked' : ''} 
+                                   onclick="event.stopPropagation(); toggleComparison('${profession.profesion}')">
+                            <div class="card-header">
+                                <h3 class="profession-title">${profession.profesion}</h3>
+                                <span class="profession-category">${profession.categoria}</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="metric-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value text-success">${Math.round(profession.empleabilidad_1_ano * 100)}%</div>
+                                        <div class="metric-label">Empleabilidad</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value text-warning">${formatCurrency(profession.sueldo_promedio_4_ano)}</div>
+                                        <div class="metric-label">Salario Promedio</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value text-info">${profession.demanda_anual_actual.toLocaleString()}</div>
+                                        <div class="metric-label">Demanda Actual</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value text-primary">${profession.demanda_anual_5_anos_ia.toLocaleString()}</div>
+                                        <div class="metric-label">Demanda 5 años</div>
+                                    </div>
+                                </div>
+                                <div class="ia-impact">
+                                    <div class="impact-header">
+                                        <span class="impact-title">Impacto IA</span>
+                                        <span class="risk-badge ${riskClass}">${profession.categoria_riesgo_new}</span>
+                                    </div>
+                                    <div class="impact-bar-container">
+                                        <div class="impact-bar" style="width: ${riskPercentage}%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="small text-muted">ISIA: ${profession.isia_new.toFixed(1)}</span>
+                                        <span class="small fw-bold">Oferta: ${profession.oferta_actual.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Renderizar vista de tabla
+        function renderTableView() {
+            const tableBody = document.getElementById('tableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedProfessions = filteredProfessions.slice(start, end);
+            
+            if (paginatedProfessions.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="bi bi-search d-block fs-1 text-muted mb-2"></i>
+                            <p class="mb-0">No se encontraron profesiones</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = paginatedProfessions.map(profession => {
+                // Determinar clase de riesgo
+                let riskClass = "risk-moderate";
+                if (profession.categoria_riesgo_new.includes("Expansión")) {
+                    riskClass = "risk-expansion";
+                } else if (profession.categoria_riesgo_new.includes("Alto") || profession.categoria_riesgo_new.includes("Riesgo")) {
+                    riskClass = "risk-high";
+                }
+                
+                // Verificar si está en la lista de comparación
+                const isChecked = comparisonList.some(p => p.profesion === profession.profesion);
+                
+                return `
+                    <tr>
+                        <td>${profession.profesion}</td>
+                        <td>${profession.categoria}</td>
+                        <td>${formatCurrency(profession.sueldo_promedio_4_ano)}</td>
+                        <td>${Math.round(profession.empleabilidad_1_ano * 100)}%</td>
+                        <td>${profession.demanda_anual_actual.toLocaleString()}</td>
+                        <td>
+                            <span class="risk-badge ${riskClass}">${profession.categoria_riesgo_new}</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" onclick="showProfessionDetails('${profession.profesion}')">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="toggleComparison('${profession.profesion}')">
+                                    <i class="bi ${isChecked ? 'bi-check-square-fill' : 'bi-square'}"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Renderizar paginación
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredProfessions.length / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let paginationHTML = '';
+            
+            // Botón anterior
+            paginationHTML += `
+                <button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" 
+                        onclick="changePage(${currentPage - 1})" 
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            `;
+            
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    paginationHTML += `
+                        <button class="page-btn ${i === currentPage ? 'active' : ''}" 
+                                onclick="changePage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationHTML += `<span class="page-btn disabled">...</span>`;
+                }
+            }
+            
+            // Botón siguiente
+            paginationHTML += `
+                <button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" 
+                        onclick="changePage(${currentPage + 1})" 
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        // Cambiar página
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredProfessions.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderCurrentView();
+            
+            // Scroll al inicio de la lista
+            document.getElementById(currentView === 'card' ? 'cardViewContainer' : 'tableView').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        // Buscar profesiones con debounce
+        let searchTimeout;
+        function searchProfessions(query) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const searchTerm = query.toLowerCase();
+                
+                if (searchTerm === '') {
+                    applyAdvancedFilters();
+                    return;
+                }
+                
+                filteredProfessions = profesionArray.filter(p => 
+                    p.profesion.toLowerCase().includes(searchTerm) ||
+                    p.sector.toLowerCase().includes(searchTerm) ||
+                    p.categoria.toLowerCase().includes(searchTerm)
+                );
+                
+                // Aplicar ordenamiento
+                applySorting();
+                
+                // Resetear paginación
+                currentPage = 1;
+                
+                // Renderizar vista actual
+                renderCurrentView();
+            }, 300);
+        }
+
+        // Alternar comparación
+        function toggleComparison(professionName) {
+            const profession = profesionArray.find(p => p.profesion === professionName);
+            if (!profession) return;
+            
+            const index = comparisonList.findIndex(p => p.profesion === professionName);
+            
+            if (index === -1) {
+                // Agregar a la lista (máximo 3)
+                if (comparisonList.length < 3) {
+                    comparisonList.push(profession);
+                } else {
+                    alert('Solo puedes comparar hasta 3 profesiones a la vez');
+                }
+            } else {
+                // Eliminar de la lista
+                comparisonList.splice(index, 1);
+            }
+            
+            // Actualizar vista
+            renderCurrentView();
+            updateComparisonPanel();
+        }
+
+        // Actualizar panel de comparación
+        function updateComparisonPanel() {
+            const panel = document.getElementById('comparisonPanel');
+            const tableBody = document.getElementById('comparisonTableBody');
+            
+            if (comparisonList.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+            
+            panel.style.display = 'block';
+            
+            tableBody.innerHTML = comparisonList.map(profession => {
+                // Determinar clase de riesgo
+                let riskClass = "risk-moderate";
+                if (profession.categoria_riesgo_new.includes("Expansión")) {
+                    riskClass = "risk-expansion";
+                } else if (profession.categoria_riesgo_new.includes("Alto") || profession.categoria_riesgo_new.includes("Riesgo")) {
+                    riskClass = "risk-high";
+                }
+                
+                return `
+                    <tr>
+                        <td>${profession.profesion}</td>
+                        <td>${profession.categoria}</td>
+                        <td>${formatCurrency(profession.sueldo_promedio_4_ano)}</td>
+                        <td>${Math.round(profession.empleabilidad_1_ano * 100)}%</td>
+                        <td>${profession.demanda_anual_actual.toLocaleString()}</td>
+                        <td>${profession.demanda_anual_5_anos_ia.toLocaleString()}</td>
+                        <td><span class="risk-badge ${riskClass}">${profession.categoria_riesgo_new}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Limpiar comparación
+        function clearComparison() {
+            comparisonList = [];
+            renderCurrentView();
+            updateComparisonPanel();
+        }
+
+        // Mostrar detalles de la profesión en modal
+        function showProfessionDetails(profesionName) {
+            const profession = profesionArray.find(p => p.profesion === profesionName);
+            if (!profession) return;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = profession.profesion;
+
+            // Determinar clase de riesgo
+            let riskClass = "risk-moderate";
+            if (profession.categoria_riesgo_new.includes("Expansión")) {
+                riskClass = "risk-expansion";
+            } else if (profession.categoria_riesgo_new.includes("Alto") || profession.categoria_riesgo_new.includes("Riesgo")) {
+                riskClass = "risk-high";
+            }
+
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h5 class="detail-section-title">Información General</h5>
+                    <div class="detail-row">
+                        <span class="detail-label">Categoría:</span>
+                        <span class="detail-value">${profession.categoria}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Sector:</span>
+                        <span class="detail-value">${profession.sector}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Categoría de Riesgo IA:</span>
+                        <span class="detail-value"><span class="risk-badge ${riskClass}">${profession.categoria_riesgo_new}</span></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Índice ISIA:</span>
+                        <span class="detail-value">${profession.isia_new.toFixed(1)}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h5 class="detail-section-title">Indicadores Laborales</h5>
+                    <div class="detail-row">
+                        <span class="detail-label">Empleabilidad 1 año:</span>
+                        <span class="detail-value">${Math.round(profession.empleabilidad_1_ano * 100)}%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Salario Promedio:</span>
+                        <span class="detail-value">${formatCurrency(profession.sueldo_promedio_4_ano)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Demanda Actual:</span>
+                        <span class="detail-value">${profession.demanda_anual_actual.toLocaleString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Demanda 5 años (IA):</span>
+                        <span class="detail-value">${profession.demanda_anual_5_anos_ia.toLocaleString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Oferta Actual:</span>
+                        <span class="detail-value">${profession.oferta_actual.toLocaleString()}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <h5 class="detail-section-title">Impacto de IA</h5>
+                    <div class="detail-row">
+                        <span class="detail-label">Automatización (A/T):</span>
+                        <span class="detail-value">${profession.a_t_scaled}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Interacción Humana (R/H):</span>
+                        <span class="detail-value">${profession.r_h_scaled}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Creatividad e Inteligencia (C/I):</span>
+                        <span class="detail-value">${profession.c_i_scaled}</span>
+                    </div>
+                </div>
+                
+                <div class="recommendation-box">
+                    <div class="recommendation-title">Recomendación de Estudio</div>
+                    <div class="recommendation-text">${profession.recomendacion_estudio}</div>
+                </div>
+                
+                <div class="curriculum-changes">
+                    <div class="curriculum-title">Cambios Curriculares Sugeridos por IA</div>
+                    <div class="curriculum-text">${profession.cambios_curriculares_ia}</div>
+                </div>
+            `;
+
+            const modal = new bootstrap.Modal(document.getElementById('professionModal'));
+            modal.show();
+        }
+
+        // Cambiar tema
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            
+            const themeIcon = document.querySelector('#themeToggle i');
+            themeIcon.className = isDarkMode ? 'bi bi-sun' : 'bi bi-moon-stars';
+            
+            // Actualizar gráficos si existen
+            updateChartsTheme();
+        }
+
+        // Actualizar tema de gráficos
+        function updateChartsTheme() {
+            Chart.defaults.color = isDarkMode ? '#e2e8f0' : '#4b5563';
+            
+            // Actualizar gráficos existentes
+            const charts = Chart.instances;
+            for (let id in charts) {
+                charts[id].update();
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generar contenido inicial
+            generateStats();
+            generateCategoryFilters();
+            generateDashboardCharts();
+            renderCurrentView();
+            
+            // Event listeners para filtros
+            document.getElementById('categoryFilter').addEventListener('change', applyAdvancedFilters);
+            document.getElementById('salaryRange').addEventListener('input', (e) => {
+                document.getElementById('salaryValue').textContent = formatCurrency(parseInt(e.target.value));
+                applyAdvancedFilters();
+            });
+            document.getElementById('employabilityRange').addEventListener('input', (e) => {
+                document.getElementById('employabilityValue').textContent = e.target.value + '%';
+                applyAdvancedFilters();
+            });
+            document.getElementById('riskFilter').addEventListener('change', applyAdvancedFilters);
+            
+            // Event listener para búsqueda
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchProfessions(e.target.value);
+            });
+            
+            // Event listeners para ordenamiento
+            document.getElementById('sortSelect').addEventListener('change', (e) => {
+                sortField = e.target.value;
+                applyAdvancedFilters();
+            });
+            
+            document.getElementById('sortDirection').addEventListener('click', () => {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                document.querySelector('#sortDirection i').className = 
+                    sortDirection === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down';
+                applyAdvancedFilters();
+            });
+            
+            // Event listeners para vista
+            document.getElementById('cardViewBtn').addEventListener('click', () => {
+                currentView = 'card';
+                document.getElementById('cardViewBtn').classList.add('active');
+                document.getElementById('tableViewBtn').classList.remove('active');
+                document.getElementById('cardViewContainer').style.display = 'flex';
+                document.getElementById('tableView').style.display = 'none';
+                renderCurrentView();
+            });
+            
+            document.getElementById('tableViewBtn').addEventListener('click', () => {
+                currentView = 'table';
+                document.getElementById('tableViewBtn').classList.add('active');
+                document.getElementById('cardViewBtn').classList.remove('active');
+                document.getElementById('cardViewContainer').style.display = 'none';
+                document.getElementById('tableView').style.display = 'table';
+                renderCurrentView();
+            });
+            
+            // Event listener para limpiar comparación
+            document.getElementById('clearComparison').addEventListener('click', clearComparison);
+            
+            // Event listener para tema
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Inicializar vista
+            document.getElementById('cardViewContainer').style.display = 'flex';
+            document.getElementById('tableView').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Profesiones - Impacto IA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-bg: #f9fafb;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profession-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+
+        .profession-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .profession-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .profession-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ia-impact {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .impact-bar {
+            flex: 1;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .impact-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, var(--warning-color) 50%, var(--danger-color) 100%);
+            transition: width 0.5s ease;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .detail-value {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .metric-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="text-center mb-4">Análisis de Profesiones en la Era de la IA</h1>
+            <p class="text-center mb-4">Explora el impacto de la inteligencia artificial en diferentes carreras profesionales</p>
+            <div class="search-container">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Buscar profesión...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Estadísticas Generales -->
+        <div class="stats-container" id="statsContainer">
+            <!-- Las estadísticas se generarán dinámicamente -->
+        </div>
+
+        <!-- Filtros -->
+        <div class="filter-section">
+            <h5 class="mb-3">Filtrar por categoría</h5>
+            <div id="categoryFilters">
+                <!-- Los filtros se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Contenedor de Tarjetas -->
+        <div id="professionsContainer" class="row">
+            <!-- Las tarjetas se generarán dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Modal de Detalles -->
+    <div class="modal fade" id="professionModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Detalles de la Profesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Los detalles se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="registros.js"></script>
+
+    <script>
+        let filteredProfessions = [...profesionArray];
+        let activeCategory = 'Todas';
+
+        // Formatear moneda
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('es-ES', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Obtener categorías únicas
+        function getUniqueCategories() {
+            const categories = profesionArray.map(p => p.categoria);
+            return ['Todas', ...new Set(categories)];
+        }
+
+        // Generar estadísticas generales
+        function generateStats() {
+            const statsContainer = document.getElementById('statsContainer');
+            const totalProfessions = profesionArray.length;
+            const avgEmployability = Math.round(profesionArray.reduce((sum, p) => sum + p.empleabilidad_1_anio, 0) / totalProfessions);
+            const avgSalary = Math.round(profesionArray.reduce((sum, p) => sum + p.sueldo_promedio_4_anio, 0) / totalProfessions);
+            const avgIAComplement = Math.round(profesionArray.reduce((sum, p) => sum + p.ia_como_complemento_pct, 0) / totalProfessions);
+
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon text-primary">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <div class="stat-value">${totalProfessions}</div>
+                    <div class="stat-label">Profesiones Analizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-success">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <div class="stat-value">${avgEmployability}%</div>
+                    <div class="stat-label">Empleabilidad Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-warning">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div class="stat-value">${formatCurrency(avgSalary)}</div>
+                    <div class="stat-label">Salario Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-info">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <div class="stat-value">${avgIAComplement}%</div>
+                    <div class="stat-label">IA como Complemento</div>
+                </div>
+            `;
+        }
+
+        // Generar filtros de categoría
+        function generateCategoryFilters() {
+            const filtersContainer = document.getElementById('categoryFilters');
+            const categories = getUniqueCategories();
+
+            filtersContainer.innerHTML = categories.map(cat => `
+                <button class="filter-btn ${cat === 'Todas' ? 'active' : ''}" 
+                        onclick="filterByCategory('${cat}')">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        // Filtrar por categoría
+        function filterByCategory(category) {
+            activeCategory = category;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === category) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Filtrar profesiones
+            if (category === 'Todas') {
+                filteredProfessions = [...profesionArray];
+            } else {
+                filteredProfessions = profesionArray.filter(p => p.categoria === category);
+            }
+
+            renderProfessions();
+        }
+
+        // Buscar profesiones
+        function searchProfessions(query) {
+            const searchTerm = query.toLowerCase();
+            
+            if (activeCategory === 'Todas') {
+                filteredProfessions = profesionArray.filter(p => 
+                    p.profesion.toLowerCase().includes(searchTerm) ||
+                    p.sector.toLowerCase().includes(searchTerm)
+                );
+            } else {
+                filteredProfessions = profesionArray.filter(p => 
+                    p.categoria === activeCategory &&
+                    (p.profesion.toLowerCase().includes(searchTerm) ||
+                     p.sector.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            renderProfessions();
+        }
+
+        // Renderizar tarjetas de profesiones
+        function renderProfessions() {
+            const container = document.getElementById('professionsContainer');
+            
+            if (filteredProfessions.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-search display-1 text-muted"></i>
+                        <h4 class="mt-3 text-muted">No se encontraron profesiones</h4>
+                        <p class="text-muted">Intenta con otra búsqueda o categoría</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProfessions.map(profession => `
+                <div class="col-lg-6 col-xl-4">
+                    <div class="profession-card" onclick="showProfessionDetails(${profession.numero})">
+                        <div class="card-header">
+                            <h3 class="profession-title">${profession.profesion}</h3>
+                            <span class="profession-category">${profession.categoria}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-value text-success">${profession.empleabilidad_1_anio}%</div>
+                                    <div class="metric-label">Empleabilidad</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-value text-warning">${formatCurrency(profession.sueldo_promedio_4_anio)}</div>
+                                    <div class="metric-label">Salario Promedio</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-value text-info">${profession.ia_como_complemento_pct}%</div>
+                                    <div class="metric-label">IA Complemento</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-value text-danger">${profession.probabilidad_sustitucion_ia_pct}%</div>
+                                    <div class="metric-label">Riesgo IA</div>
+                                </div>
+                            </div>
+                            <div class="ia-impact">
+                                <span class="text-muted small">Impacto IA:</span>
+                                <div class="impact-bar">
+                                    <div class="impact-fill" style="width: ${profession.probabilidad_sustitucion_ia_pct}%"></div>
+                                </div>
+                                <span class="small fw-bold">${profession.categoria_riesgo_new}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Mostrar detalles de la profesión en modal
+        function showProfessionDetails(numero) {
+            const profession = profesionArray.find(p => p.numero === numero);
+            if (!profession) return;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = profession.profesion;
+
+            // Seleccionar propiedades importantes para mostrar
+            const importantProperties = [
+                { label: 'Categoría', value: profession.categoria },
+                { label: 'Sector', value: profession.sector },
+                { label: 'Clasificación General', value: profession.clasificacion_general },
+                { label: 'Categoría de Riesgo IA', value: profession.categoria_riesgo_new },
+                { label: 'Recomendación de Estudio', value: profession.recomendacion_estudio },
+                { label: 'Nivel Educativo Requerido', value: profession.nivel_educacion_requerido },
+                { label: 'Duración Promedio Carrera', value: `${profession.duracion_promedio_carrera_anios} años` },
+                { label: 'Edad Promedio Ingreso Laboral', value: `${profession.edad_promedio_ingreso_laboral} años` },
+                { label: 'Empleabilidad 1 año', value: `${profession.empleabilidad_1_anio}%` },
+                { label: 'Empleabilidad 5 años', value: `${profession.empleabilidad_5_anios}%` },
+                { label: 'Empleabilidad 10 años', value: `${profession.empleabilidad_10_anios}%` },
+                { label: 'Empleabilidad 15 años', value: `${profession.empleabilidad_15_anios}%` },
+                { label: 'Salario Promedio Actual', value: formatCurrency(profession.sueldo_promedio_4_anio) },
+                { label: 'Salario Proyectado 5 años', value: formatCurrency(profession.sueldo_promedio_4_anio_5) },
+                { label: 'Salario Proyectado 10 años', value: formatCurrency(profession.sueldo_promedio_4_anio_10) },
+                { label: 'Salario Proyectado 15 años', value: formatCurrency(profession.sueldo_promedio_4_anio_15) },
+                { label: 'Demanda Anual Actual', value: profession.demanda_anual_actual.toLocaleString() },
+                { label: 'Demanda Proyectada 5 años', value: profession.demanda_anual_5_anios.toLocaleString() },
+                { label: 'Oferta Actual', value: profession.oferta_actual.toLocaleString() },
+                { label: 'Probabilidad Sustitución IA', value: `${profession.probabilidad_sustitucion_ia_pct}%` },
+                { label: 'IA como Complemento', value: `${profession.ia_como_complemento_pct}%` },
+                { label: 'IA como Sustituto', value: `${profession.ia_como_sustituto_pct}%` },
+                { label: 'Índice Creatividad Requerida', value: `${profession.indice_creatividad_requerida}%` },
+                { label: 'Índice Interacción Humana', value: `${profession.indice_interaccion_humana}%` },
+                { label: 'Satisfacción Laboral Promedio', value: `${profession.satisfaccion_laboral_promedio}%` },
+                { label: 'Brecha de Género', value: `${profession.brecha_genero_laboral_pct}%` },
+                { label: 'Tasa Innovación Sector', value: `${profession.tasa_innovacion_sector}%` },
+                { label: 'Nivel Digitalización Actual', value: `${profession.nivel_digitalizacion_actual}%` },
+                { label: 'Índice Estabilidad Laboral', value: `${profession.indice_estabilidad_laboral}%` }
+            ];
+
+            modalBody.innerHTML = importantProperties.map(prop => `
+                <div class="detail-row">
+                    <span class="detail-label">${prop.label}:</span>
+                    <span class="detail-value">${prop.value}</span>
+                </div>
+            `).join('');
+
+            const modal = new bootstrap.Modal(document.getElementById('professionModal'));
+            modal.show();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchProfessions(e.target.value);
+        });
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            generateStats();
+            generateCategoryFilters();
+            renderProfessions();
+        });
+    </script>
+</body>
+</html>

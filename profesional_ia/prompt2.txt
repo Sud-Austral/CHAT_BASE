@@ -1,0 +1,226 @@
+Eres un asistente experto en análisis laboral y proyección de impacto tecnológico. Tu tarea es completar una tabla de datos en formato CSV (valores separados estrictamente por comas, SIN usar comas dentro de los valores) con información sobre distintas profesiones, considerando el impacto de la automatización, la IA y el mercado laboral a futuro.
+
+📋 FORMATO DE SALIDA:
+- El archivo debe estar en formato CSV separado **por comas (",")**.
+- No incluyas texto explicativo, encabezados extra ni comillas alrededor de los valores.
+- Cada fila representa una profesión.
+- El separador de columnas debe ser exclusivamente la coma.
+- Si algún valor no aplica o no tienes datos, escribe "N.D.".
+- **No incluyas comas dentro de los valores.** Si un texto lo requiere, reemplaza las comas por punto y coma (;).
+
+🧾 COLUMNAS REQUERIDAS (usa exactamente estos nombres en el encabezado):
+Categoría,Clasificación general de la profesión (por ejemplo: Salud, Tecnología, Educación, Ingeniería, etc.),Número,Profesión,Empleabilidad al 1° Año,Sueldo Promedio 4° Año,Sector,A_t_scaled,R_h_scaled,C_i_scaled,ISIA_new,Categoría de Riesgo_new,Demanda Anual Actual,Demanda Anual Proyectada en 5 años con adopción de IA,Oferta Actual,Recomendación de Estudio,Cambios Curriculares IA,Tendencia de Empleo (5 años),Nivel de Digitalización Actual,Adaptabilidad a IA (A_i),Requerimiento de Reentrenamiento (%),Satisfacción Laboral Promedio,Nivel de Educación Requerido,Duración Promedio de la Carrera (años),Edad Promedio de Ingreso Laboral,Brecha de Género Laboral (%),Remuneración IA-Optimizada (Proyección),Remuneración con Desplazamiento por IA (Proyección),Probabilidad de Sustitución por IA (%),Índice de Creatividad Requerida,Índice de Interacción Humana,IA como Complemento (%),IA como Sustituto (%),Tasa de Innovación del Sector,Demanda Global Estimada (5 años),Nivel de Regulación/Ética Relevante,Índice de Estabilidad Laboral,Empleabilidad en 5 años,Empleabilidad en 10 años,Empleabilidad en 15 años,Demanda Anual en 5 años,Demanda Anual en 10 años,Demanda Anual en 15 años,Sueldo Promedio 4° Año en 5 años,Sueldo Promedio 4° Año en 10 años,Sueldo Promedio 4° Año en 15 años
+
+🎯 CATEGORÍAS POSIBLES (usar solo una por profesión):
+Avanzada, Emergente, Técnica, Universitaria
+
+🎯 SECTORES POSIBLES (usar solo uno por profesión):
+Administración, Aeroespacial, Agricultura, Arte, Automotriz, Biotech, Ciencia, Comercio, Comunicaciones, Construcción, Creativo, Cultura, Deporte, Diseño, Educación, Energía, Eventos, Finanzas, Gastronomía, Industria, Legal, Logística, Marketing, Medioambiente, Medios, Mineria, Negocios, Oceanografía, Pesca, RRHH, Salud, Salud Mental, Seguridad, Sociales, Tecnología, Transporte, Turismo, Urbanismo
+
+🎯 CATEGORÍAS DE RIESGO POSIBLES:
+Alta reconversión, Expansión y crecimiento, Oportunidad controlada, Riesgo crítico, Transformación híbrida
+
+📌 PROFESIONES A INCLUIR:
+Medicina
+Ingeniería Civil en Minas
+Odontología
+Química y Farmacia
+Ingeniería Civil Eléctrica
+Enfermería
+Ingeniería Civil Industrial
+Ingeniería Civil en Computación e Informática
+Kinesiología
+Obstetricia y Puericultura
+Ingeniería en Gestión Pública
+Pedagogía en Educación Técnico Profesional
+Ingeniería Civil en Geomensura y Cartografía
+Derecho
+Ingeniería en Logística
+Ingeniería Civil en Construcción
+Veterinaria
+Pedagogía en Matemáticas y Computación
+Ingeniería Civil Química
+Psicología
+Ingeniería en Prevención de Riesgos
+Data Science
+Ingeniería Civil en Telecomunicaciones
+Pedagogía en Educación Diferencial
+Geología
+Ingeniería en Electricidad
+Contador Auditor
+Ingeniería en Automatización Instrumentación y Control
+Arquitectura
+Ingeniería Comercial
+Educación Parvularia
+Ingeniería Civil en Informática
+Nutrición y Dietética
+Ingeniería en Minas
+Pedagogía en Educación Básica
+Terapia Ocupacional
+Ingeniería en Producción
+Economía
+Ingeniería Civil en Matemáticas
+Fonoaudiología
+Ingeniería en Ciberseguridad
+Administración Pública
+Ingeniería Civil en Energía
+Periodismo
+Ingeniería en Biotecnología
+Sociología
+Ingeniería Civil en Hidráulica
+Educación Física
+Ingeniería en Sostenibilidad
+Antropología
+Técnico en Instrumentación Automatización y Control Industrial
+Técnico en Mantenimiento Industrial
+Técnico en Mecánica Industrial
+Técnico en Electricidad y Electricidad Industrial
+Técnico en Contabilidad General
+Técnico en Minería y Metalurgia
+Técnico en Mecánica Automotriz
+Técnico en Administración de Empresas
+Técnico en Auditoría
+Técnico en Logística
+Técnico en Prevención de Riesgos
+Técnico en Redes y Telecomunicaciones
+Técnico en Topografía y Geomensura
+Técnico en Gastronomía y Cocina Internacional
+Técnico en Turismo y Hotelería
+Técnico en Administración Gastronómica
+Técnico en Enfermería
+Técnico en Farmacia
+Técnico en Automatización Industrial
+Técnico en Seguridad Privada
+Técnico en Mantenimiento Eléctrico
+Técnico en Programación y Análisis de Sistemas
+Técnico en Química Industrial
+Técnico en Operaciones Mineras
+Técnico en Soldadura y Metalurgia
+Técnico en Administración Pública
+Técnico en Marketing Digital
+Técnico en Ciberseguridad
+Técnico en Energías Renovables
+Técnico en Laboratorio Clínico
+Técnico en Ventas y Comercialización
+Técnico en Recursos Humanos
+Técnico en Construcción Civil
+Técnico en Biotecnología
+Técnico en Informática
+Técnico en Transporte y Logística
+Técnico en Educación Parvularia
+Técnico en Diseño Gráfico
+Técnico en Mantenimiento Mecánico
+Técnico en Finanzas
+Técnico en Producción Industrial
+Técnico en Salud Dental
+Técnico en Operador de Equipos Mineros
+Técnico en Análisis de Datos
+Técnico en Instalaciones Eléctricas
+Técnico en Kinesiología Deportiva
+Técnico en Administración Hotelera
+Técnico en Robótica Industrial
+Técnico en Sostenibilidad Ambiental
+Técnico en Soporte TI
+Ingeniería Civil Metalúrgica
+Ingeniería en Metalurgia Extractiva
+Ingeniería Civil Mecánica
+Ingeniería Civil en Obras Civiles
+Bioquímica
+Agronomía
+Ingeniería Forestal
+Licenciatura en Física
+Licenciatura en Matemáticas
+Ingeniería en Alimentos
+Diseño
+Ingeniería en Acuicultura
+Licenciatura en Historia
+Ingeniería en Recursos Naturales
+Trabajo Social
+Ingeniería en Pesca
+Licenciatura en Química
+Ingeniería Ambiental
+Pedagogía en Historia y Ciencias Sociales
+Ingeniería en Turismo
+Licenciatura en Biología
+Ingeniería en Finanzas
+Pedagogía en Lengua Castellana y Literatura
+Ingeniería en Marketing
+Licenciatura en Astronomía
+Ingeniería en Transporte
+Pedagogía en Inglés
+Ingeniería en Comercio Internacional
+Licenciatura en Filosofía
+Ingeniería en Hotelería
+Pedagogía en Educación Musical
+Ingeniería en Paisajismo
+Licenciatura en Lingüística
+Ingeniería en Gestión Cultural
+Pedagogía en Artes Visuales
+Ingeniería en Eventos
+Licenciatura en Arqueología
+Ingeniería en Deporte
+Pedagogía en Danza
+Ingeniería en Cine y Televisión
+Licenciatura en Música
+Ingeniería en Teatro
+Pedagogía en Teatro
+Ingeniería en Animación Digital
+Licenciatura en Artes Escénicas
+Ingeniería en Videojuegos
+Pedagogía en Cine
+Ingeniería en Realidad Extendida
+Licenciatura en Estudios Internacionales
+Ingeniería en Innovación Tecnológica
+Ingeniería en Inteligencia Artificial
+Ingeniería en Ciberseguridad Avanzada
+Data Science y Machine Learning
+Ingeniería en Blockchain y Criptoactivos
+Ingeniería en Robótica y Automatización
+Ingeniería en Realidad Extendida (XR)
+Ingeniería en Computación Cuántica
+Ingeniería en Biotecnología Sintética
+Ingeniería en Energías Renovables Avanzadas
+Análisis de Datos Avanzado (Big Data)
+Ingeniería en Internet de las Cosas (IoT)
+Ingeniería en Ética y Gobernanza de IA
+Ingeniería en Vehículos Autónomos
+Ingeniería en Genómica y Bioinformática
+Ingeniería en Sostenibilidad Digital
+Ingeniería en 5G y Redes Avanzadas
+Ingeniería en Fintech y Pagos Digitales
+Ingeniería en Agricultura de Precisión
+Ingeniería en Salud Digital y Telemedicina
+Ingeniería en Smart Cities y Urban Analytics
+Ingeniería en Quantum Machine Learning
+Ingeniería en Neurotecnología e Interfaces Cerebro-Computadora
+Ingeniería en Fusión Nuclear y Energía Limpia
+Ingeniería en Nanotecnología y Materiales Avanzados
+Ingeniería en Space Tech y Satélites
+Ingeniería en Bioingeniería y Órganos Artificiales
+Ingeniería en Fotónica y Láser Avanzado
+Ingeniería en Hidrógeno Verde y Economía del Hidrógeno
+Ingeniería en Edición Genética CRISPR y Terapia Génica
+Ingeniería en Materiales Cuánticos y Superconductores
+Ingeniería en Realidad Mixta Industrial 5.0
+Ingeniería en Ciberfísica y Sistemas Autónomos
+Ingeniería en Bioeconomía Circular y Biorefinerías
+Ingeniería en IA Explicable y Transparente
+Ingeniería en Minería Espacial y Recursos Extraterrestres
+Ingeniería en Neurociencia Computacional
+Ingeniería en Carbon Capture and Storage (CCS)
+Ingeniería en Swarm Intelligence y Sistemas Multiagente
+Ingeniería en Litio y Baterías de Nueva Generación
+Ingeniería en Digital Twins y Simulación Avanzada
+Ingeniería en Quantum Cryptography y Seguridad Post-Cuántica
+Ingeniería en Terahertz Technology y Imágenes Avanzadas
+Ingeniería en Oceanografía Computacional y Blue Economy
+Ingeniería en Human Augmentation y Exoesqueletos
+Ingeniería en Metaverso Industrial y Espacios Virtuales
+Ingeniería en Synthetic Biology y Biofabricación
+Ingeniería en Edge AI y Computación Distribuida
+Ingeniería en Climate Tech y Geoingeniería
+Ingeniería en Autonomous Ocean Vehicles y Submarinos
+Ingeniería en Resilient Infrastructure y Diseño Anti-Desastres
+
+🔢 Comienza el archivo CSV con la fila de encabezados y luego todas las profesiones con sus respectivos datos.
+No incluyas texto introductorio ni explicaciones, solo el CSV final.
