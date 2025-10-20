@@ -1240,9 +1240,6 @@
                     <label class="filter-label">Riesgo IA</label>
                     <select class="filter-select" id="riskFilter">
                         <option value="Todas">Todos los niveles</option>
-                        <option value="Expansión">Expansión</option>
-                        <option value="Moderado">Moderado</option>
-                        <option value="Alto Riesgo">Alto Riesgo</option>
                     </select>
                 </div>
                 
@@ -1403,6 +1400,12 @@
             return ['Todas', ...new Set(categories)];
         }
 
+        // Obtener categorías de riesgo únicas
+        function getUniqueRiskCategories() {
+            const riskCategories = profesionArray.map(p => p.categoria_riesgo_new);
+            return ['Todas', ...new Set(riskCategories)];
+        }
+
         // Generar estadísticas generales
         function generateStats() {
             const statsContainer = document.getElementById('statsContainer');
@@ -1452,6 +1455,17 @@
                 `<option value="${cat}" ${cat === 'Todas' ? 'selected' : ''}>${cat}</option>`
             ).join('');
         }
+
+        // Generar filtros de riesgo
+        function generateRiskFilters() {
+            const riskFilter = document.getElementById('riskFilter');
+            const riskCategories = getUniqueRiskCategories();
+
+            riskFilter.innerHTML = riskCategories.map(cat => 
+                `<option value="${cat}" ${cat === 'Todas' ? 'selected' : ''}>${cat}</option>`
+            ).join('');
+        }
+
         // Aplicar filtros avanzados
         function applyAdvancedFilters() {
             const category = document.getElementById('categoryFilter').value;
@@ -1464,16 +1478,11 @@
                 const salaryMatch = p.sueldo_promedio_4_ano <= maxSalary;
                 const employabilityMatch = (p.empleabilidad_1_ano * 100) >= minEmployability;
                 
-                // Corrección: comparación más flexible para el riesgo
+                // Lógica mejorada para el filtro de riesgo
                 let riskMatch = risk === 'Todas';
                 if (!riskMatch) {
-                    if (risk === 'Expansión') {
-                        riskMatch = p.categoria_riesgo_new.includes('Expansión');
-                    } else if (risk === 'Moderado') {
-                        riskMatch = p.categoria_riesgo_new.includes('Moderado');
-                    } else if (risk === 'Alto Riesgo') {
-                        riskMatch = p.categoria_riesgo_new.includes('Alto') || p.categoria_riesgo_new.includes('Riesgo');
-                    }
+                    // Comparamos directamente con la categoría de riesgo
+                    riskMatch = p.categoria_riesgo_new === risk;
                 }
                 
                 return categoryMatch && salaryMatch && employabilityMatch && riskMatch;
@@ -1489,8 +1498,6 @@
             renderCurrentView();
         }
 
-        
-       
         // Resetear filtros
         function resetFilters() {
             // Resetear valores de los filtros
@@ -1854,8 +1861,8 @@
         }
 
         // Mostrar detalles de la profesión en modal
-        function showProfessionDetails(profesionName) {
-            const profession = profesionArray.find(p => p.profesion === profesionName);
+        function showProfessionDetails(profesiónName) {
+            const profession = profesionArray.find(p => p.profesion === profesiónName);
             if (!profession) return;
 
             const modalTitle = document.getElementById('modalTitle');
@@ -1961,6 +1968,7 @@
             // Generar contenido inicial
             generateStats();
             generateCategoryFilters();
+            generateRiskFilters();
             renderCurrentView();
             
             // Event listeners para filtros
