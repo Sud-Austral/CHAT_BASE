@@ -1,0 +1,2413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrera Quest: La Misión de las 10 Llaves</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@700&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b9bd1;
+            --accent-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --purple: #9b59b6;
+            --teal: #1abc9c;
+            --red: #e74c3c;
+            --blue: #3498db;
+            --green: #2ecc71;
+            --yellow: #f1c40f;
+            --orange: #e67e22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50, #4a6fa5);
+            color: var(--light-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(74, 111, 165, 0.8);
+            letter-spacing: 2px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(74, 111, 165, 0.8), 0 0 20px rgba(74, 111, 165, 0.6);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(74, 111, 165, 1), 0 0 25px rgba(74, 111, 165, 0.8);
+            }
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 900px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-container h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .key-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .key-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .key-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .key-card:hover::before {
+            opacity: 1;
+        }
+
+        .key-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .key-card.completed {
+            border-color: var(--success-color);
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.2), rgba(46, 204, 113, 0.1));
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+            }
+        }
+
+        .key-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(74, 111, 165, 0.5));
+        }
+
+        .key-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--light-color);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .key-card .score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, var(--accent-color), var(--warning-color));
+            color: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+
+        .key-card.completed .score {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .challenge-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .challenge-content {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: modalAppear 0.5s ease;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light-color);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(231, 76, 60, 0.3);
+            color: var(--danger-color);
+        }
+
+        .challenge-content h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .timer {
+            background: linear-gradient(45deg, var(--accent-color), var(--warning-color));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .question-container {
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .question {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--light-color);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: rgba(74, 111, 165, 0.2);
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: rgba(74, 111, 165, 0.3);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(74, 111, 165, 0.5);
+        }
+
+        .option.correct {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: var(--success-color);
+            animation: correctAnswer 0.5s ease;
+        }
+
+        @keyframes correctAnswer {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .option.incorrect {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: var(--danger-color);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(5px);
+            }
+        }
+
+        .option input[type="radio"] {
+            margin-right: 0.8rem;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .option .radio-custom {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--light-color);
+            margin-right: 0.8rem;
+            display: inline-block;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .option.selected .radio-custom {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(74, 111, 165, 0.5);
+        }
+
+        .option.selected .radio-custom::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, var(--success-color), #27ae60);
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(45deg, #27ae60, var(--success-color));
+        }
+
+        .results-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 900px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-container h2 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .career-list {
+            list-style: none;
+        }
+
+        .career-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .career-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .career-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--light-color);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .career-score {
+            background: linear-gradient(45deg, var(--accent-color), var(--warning-color));
+            color: white;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.8s ease;
+            box-shadow: 0 0 10px rgba(74, 111, 165, 0.5);
+        }
+
+        .social-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .social-container h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .share-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .share-btn.twitter {
+            background: linear-gradient(45deg, #1DA1F2, #0d8bd9);
+        }
+
+        .share-btn.facebook {
+            background: linear-gradient(45deg, #4267B2, #365899);
+        }
+
+        .share-btn.whatsapp {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+        }
+
+        .team-compatibility {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .team-compatibility h4 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            font-size: 1.3rem;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .team-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            transition: all 0.3s ease;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .team-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+        }
+
+        .team-results {
+            margin-top: 1rem;
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--success-color), #27ae60);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1001;
+            max-width: 300px;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.error {
+            background: linear-gradient(45deg, var(--danger-color), #c0392b);
+        }
+
+        .notification.warning {
+            background: linear-gradient(45deg, var(--warning-color), #d35400);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--light-color);
+            margin-top: 2rem;
+            opacity: 0.7;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .key-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            color: var(--accent-color);
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            animation: keyCollect 2s ease;
+        }
+
+        @keyframes keyCollect {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            position: absolute;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 2000;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .fun-element {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: funPop 0.5s ease;
+            font-family: 'Comic Neue', cursive;
+        }
+
+        @keyframes funPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .fun-element h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .fun-element p {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .fun-element .emoji {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+
+        .next-question-btn {
+            margin-top: 1rem;
+            background: linear-gradient(45deg, var(--purple), #8e44ad);
+        }
+
+        .next-question-btn:hover {
+            background: linear-gradient(45deg, #8e44ad, var(--purple));
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .key-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .challenge-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+
+    <header>
+        <div class="container">
+            <h1>Carrera Quest: La Misión de las 10 Llaves</h1>
+            <p>¡Descubre tu carrera ideal recolectando llaves mágicas! 🚀</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="game-container" id="game-container">
+            <h2>Recolecta las 10 Llaves Dimensionales</h2>
+            <p>¡Selecciona cada llave para responder 2 preguntas y obtener tu puntuación!</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar"></div>
+                </div>
+                <p id="progress-text">Progreso: 0/10 llaves recolectadas</p>
+            </div>
+            
+            <div class="key-container" id="key-container">
+                <!-- Las llaves se generarán dinámicamente con JavaScript -->
+            </div>
+            
+            <div class="text-center" id="complete-game-btn" style="display: none;">
+                <button class="btn btn-submit" id="show-results">¡Ver mis carreras compatibles!</button>
+            </div>
+        </div>
+
+        <div class="results-container" id="results-container">
+            <h2>Tu Cofre del Tesoro: Las 5 Carreras que Mejor Usan Tus Llaves</h2>
+            <ul class="career-list" id="career-list">
+                <!-- Las carreras se generarán dinámicamente con JavaScript -->
+            </ul>
+            
+            <div class="social-container">
+                <h3>Comparte tus resultados</h3>
+                <div class="share-buttons">
+                    <button class="share-btn twitter" id="share-twitter"><i class="fab fa-twitter"></i></button>
+                    <button class="share-btn facebook" id="share-facebook"><i class="fab fa-facebook-f"></i></button>
+                    <button class="share-btn whatsapp" id="share-whatsapp"><i class="fab fa-whatsapp"></i></button>
+                </div>
+                
+                <div class="team-compatibility">
+                    <h4>Compara tus resultados con tus amigos</h4>
+                    <p>Ingresa el código de resultado de tu amigo para ver vuestra compatibilidad en equipo</p>
+                    <input type="text" class="team-input" id="friend-code" placeholder="Código de resultado de tu amigo">
+                    <button class="btn" id="compare-results">Comparar resultados</button>
+                    
+                    <div class="team-results" id="team-results">
+                        <!-- Los resultados de comparación se mostrarán aquí -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="btn" id="restart-game">Jugar de nuevo</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="challenge-modal" id="challenge-modal">
+        <div class="challenge-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2 id="challenge-title">Desafío</h2>
+            <div class="timer" id="timer">Tiempo restante: 02:00</div>
+            <p>¡Responde estas 2 preguntas para obtener tu llave dimensional! 🧠</p>
+            
+            <div id="questions-container">
+                <!-- Las preguntas se generarán dinámicamente -->
+            </div>
+            
+            <button class="btn btn-submit" id="submit-challenge">Enviar respuestas</button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <!-- Las notificaciones se mostrarán aquí -->
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Carrera Quest - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        // Matriz de profesiones
+        const professionsMatrix = {
+            "Agronomía": [8, 3, 6, 6, 4, 5, 7, 7, 4, 6],
+            "Arqueología": [7, 4, 5, 5, 3, 5, 7, 7, 5, 7],
+            "Astronomía": [10, 3, 8, 4, 10, 4, 9, 9, 3, 6],
+            "Bioingeniería": [9, 4, 9, 6, 7, 6, 9, 8, 4, 7],
+            "Biología": [8, 4, 6, 6, 7, 4, 8, 8, 3, 7],
+            "Bioquímica": [9, 3, 7, 6, 7, 4, 8, 9, 2, 6],
+            "Estadística": [9, 3, 7, 6, 9, 4, 8, 9, 2, 6],
+            "Física": [10, 3, 7, 3, 9, 4, 9, 9, 4, 6],
+            "Geofísica": [9, 3, 7, 5, 5, 5, 8, 8, 2, 6],
+            "Ingeniería Acústica": [8, 3, 7, 6, 6, 5, 7, 8, 5, 5],
+            "Ingeniería en Acuicultura": [7, 4, 6, 6, 3, 5, 7, 7, 3, 7],
+            "Ingeniería en Alimentos": [8, 5, 7, 6, 5, 5, 8, 9, 3, 7],
+            "Ingeniería en Bioinformática": [9, 3, 9, 6, 9, 4, 9, 9, 2, 6],
+            "Ingeniería en Biomasa": [8, 3, 8, 6, 5, 5, 8, 8, 3, 7],
+            "Ingeniería en Biomédica": [9, 5, 9, 6, 7, 6, 9, 8, 5, 8],
+            "Ingeniería en Biorremediación": [8, 4, 8, 6, 5, 5, 8, 8, 3, 9],
+            "Ingeniería en Cerámica": [7, 3, 6, 6, 4, 5, 7, 8, 5, 5],
+            "Ingeniería en Ciencia de los Materiales": [9, 3, 8, 6, 7, 5, 8, 8, 3, 6],
+            "Ingeniería en Conservación de la Biodiversidad": [8, 5, 7, 6, 3, 6, 8, 7, 3, 9],
+            "Ingeniería en Energía Eólica": [8, 4, 8, 5, 5, 6, 8, 7, 3, 7],
+            "Ingeniería en Energía Solar": [8, 4, 8, 5, 5, 6, 8, 7, 3, 7],
+            "Ingeniería en Energías No Convencionales": [8, 4, 9, 6, 6, 6, 9, 7, 4, 7],
+            "Ingeniería en Explotación de Minas": [8, 3, 6, 8, 3, 7, 7, 8, 2, 6],
+            "Ingeniería en Genómica": [9, 3, 9, 6, 7, 5, 9, 8, 2, 7],
+            "Ingeniería en Geotermia": [8, 3, 8, 7, 5, 6, 8, 7, 2, 7],
+            "Ingeniería en Gestión de Desastres": [8, 6, 7, 8, 4, 8, 8, 8, 3, 9],
+            "Ingeniería en Higiene y Seguridad Ocupacional": [8, 6, 6, 7, 3, 7, 7, 8, 2, 8],
+            "Ingeniería en Materiales": [9, 3, 8, 6, 7, 5, 8, 8, 3, 6],
+            "Ingeniería en Medio Ambiente": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
+            "Ingeniería en Metalurgia": [8, 3, 6, 5, 4, 5, 7, 9, 2, 5],
+            "Ingeniería en Metalurgia Extractiva": [8, 3, 6, 7, 4, 5, 7, 9, 2, 5],
+            "Ingeniería en Minerales": [8, 3, 6, 7, 4, 5, 7, 9, 2, 5],
+            "Ingeniería en Nanotecnología": [10, 3, 9, 6, 7, 5, 9, 8, 3, 6],
+            "Ingeniería en Petróleo y Gas": [8, 3, 6, 8, 4, 7, 7, 8, 2, 4],
+            "Ingeniería en Plásticos": [8, 3, 7, 6, 5, 5, 7, 8, 3, 5],
+            "Ingeniería en Polímeros": [8, 3, 7, 6, 5, 5, 7, 9, 3, 6],
+            "Ingeniería en Procesos Mineros": [8, 3, 6, 6, 4, 6, 7, 8, 2, 6],
+            "Ingeniería en Procesos Químicos": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
+            "Ingeniería en Protección Civil": [6, 6, 6, 7, 4, 8, 8, 8, 3, 9],
+            "Ingeniería en Recursos Hídricos": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
+            "Ingeniería en Recursos Naturales": [8, 5, 7, 6, 3, 6, 8, 7, 3, 8],
+            "Ingeniería en Seguridad Industrial": [8, 6, 6, 7, 3, 7, 7, 8, 2, 8],
+            "Ingeniería en Seguridad Minera": [8, 6, 6, 7, 3, 7, 7, 9, 2, 8],
+            "Ingeniería en Tejidos": [8, 4, 6, 6, 5, 5, 7, 8, 5, 5],
+            "Ingeniería Forestal": [8, 4, 6, 6, 3, 6, 7, 7, 3, 8],
+            "Ingeniería Naval": [8, 4, 7, 6, 4, 6, 7, 9, 3, 5],
+            "Matemáticas": [10, 2, 7, 4, 9, 4, 8, 10, 2, 4],
+            "Meteorología": [8, 4, 7, 5, 6, 5, 8, 8, 2, 7],
+            "Oceanografía": [8, 4, 7, 5, 4, 5, 8, 8, 3, 7],
+            "Química": [9, 3, 7, 6, 7, 4, 8, 8, 2, 6],
+            "Administración Pública": [7, 7, 6, 5, 6, 7, 7, 6, 3, 8],
+            "Análisis de Datos Avanzado (Big Data)": [9, 3, 8, 6, 9, 4, 9, 8, 3, 6],
+            "Antropología": [7, 7, 6, 5, 5, 5, 7, 7, 4, 8],
+            "Arquitectura": [8, 6, 6, 6, 5, 6, 7, 7, 9, 6],
+            "Contador Auditor": [8, 4, 6, 3, 7, 5, 7, 10, 2, 6],
+            "Data Science": [9, 3, 9, 6, 9, 5, 9, 8, 3, 6],
+            "Data Science y Machine Learning": [9, 3, 10, 6, 9, 5, 9, 8, 3, 6],
+            "Derecho": [7, 7, 5, 4, 6, 7, 7, 8, 3, 9],
+            "Diseño": [5, 5, 6, 5, 5, 5, 7, 7, 9, 6],
+            "Economía": [9, 5, 7, 6, 9, 6, 8, 7, 3, 6],
+            "Educación Física": [6, 7, 5, 5, 1, 6, 6, 6, 4, 8],
+            "Educación Parvularia": [5, 9, 5, 4, 3, 6, 6, 6, 6, 9],
+            "Enfermería": [7, 9, 6, 6, 2, 6, 7, 8, 2, 10],
+            "Fonoaudiología": [6, 9, 5, 6, 3, 6, 6, 8, 3, 9],
+            "Geología": [8, 4, 7, 6, 4, 6, 8, 7, 2, 6],
+            "Ingeniería Aeronáutica": [9, 4, 7, 6, 6, 6, 8, 8, 3, 6],
+            "Ingeniería Ambiental": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
+            "Ingeniería Civil Eléctrica": [9, 4, 8, 6, 7, 6, 8, 9, 2, 6],
+            "Ingeniería Civil en Computación": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
+            "Ingeniería Civil en Computación e Informática": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
+            "Ingeniería Civil en Construcción": [8, 4, 6, 6, 4, 6, 7, 8, 3, 6],
+            "Ingeniería Civil en Energía": [8, 4, 8, 5, 6, 6, 8, 7, 3, 7],
+            "Ingeniería Civil en Geografía": [8, 5, 6, 6, 4, 6, 7, 8, 3, 7],
+            "Ingeniería Civil en Geomensura y Cartografía": [8, 4, 6, 6, 5, 6, 7, 9, 2, 6],
+            "Ingeniería Civil en Hidráulica": [8, 4, 7, 6, 4, 6, 8, 7, 3, 6],
+            "Ingeniería Civil en Informática": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
+            "Ingeniería Civil en Matemáticas": [10, 2, 7, 4, 9, 4, 8, 10, 2, 4],
+            "Ingeniería Civil en Minas": [8, 4, 6, 8, 3, 7, 7, 8, 2, 6],
+            "Ingeniería Civil en Obras Civiles": [8, 4, 6, 6, 4, 6, 7, 8, 3, 6],
+            "Ingeniería Civil en Química": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
+            "Ingeniería Civil en Telecomunicaciones": [9, 4, 8, 6, 6, 6, 8, 9, 3, 6],
+            "Ingeniería Civil Industrial": [8, 6, 6, 6, 6, 7, 8, 8, 3, 6],
+            "Ingeniería Civil Mecánica": [9, 4, 6, 6, 6, 6, 8, 9, 3, 5],
+            "Ingeniería Civil Metalúrgica": [8, 3, 6, 5, 4, 6, 7, 9, 2, 5],
+            "Ingeniería Civil Química": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
+            "Ingeniería Comercial": [8, 6, 7, 6, 7, 7, 8, 8, 3, 7],
+            "Kinesiología": [6, 9, 6, 6, 2, 5, 7, 7, 4, 9],
+            "Licenciatura en Antropología Digital": [6, 7, 8, 5, 6, 6, 8, 7, 6, 8],
+            "Licenciatura en Arqueología": [7, 4, 5, 5, 3, 5, 7, 7, 5, 7],
+            "Licenciatura en Arqueología Digital": [8, 5, 7, 5, 6, 5, 8, 7, 6, 8],
+            "Licenciatura en Artes Escénicas": [5, 7, 5, 5, 4, 5, 6, 6, 10, 6],
+            "Licenciatura en Artes Plásticas": [6, 5, 5, 5, 4, 5, 6, 6, 10, 5],
+            "Licenciatura en Astronomía": [10, 3, 8, 6, 10, 4, 9, 9, 3, 6],
+            "Licenciatura en Biología": [8, 4, 6, 6, 7, 4, 8, 8, 3, 7],
+            "Licenciatura en Estudios Internacionales": [7, 8, 7, 5, 6, 6, 7, 6, 4, 8],
+            "Licenciatura en Filosofía": [5, 5, 5, 4, 10, 5, 7, 7, 5, 8],
+            "Licenciatura en Física": [10, 3, 7, 3, 9, 4, 9, 9, 4, 6],
+            "Licenciatura en Geología": [8, 4, 7, 6, 4, 6, 8, 7, 2, 6],
+            "Licenciatura en Historia": [7, 6, 5, 4, 9, 4, 7, 6, 4, 7],
+            "Licenciatura en Historia Digital": [8, 6, 7, 5, 6, 6, 8, 6, 5, 7],
+            "Licenciatura en Letras": [7, 6, 5, 4, 7, 4, 7, 6, 7, 6],
+            "Licenciatura en Lingüística": [8, 5, 5, 4, 6, 4, 7, 7, 4, 7],
+            "Licenciatura en Matemáticas": [10, 2, 7, 4, 9, 3, 8, 10, 2, 4],
+            "Licenciatura en Música": [6, 6, 5, 5, 5, 4, 6, 6, 10, 6],
+            "Licenciatura en Química": [9, 3, 7, 6, 7, 5, 8, 8, 2, 6],
+            "Licenciatura en Sociología Computacional": [8, 7, 8, 5, 9, 6, 8, 7, 5, 9],
+            "Medicina": [9, 9, 7, 6, 4, 6, 8, 9, 5, 10],
+            "Nutrición y Dietética": [7, 8, 6, 6, 3, 5, 7, 8, 3, 9],
+            "Obstetricia y Puericultura": [7, 9, 6, 6, 2, 5, 6, 8, 3, 10],
+            "Odontología": [8, 7, 6, 6, 4, 5, 7, 10, 5, 9],
+            "Pedagogía en Artes Visuales": [6, 7, 5, 5, 5, 6, 6, 6, 9, 8],
+            "Pedagogía en Ciencias Naturales": [7, 7, 6, 4, 5, 5, 7, 7, 4, 9],
+            "Pedagogía en Cine": [5, 6, 7, 5, 5, 5, 7, 6, 8, 7],
+            "Pedagogía en Danza": [5, 7, 6, 5, 4, 5, 6, 6, 10, 8],
+            "Pedagogía en Educación Básica": [5, 8, 6, 4, 4, 6, 7, 7, 5, 9],
+            "Pedagogía en Educación Diferencial": [6, 9, 6, 4, 6, 6, 6, 7, 6, 10],
+            "Pedagogía en Educación Física Digital": [7, 8, 7, 5, 4, 6, 8, 6, 6, 8],
+            "Pedagogía en Educación Musical": [6, 7, 6, 5, 5, 5, 7, 7, 9, 8],
+            "Pedagogía en Educación Técnico Profesional": [7, 8, 6, 5, 4, 7, 7, 7, 5, 8],
+            "Pedagogía en Filosofía": [5, 7, 5, 4, 6, 5, 7, 7, 5, 8],
+            "Pedagogía en Historia y Ciencias Sociales": [7, 7, 6, 4, 6, 5, 7, 6, 5, 9],
+            "Pedagogía en Inglés": [7, 7, 6, 4, 6, 5, 7, 6, 5, 8],
+            "Pedagogía en Lengua Castellana y Literatura": [7, 7, 6, 4, 9, 5, 7, 6, 6, 8],
+            "Pedagogía en Matemáticas Computacionales": [8, 6, 7, 3, 7, 6, 8, 7, 4, 8],
+            "Pedagogía en Matemáticas y Computación": [8, 6, 7, 3, 7, 6, 8, 7, 4, 8],
+            "Pedagogía en Religión": [5, 8, 6, 4, 8, 5, 6, 6, 4, 9],
+            "Pedagogía en Teatro": [5, 7, 5, 5, 4, 5, 6, 6, 10, 8],
+            "Periodismo": [7, 8, 6, 5, 6, 6, 7, 7, 6, 8],
+            "Psicología": [7, 9, 6, 4, 6, 6, 7, 8, 4, 10],
+            "Química y Farmacia": [9, 6, 7, 6, 6, 5, 8, 10, 2, 8],
+            "Sociología": [6, 8, 6, 5, 7, 6, 7, 6, 4, 9],
+            "Terapia Ocupacional": [6, 9, 6, 6, 3, 5, 6, 8, 5, 9],
+            "Trabajo Social": [6, 9, 6, 4, 6, 6, 7, 7, 4, 10],
+            "Veterinaria": [8, 7, 6, 6, 3, 5, 7, 8, 3, 8]
+        };
+
+        // Banco de preguntas para cada dimensión
+        const questionsBank = [
+            // Dimensión 0: Aptitud Técnica y Analítica
+            [
+                {
+                    question: "¿Cuál es el resultado de 15² + 23 × 4 - 18 ÷ 3?",
+                    options: ["311", "321", "301", "291"],
+                    correctAnswer: 0
+                },
+                {
+                    question: "Si un algoritmo tiene una complejidad O(n²), ¿qué significa esto?",
+                    options: [
+                        "El tiempo de ejecución es constante",
+                        "El tiempo de ejecución crece linealmente con el tamaño de entrada",
+                        "El tiempo de ejecución crece cuadráticamente con el tamaño de entrada",
+                        "El tiempo de ejecución es logarítmico"
+                    ],
+                    correctAnswer: 2
+                },
+                {
+                    question: "¿Cuál es la derivada de f(x) = 3x² + 5x - 2?",
+                    options: ["6x + 5", "6x - 5", "3x + 5", "3x² + 5"],
+                    correctAnswer: 0
+                },
+                {
+                    question: "En una base de datos relacional, ¿qué es una clave primaria?",
+                    options: [
+                        "Un índice para acelerar consultas",
+                        "Un campo que identifica únicamente cada registro",
+                        "Una tabla que contiene datos de referencia",
+                        "Un tipo de dato especial"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cuál es el valor binario del número decimal 25?",
+                    options: ["11001", "10101", "11101", "10011"],
+                    correctAnswer: 0
+                }
+            ],
+            // Dimensión 1: Requerimiento Interpersonal y Empatía
+            [
+                {
+                    question: "Si un compañero de equipo está frustrado porque su idea fue rechazada, ¿cuál es la mejor respuesta?",
+                    options: [
+                        "Deberías aceptar la decisión y seguir adelante.",
+                        "Entiendo tu frustración. ¿Te gustaría que analicemos juntos por qué fue rechazada?",
+                        "No te preocupes, tu idea no era tan buena.",
+                        "La decisión ya está tomada, no hay nada que hacer."
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo manejarías una situación donde dos miembros de tu equipo tienen un conflicto?",
+                    options: [
+                        "Ignorar el conflicto y esperar que se resuelva solo",
+                        "Hablar con cada uno por separado y luego organizar una reunión conjunta",
+                        "Decidir quién tiene la razón y apoyar a esa persona",
+                        "Evitar trabajar con ambos hasta que se resuelva el conflicto"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Un cliente está muy molesto por un retraso en la entrega. ¿Cuál sería tu enfoque?",
+                    options: [
+                        "Explicar que el retraso no es culpa tuya",
+                        "Escuchar sus preocupaciones, disculparte y ofrecer una solución concreta",
+                        "Prometer una entrega inmediata aunque no sea realista",
+                        "Transferir la llamada a tu supervisor"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo apoyarías a un colega que está pasando por un momento difícil personalmente?",
+                    options: [
+                        "Evitar mencionar el tema para no incomodarle",
+                        "Ofrecer tu ayuda de manera discreta y respetuosa",
+                        "Contar a todos sobre su situación para que puedan ayudar",
+                        "Sugerir que tome vacaciones"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "En una negociación, ¿qué habilidad interpersonal es más importante?",
+                    options: [
+                        "Hablar más que el otro para convencerle",
+                        "Escuchar activamente para entender las necesidades del otro",
+                        "Mantener una postura rígida en tus posiciones",
+                        "Interrumpir para aclarar tus puntos rápidamente"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 2: Capacidad de Innovación y Adaptación a IA
+            [
+                {
+                    question: "¿Qué es el aprendizaje automático (Machine Learning)?",
+                    options: [
+                        "Un tipo de programación tradicional",
+                        "La capacidad de un sistema para aprender y mejorar a partir de datos sin ser programado explícitamente",
+                        "Un lenguaje de programación específico para IA",
+                        "Un hardware especializado para procesamiento de datos"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cuál es un ejemplo de innovación disruptiva en IA?",
+                    options: [
+                        "Mejorar un producto existente",
+                        "Crear un producto que reemplaza completamente a uno anterior",
+                        "Reducir costos de producción",
+                        "Aumentar la eficiencia de procesos existentes"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo debería una empresa adaptarse a los cambios tecnológicos rápidos?",
+                    options: [
+                        "Mantener sus procesos actuales hasta que sea absolutamente necesario cambiar",
+                        "Fomentar una cultura de aprendizaje continuo y experimentación",
+                        "Contratar solo especialistas en tecnología",
+                        "Delegar toda la adaptación tecnológica al departamento de TI"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué es la 'transformación digital'?",
+                    options: [
+                        "Cambiar todos los documentos físicos a digitales",
+                        "Integrar tecnología digital en todas las áreas de un negocio",
+                        "Usar redes sociales para marketing",
+                        "Implementar un sistema de contabilidad digital"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cuál es un desafío ético común en el desarrollo de IA?",
+                    options: [
+                        "La velocidad de procesamiento",
+                        "El sesgo algorítmico y la privacidad de datos",
+                        "El consumo de energía",
+                        "La compatibilidad con sistemas antiguos"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 3: Tolerancia al Riesgo y Estabilidad Laboral
+            [
+                {
+                    question: "Al evaluar una oportunidad profesional, ¿qué factor es más importante para ti?",
+                    options: [
+                        "Salario inicial alto",
+                        "Oportunidades de crecimiento y aprendizaje",
+                        "Estabilidad laboral a largo plazo",
+                        "Ubicación conveniente"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo abordarías un proyecto con alto potencial pero también alto riesgo de fracaso?",
+                    options: [
+                        "Rechazarlo inmediatamente por el riesgo",
+                        "Analizar cuidadosamente los riesgos y beneficios antes de decidir",
+                        "Aceptarlo sin considerar los riesgos",
+                        "Delegarlo a otra persona"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "En tu carrera, ¿qué prefieres?",
+                    options: [
+                        "Un trabajo estable con pocas novedades",
+                        "Un trabajo dinámico con cambios frecuentes",
+                        "Trabajar por cuenta propia con ingresos variables",
+                        "Un trabajo temporal con alta remuneración"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué significa para ti la 'seguridad laboral'?",
+                    options: [
+                        "Tener un contrato indefinido",
+                        "Poseer habilidades demandadas en el mercado",
+                        "Trabajar en una empresa grande",
+                        "Tener un sindicato fuerte"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Ante un cambio tecnológico que podría automatizar parte de tu trabajo, ¿cuál sería tu reacción?",
+                    options: [
+                        "Resistirte al cambio",
+                        "Aprender a usar la nueva tecnología para mejorar tu trabajo",
+                        "Buscar otro trabajo en un campo menos afectado",
+                        "Ignorar el cambio hasta que sea obligatorio"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 4: Preferencia por el Entorno (Físico vs. Conceptual)
+            [
+                {
+                    question: "¿Qué tipo de entorno te resulta más atractivo para trabajar?",
+                    options: [
+                        "Una oficina con vistas a la naturaleza",
+                        "Un laboratorio o taller con equipos especializados",
+                        "Un espacio digital o virtual",
+                        "Un café o espacio compartido"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Al resolver un problema complejo, ¿qué prefieres?",
+                    options: [
+                        "Construir un prototipo físico",
+                        "Crear un modelo conceptual o diagrama",
+                        "Escribir código o algoritmos",
+                        "Discutir verbalmente con un equipo"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué actividad te resulta más satisfactoria?",
+                    options: [
+                        "Construir algo con tus manos",
+                        "Analizar datos y encontrar patrones",
+                        "Diseñar sistemas o estructuras",
+                        "Planificar estrategias"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué tipo de proyectos te interesan más?",
+                    options: [
+                        "Proyectos de construcción o infraestructura",
+                        "Proyectos de investigación científica",
+                        "Proyectos de desarrollo de software",
+                        "Proyectos de gestión o consultoría"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo prefieres aprender algo nuevo?",
+                    options: [
+                        "Haciendo experimentos prácticos",
+                        "Leyendo teoría y conceptos",
+                        "Programando o simulando",
+                        "Discutiendo con expertos"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 5: Capacidad de Liderazgo y Gestión de Equipos
+            [
+                {
+                    question: "¿Qué cualidad es más importante en un líder?",
+                    options: [
+                        "Tomar decisiones rápidamente",
+                        "Escuchar y considerar diferentes perspectivas",
+                        "Tener conocimientos técnicos profundos",
+                        "Ser estricto en el cumplimiento de normas"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo motivarías a un equipo que está perdiendo interés en un proyecto?",
+                    options: [
+                        "Aumentar la presión y las horas de trabajo",
+                        "Reconocer logros, conectar el trabajo con un propósito mayor y ofrecer apoyo",
+                        "Cambiar completamente el proyecto",
+                        "Reemplazar a los miembros menos motivados"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué harías si un miembro de tu equipo no está cumpliendo con sus responsabilidades?",
+                    options: [
+                        "Ignorar el problema y esperar que se solucione solo",
+                        "Hablar con la persona para entender las razones y buscar soluciones juntos",
+                        "Asignar sus tareas a otros miembros",
+                        "Reportarlo inmediatamente a recursos humanos"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo manejas las diferencias de opinión dentro de tu equipo?",
+                    options: [
+                        "Tomas la decisión final sin considerar otras opiniones",
+                        "Fomentas un debate constructivo y buscas consenso",
+                        "Evitas discusiones para mantener la armonía",
+                        "Delegas la decisión a un superior"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué es más importante al establecer metas para tu equipo?",
+                    options: [
+                        "Que sean muy ambiciosas",
+                        "Que sean realistas, medibles y alineadas con objetivos más amplios",
+                        "Que sean fáciles de alcanzar para mantener la moral alta",
+                        "Que sean las mismas para todos los miembros"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 6: Necesidad de Aprendizaje Continuo y Reciclaje
+            [
+                {
+                    question: "¿Con qué frecuencia buscas aprender nuevas habilidades relacionadas con tu trabajo?",
+                    options: [
+                        "Raramente, solo cuando es necesario",
+                        "Regularmente, como parte de mi rutina",
+                        "Constantemente, siempre estoy buscando algo nuevo que aprender",
+                        "Solo cuando mi empresa ofrece formación"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo reaccionas cuando aparece una nueva tecnología que podría cambiar tu campo?",
+                    options: [
+                        "Me resisto al cambio",
+                        "Me entusiasmo y busco aprender sobre ella lo antes posible",
+                        "Espero a que sea ampliamente adoptada antes de aprenderla",
+                        "Dejo que otros la aprendan y luego les pregunto"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué prefieres en un entorno de trabajo?",
+                    options: [
+                        "Tareas rutinarias y predecibles",
+                        "Desafíos constantes que requieran aprender nuevas habilidades",
+                        "Un equilibrio entre tareas conocidas y nuevos desafíos",
+                        "Trabajar solo en lo que ya domino"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo mantienes tus conocimientos actualizados?",
+                    options: [
+                        "Confío en lo que aprendí en mis estudios",
+                        "Leo artículos, asisto a conferencias y tomo cursos regularmente",
+                        "Aprendo solo cuando surge una necesidad específica",
+                        "Espero que mi empresa me proporcione formación"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué significa para ti el 'desarrollo profesional'?",
+                    options: [
+                        "Ascender en la jerarquía de la empresa",
+                        "Adquirir constantemente nuevas habilidades y conocimientos",
+                        "Aumentar tu salario",
+                        "Obtener más responsabilidades"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 7: Orientación al Detalle y Precisión
+            [
+                {
+                    question: "Al revisar un documento, ¿qué es lo primero que notas?",
+                    options: [
+                        "El contenido general y las ideas principales",
+                        "Los errores gramaticales y de formato",
+                        "La estructura y organización",
+                        "La longitud y complejidad"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo abordarías una tarea que requiere alta precisión?",
+                    options: [
+                        "La hago rápidamente y luego reviso brevemente",
+                        "La hago con cuidado, verificando cada paso",
+                        "Pido a alguien que la revise después",
+                        "Uso herramientas automáticas para verificar"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Encuentra los 5 errores en este texto: 'La ciencia y la tecnologia avansan rapidamente. Los profesionales deben mantenerse actualizados para no quedarse atras. El aprendisaje continuo es esencial para el desarrrollo profesional.'",
+                    options: [
+                        "avansan, tecnologia, rapidamente, atras, aprendisaje",
+                        "tecnologia, avansan, atras, aprendisaje, desarrrollo",
+                        "avansan, tecnologia, rapidamente, atras, desarrrollo",
+                        "tecnologia, avansan, rapidamente, aprendisaje, desarrrollo"
+                    ],
+                    correctAnswer: 0
+                },
+                {
+                    question: "¿Qué te resulta más frustrante?",
+                    options: [
+                        "Trabajar en proyectos ambiguos",
+                        "Cometer errores por falta de atención",
+                        "Tener que repetir tareas",
+                        "Trabajar con plazos muy ajustados"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo prefieres organizar tu trabajo?",
+                    options: [
+                        "De manera flexible, adaptándome según sea necesario",
+                        "Con listas detalladas y sistemas organizados",
+                        "Basándome en la intuición y la experiencia",
+                        "Dejando que las circunstancias guíen mi trabajo"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 8: Creatividad y Expresión Artística
+            [
+                {
+                    question: "¿Qué actividad te resulta más atractiva?",
+                    options: [
+                        "Analizar datos y encontrar patrones",
+                        "Diseñar soluciones innovadoras a problemas",
+                        "Organizar y planificar proyectos",
+                        "Investigar y recopilar información"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo describirías tu proceso de resolución de problemas?",
+                    options: [
+                        "Sigo métodos establecidos y probados",
+                        "Combino enfoques conocidos con ideas nuevas",
+                        "Busco soluciones completamente originales",
+                        "Dependo de la experiencia de otros"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué te inspira más?",
+                    options: [
+                        "La lógica y la razón",
+                        "La naturaleza y el arte",
+                        "La tecnología y la innovación",
+                        "Las personas y las relaciones"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Si tuvieras que crear algo nuevo, ¿qué preferirías?",
+                    options: [
+                        "Un sistema eficiente",
+                        "Una obra de arte",
+                        "Un producto útil",
+                        "Una teoría innovadora"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo te sientes acerca de las reglas y convenciones?",
+                    options: [
+                        "Son esenciales y deben seguirse",
+                        "Son puntos de partida que pueden romperse",
+                        "Son limitaciones que evitan la creatividad",
+                        "Depende de la situación"
+                    ],
+                    correctAnswer: 1
+                }
+            ],
+            // Dimensión 9: Impacto Social y Ética (Motivación de Servicio)
+            [
+                {
+                    question: "¿Qué te motiva más en tu trabajo?",
+                    options: [
+                        "El reconocimiento y el éxito profesional",
+                        "La oportunidad de marcar una diferencia positiva",
+                        "El desafío intelectual",
+                        "La estabilidad económica"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué tipo de proyecto te interesaría más?",
+                    options: [
+                        "Un proyecto con alto potencial de lucro",
+                        "Un proyecto que resuelva un problema social",
+                        "Un proyecto técnicamente innovador",
+                        "Un proyecto con buen equilibrio vida-trabajo"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Cómo definirías el 'éxito'?",
+                    options: [
+                        "Alcanzar una posición alta y reconocimiento",
+                        "Tener un impacto positivo en la vida de otros",
+                        "Lograr tus metas personales",
+                        "Tener seguridad financiera"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "¿Qué valor es más importante para ti en una organización?",
+                    options: [
+                        "Eficiencia y productividad",
+                        "Responsabilidad social y ética",
+                        "Innovación y creatividad",
+                        "Estabilidad y tradición"
+                    ],
+                    correctAnswer: 1
+                },
+                {
+                    question: "Si tuvieras recursos para iniciar un proyecto, ¿qué tipo elegirías?",
+                    options: [
+                        "Un negocio con alto potencial de ganancias",
+                        "Una iniciativa para ayudar a una comunidad vulnerable",
+                        "Una investigación científica de vanguardia",
+                        "Un proyecto cultural o artístico"
+                    ],
+                    correctAnswer: 1
+                }
+            ]
+        ];
+
+        // Elementos divertidos por dimensión
+        const funElements = [
+            // Dimensión 0: Aptitud Técnica y Analítica
+            [
+                {
+                    title: "¿Sabías que...?",
+                    content: "El primer programador de la historia fue una mujer. Ada Lovelace escribió el primer algoritmo en 1843. ¡Girl power! 💻👩‍💻",
+                    emoji: "🤓"
+                },
+                {
+                    title: "Chiste de nerds",
+                    content: "¿Por qué los programadores confunden Halloween con Navidad? Porque Oct 31 = Dec 25. ¡Ja! 😂",
+                    emoji: "🎃🎄"
+                }
+            ],
+            // Dimensión 1: Requerimiento Interpersonal y Empatía
+            [
+                {
+                    title: "Curiosidad",
+                    content: "Sonreír, incluso si no te sientes feliz, puede mejorar tu estado de ánimo. ¡Es ciencia! 😊",
+                    emoji: "🧠"
+                },
+                {
+                    title: "Superpoder",
+                    content: "La empatía es como un superpoder: te permite entender a los demás sin necesidad de palabras mágicas. ✨",
+                    emoji: "🦸‍♀️"
+                }
+            ],
+            // Dimensión 2: Capacidad de Innovación y Adaptación a IA
+            [
+                {
+                    title: "Dato curioso",
+                    content: "La IA ya puede crear arte, música y hasta escribir historias. ¿Qué será lo siguiente? 🤖🎨",
+                    emoji: "🚀"
+                },
+                {
+                    title: "Reflexión",
+                    content: "La innovación no es tener ideas nuevas, sino dejar de tener ideas viejas. 💡",
+                    emoji: "🌟"
+                }
+            ],
+            // Dimensión 3: Tolerancia al Riesgo y Estabilidad Laboral
+            [
+                {
+                    title: "Dato interesante",
+                    content: "Las personas que toman riesgos calculados tienen más probabilidades de alcanzar el éxito. ¡Atrévete! 🎯",
+                    emoji: "🎲"
+                },
+                {
+                    title: "Consejo",
+                    content: "El mayor riesgo en la vida es no tomar ningún riesgo. ¡Sal de tu zona de confort! 🌈",
+                    emoji: "🏄‍♂️"
+                }
+            ],
+            // Dimensión 4: Preferencia por el Entorno (Físico vs. Conceptual)
+            [
+                {
+                    title: "Curiosidad",
+                    content: "Tu cerebro procesa mejor la información cuando estás en un entorno que te gusta. ¡Busca tu espacio ideal! 🌿",
+                    emoji: "🏞️"
+                },
+                {
+                    title: "Dato divertido",
+                    content: "Einstein desarrolló la teoría de la relatividad mientras trabajaba en una oficina de patentes. ¡La inspiración llega en cualquier lugar! 🌌",
+                    emoji: "🧩"
+                }
+            ],
+            // Dimensión 5: Capacidad de Liderazgo y Gestión de Equipos
+            [
+                {
+                    title: "Sabiduría",
+                    content: "Un buen líder no crea seguidores, crea más líderes. ¡Multiplica el talento! 👥",
+                    emoji: "👑"
+                },
+                {
+                    title: "Consejo",
+                    content: "La diferencia entre un jefe y un líder: un jefe dice 've', un líder dice 'vamos'. ¡Guía con el ejemplo! 🚶‍♂️",
+                    emoji: "🌟"
+                }
+            ],
+            // Dimensión 6: Necesidad de Aprendizaje Continuo y Reciclaje
+            [
+                {
+                    title: "Dato inspirador",
+                    content: "El cerebro humano puede seguir aprendiendo y cambiando hasta los 90 años. ¡Nunca es tarde! 🧠✨",
+                    emoji: "📚"
+                },
+                {
+                    title: "Reflexión",
+                    content: "El aprendizaje es como el ejercicio: cuanto más haces, más fuerte te vuelves. ¡Entrena tu mente! 💪",
+                    emoji: "🏋️‍♀️"
+                }
+            ],
+            // Dimensión 7: Orientación al Detalle y Precisión
+            [
+                {
+                    title: "Dato curioso",
+                    content: "Los detalles marcan la diferencia entre lo bueno y lo excelente. ¡La perfección está en los pequeños detalles! 🔍",
+                    emoji: "🎯"
+                },
+                {
+                    title: "Consejo",
+                    content: "En un mundo lleno de distracciones, la atención al detalle es una superpotencia. ¡Usa tu poder! ⚡",
+                    emoji: "🦸‍♂️"
+                }
+            ],
+            // Dimensión 8: Creatividad y Expresión Artística
+            [
+                {
+                    title: "Inspiración",
+                    content: "La creatividad es inteligencia divirtiéndose. ¡Deja volar tu imaginación! 🎨✨",
+                    emoji: "🌈"
+                },
+                {
+                    title: "Dato divertido",
+                    content: "Einstein dijo: 'La creatividad es más importante que el conocimiento'. ¡Y mira a dónde llegó! 🚀",
+                    emoji: "💡"
+                }
+            ],
+            // Dimensión 9: Impacto Social y Ética (Motivación de Servicio)
+            [
+                {
+                    title: "Reflexión",
+                    content: "El verdadero éxito no es cuánto tienes, sino cuánto das. ¡Haz del mundo un lugar mejor! 🌍❤️",
+                    emoji: "🤝"
+                },
+                {
+                    title: "Consejo",
+                    content: "No necesitas ser grande para empezar, pero necesitas empezar para ser grande. ¡Cada pequeño gesto cuenta! 🌱",
+                    emoji: "🌟"
+                }
+            ]
+        ];
+
+        // Dimensiones con colores asociados
+        const dimensions = [
+            { id: 0, name: "Aptitud Técnica y Analítica", icon: "fa-calculator", color: "#3498db" },
+            { id: 1, name: "Requerimiento Interpersonal y Empatía", icon: "fa-users", color: "#e74c3c" },
+            { id: 2, name: "Capacidad de Innovación y Adaptación a IA", icon: "fa-robot", color: "#9b59b6" },
+            { id: 3, name: "Tolerancia al Riesgo y Estabilidad Laboral", icon: "fa-chart-line", color: "#f39c12" },
+            { id: 4, name: "Preferencia por el Entorno (Físico vs. Conceptual)", icon: "fa-mountain", color: "#1abc9c" },
+            { id: 5, name: "Capacidad de Liderazgo y Gestión de Equipos", icon: "fa-user-tie", color: "#34495e" },
+            { id: 6, name: "Necesidad de Aprendizaje Continuo y Reciclaje", icon: "fa-book", color: "#2ecc71" },
+            { id: 7, name: "Orientación al Detalle y Precisión", icon: "fa-search", color: "#16a085" },
+            { id: 8, name: "Creatividad y Expresión Artística", icon: "fa-palette", color: "#e67e22" },
+            { id: 9, name: "Impacto Social y Ética (Motivación de Servicio)", icon: "fa-hands-helping", color: "#d35400" }
+        ];
+
+        // Estado del juego
+        let gameState = {
+            completedChallenges: [],
+            scores: new Array(10).fill(0),
+            currentChallenge: null,
+            timer: null,
+            timeLeft: 120, // 2 minutos para 2 preguntas
+            currentQuestions: [],
+            currentAnswers: [],
+            showingFeedback: false,
+            currentQuestionIndex: 0,
+            showingFunElement: false
+        };
+
+        // Inicializar el juego
+        function initGame() {
+            createParticles();
+            renderKeys();
+            setupEventListeners();
+        }
+
+        // Crear partículas flotantes
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 5 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición inicial aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Opacidad aleatoria
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                // Duración de la animación aleatoria
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Retardo aleatorio
+                const delay = Math.random() * 5;
+                particle.style.animationDelay = `${delay}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Renderizar las llaves
+        function renderKeys() {
+            const keyContainer = document.getElementById('key-container');
+            keyContainer.innerHTML = '';
+            
+            dimensions.forEach(dimension => {
+                const keyCard = document.createElement('div');
+                keyCard.className = 'key-card';
+                keyCard.dataset.id = dimension.id;
+                
+                if (gameState.completedChallenges.includes(dimension.id)) {
+                    keyCard.classList.add('completed');
+                }
+                
+                keyCard.innerHTML = `
+                    <i class="fas ${dimension.icon}" style="color: ${dimension.color}"></i>
+                    <h3>${dimension.name}</h3>
+                    <div class="score">${gameState.scores[dimension.id]}</div>
+                `;
+                
+                keyCard.addEventListener('click', () => openChallenge(dimension.id));
+                keyContainer.appendChild(keyCard);
+            });
+            
+            updateProgress();
+        }
+
+        // Actualizar el progreso
+        function updateProgress() {
+            const progress = (gameState.completedChallenges.length / 10) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `Progreso: ${gameState.completedChallenges.length}/10 llaves recolectadas`;
+            
+            if (gameState.completedChallenges.length === 10) {
+                document.getElementById('complete-game-btn').style.display = 'block';
+                createConfetti();
+            }
+        }
+
+        // Crear confeti al completar el juego
+        function createConfetti() {
+            const colors = ['#f39c12', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+            const confettiCount = 100;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.top = `-10px`;
+                    confetti.style.width = `${Math.random() * 10 + 5}px`;
+                    confetti.style.height = `${Math.random() * 10 + 5}px`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Eliminar el confeti después de la animación
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 30);
+            }
+        }
+
+        // Abrir un desafío
+        function openChallenge(dimensionId) {
+            if (gameState.completedChallenges.includes(dimensionId)) {
+                showNotification('¡Ya completaste este desafío! Prueba con otra llave.', 'warning');
+                return;
+            }
+            
+            const dimension = dimensions[dimensionId];
+            gameState.currentChallenge = dimensionId;
+            gameState.timeLeft = 120; // 2 minutos
+            gameState.currentQuestionIndex = 0;
+            gameState.showingFeedback = false;
+            gameState.showingFunElement = false;
+            
+            // Seleccionar 2 preguntas al azar
+            const allQuestions = [...questionsBank[dimensionId]];
+            gameState.currentQuestions = [];
+            
+            for (let i = 0; i < 2; i++) {
+                const randomIndex = Math.floor(Math.random() * allQuestions.length);
+                gameState.currentQuestions.push(allQuestions[randomIndex]);
+                allQuestions.splice(randomIndex, 1);
+            }
+            
+            gameState.currentAnswers = new Array(2).fill(null);
+            
+            document.getElementById('challenge-title').textContent = dimension.name;
+            document.getElementById('challenge-title').style.color = dimension.color;
+            document.getElementById('challenge-modal').style.display = 'flex';
+            
+            renderCurrentQuestion();
+            startTimer();
+        }
+
+        // Renderizar la pregunta actual
+        function renderCurrentQuestion() {
+            const questionsContainer = document.getElementById('questions-container');
+            questionsContainer.innerHTML = '';
+            
+            if (gameState.showingFunElement) {
+                // Mostrar elemento divertido
+                const funElementIndex = Math.floor(Math.random() * funElements[gameState.currentChallenge].length);
+                const funElement = funElements[gameState.currentChallenge][funElementIndex];
+                
+                const funDiv = document.createElement('div');
+                funDiv.className = 'fun-element';
+                funDiv.innerHTML = `
+                    <h3>${funElement.title}</h3>
+                    <div class="emoji">${funElement.emoji}</div>
+                    <p>${funElement.content}</p>
+                    <button class="btn next-question-btn" id="next-question-btn">Siguiente pregunta →</button>
+                `;
+                
+                questionsContainer.appendChild(funDiv);
+                
+                document.getElementById('next-question-btn').addEventListener('click', () => {
+                    gameState.showingFunElement = false;
+                    gameState.currentQuestionIndex++;
+                    
+                    if (gameState.currentQuestionIndex < 2) {
+                        renderCurrentQuestion();
+                    } else {
+                        // Todas las preguntas respondidas, mostrar botón de enviar
+                        renderSubmitButton();
+                    }
+                });
+            } else {
+                // Mostrar pregunta actual
+                const question = gameState.currentQuestions[gameState.currentQuestionIndex];
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-container';
+                
+                const optionsHtml = question.options.map((option, optionIndex) => `
+                    <div class="option" data-question="${gameState.currentQuestionIndex}" data-option="${optionIndex}">
+                        <input type="radio" id="q${gameState.currentQuestionIndex}_opt${optionIndex}" name="question${gameState.currentQuestionIndex}" value="${optionIndex}">
+                        <div class="radio-custom"></div>
+                        <label for="q${gameState.currentQuestionIndex}_opt${optionIndex}">${option}</label>
+                    </div>
+                `).join('');
+                
+                questionDiv.innerHTML = `
+                    <div class="question">Pregunta ${gameState.currentQuestionIndex + 1}/2: ${question.question}</div>
+                    <div class="options">${optionsHtml}</div>
+                `;
+                
+                questionsContainer.appendChild(questionDiv);
+                
+                // Agregar event listeners a las opciones
+                document.querySelectorAll('.option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        if (gameState.showingFeedback) return;
+                        
+                        const questionIndex = parseInt(this.dataset.question);
+                        const optionIndex = parseInt(this.dataset.option);
+                        
+                        // Marcar la opción seleccionada
+                        document.querySelectorAll(`input[name="question${questionIndex}"]`).forEach(input => {
+                            input.checked = false;
+                        });
+                        
+                        this.querySelector('input').checked = true;
+                        
+                        // Actualizar el estado visual
+                        document.querySelectorAll(`.option[data-question="${questionIndex}"]`).forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        this.classList.add('selected');
+                        
+                        // Guardar la respuesta
+                        gameState.currentAnswers[questionIndex] = optionIndex;
+                        
+                        // Mostrar feedback inmediato
+                        showImmediateFeedback(questionIndex, optionIndex);
+                    });
+                });
+                
+                // Restaurar respuesta previa si la hay
+                if (gameState.currentAnswers[gameState.currentQuestionIndex] !== null) {
+                    const answerIndex = gameState.currentAnswers[gameState.currentQuestionIndex];
+                    const optionElement = document.querySelector(`.option[data-question="${gameState.currentQuestionIndex}"][data-option="${answerIndex}"]`);
+                    if (optionElement) {
+                        optionElement.classList.add('selected');
+                        optionElement.querySelector('input').checked = true;
+                    }
+                }
+            }
+        }
+
+        // Renderizar botón de enviar
+        function renderSubmitButton() {
+            const questionsContainer = document.getElementById('questions-container');
+            questionsContainer.innerHTML = `
+                <div class="question-container" style="text-align: center;">
+                    <h3>¡Has respondido todas las preguntas!</h3>
+                    <p>¿Listo para enviar tus respuestas y obtener tu llave?</p>
+                    <button class="btn btn-submit" id="final-submit-btn">Enviar respuestas</button>
+                </div>
+            `;
+            
+            document.getElementById('final-submit-btn').addEventListener('click', () => {
+                submitChallenge();
+            });
+        }
+
+        // Mostrar feedback inmediato al seleccionar una opción
+        function showImmediateFeedback(questionIndex, selectedOption) {
+            const correctOption = gameState.currentQuestions[questionIndex].correctAnswer;
+            const options = document.querySelectorAll(`.option[data-question="${questionIndex}"]`);
+            
+            gameState.showingFeedback = true;
+            
+            // Mostrar si la opción seleccionada es correcta o incorrecta
+            if (selectedOption === correctOption) {
+                options[selectedOption].classList.add('correct');
+                showNotification('¡Correcto! ¡Eres un crack! 🎉', 'success');
+            } else {
+                options[selectedOption].classList.add('incorrect');
+                options[correctOption].classList.add('correct');
+                showNotification('Ups, no es correcta. ¡Pero no te preocupes, sigue intentándolo! 😅', 'error');
+            }
+            
+            // Deshabilitar las opciones para esta pregunta
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Habilitar las opciones después de un tiempo
+            setTimeout(() => {
+                gameState.showingFeedback = false;
+                
+                // Mostrar elemento divertido después de responder
+                setTimeout(() => {
+                    gameState.showingFunElement = true;
+                    renderCurrentQuestion();
+                }, 1000);
+            }, 1500);
+        }
+
+        // Iniciar el temporizador
+        function startTimer() {
+            clearInterval(gameState.timer);
+            updateTimerDisplay();
+            
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimerDisplay();
+                
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timer);
+                    submitChallenge(true); // Tiempo agotado
+                }
+                
+                // Cambiar el color del temporizador cuando queda poco tiempo
+                const timerElement = document.getElementById('timer');
+                if (gameState.timeLeft <= 30) {
+                    timerElement.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                } else if (gameState.timeLeft <= 60) {
+                    timerElement.style.background = 'linear-gradient(45deg, #f39c12, #d35400)';
+                }
+            }, 1000);
+        }
+
+        // Actualizar la visualización del temporizador
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            document.getElementById('timer').textContent = `Tiempo restante: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Enviar el desafío
+        function submitChallenge(timeOut = false) {
+            clearInterval(gameState.timer);
+            
+            let score = 0;
+            
+            if (timeOut) {
+                // Calcular puntuación basada en respuestas contestadas
+                const answeredCount = gameState.currentAnswers.filter(answer => answer !== null).length;
+                score = Math.round((answeredCount / 2) * 10);
+                showNotification('¡Tiempo agotado! Tu puntuación se basa en las respuestas que contestaste. ⏱️', 'warning');
+            } else {
+                // Verificar si todas las preguntas fueron respondidas
+                const unansweredCount = gameState.currentAnswers.filter(answer => answer === null).length;
+                if (unansweredCount > 0) {
+                    showNotification(`¡Falta responder ${unansweredCount} pregunta(s)! ¡Completa todas antes de enviar!`, 'warning');
+                    return;
+                }
+                
+                // Calcular puntuación basada en respuestas correctas
+                let correctCount = 0;
+                gameState.currentAnswers.forEach((answer, index) => {
+                    if (answer === gameState.currentQuestions[index].correctAnswer) {
+                        correctCount++;
+                    }
+                });
+                
+                score = Math.round((correctCount / 2) * 10);
+                
+                if (score === 10) {
+                    showNotification('¡WOW! ¡Todas tus respuestas son correctas! ¡Eres un genio! 🧠✨', 'success');
+                } else if (score >= 7) {
+                    showNotification(`¡Buen trabajo! Respondiste correctamente ${correctCount} de 2 preguntas. ¡Sigue así! 👍`, 'success');
+                } else {
+                    showNotification(`Respondiste correctamente ${correctCount} de 2 preguntas. ¡No te rindas, la práctica hace al maestro! 💪`, 'warning');
+                }
+            }
+            
+            // Guardar la puntuación
+            gameState.scores[gameState.currentChallenge] = score;
+            gameState.completedChallenges.push(gameState.currentChallenge);
+            
+            // Mostrar animación de llave recolectada
+            showKeyAnimation();
+            
+            // Cerrar el modal después de un tiempo
+            setTimeout(() => {
+                document.getElementById('challenge-modal').style.display = 'none';
+                renderKeys();
+            }, 2000);
+        }
+
+        // Mostrar animación de llave recolectada
+        function showKeyAnimation() {
+            const dimension = dimensions[gameState.currentChallenge];
+            const keyAnimation = document.createElement('div');
+            keyAnimation.className = 'key-animation';
+            keyAnimation.innerHTML = `<i class="fas ${dimension.icon}" style="color: ${dimension.color}"></i>`;
+            document.body.appendChild(keyAnimation);
+            
+            setTimeout(() => {
+                keyAnimation.remove();
+            }, 2000);
+        }
+
+        // Calcular las carreras más compatibles
+        function calculateCompatibleCareers() {
+            const userScores = gameState.scores;
+            const careerScores = {};
+            
+            // Calcular la correlación de Spearman para cada carrera
+            for (const [career, scores] of Object.entries(professionsMatrix)) {
+                let correlation = calculateSpearmanCorrelation(userScores, scores);
+                careerScores[career] = correlation;
+            }
+            
+            // Ordenar las carreras por correlación (de mayor a menor)
+            const sortedCareers = Object.entries(careerScores)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            return sortedCareers;
+        }
+
+        // Calcular la correlación de Spearman (versión simplificada)
+        function calculateSpearmanCorrelation(x, y) {
+            // Convertir a rangos
+            const rankX = getRanks(x);
+            const rankY = getRanks(y);
+            
+            // Calcular la diferencia de rangos al cuadrado
+            let dSquaredSum = 0;
+            for (let i = 0; i < rankX.length; i++) {
+                const d = rankX[i] - rankY[i];
+                dSquaredSum += d * d;
+            }
+            
+            // Calcular la correlación de Spearman
+            const n = rankX.length;
+            const spearman = 1 - (6 * dSquaredSum) / (n * (n * n - 1));
+            
+            return spearman;
+        }
+
+        // Obtener los rangos de un array
+        function getRanks(arr) {
+            // Crear una copia del array original
+            const sorted = [...arr].sort((a, b) => a - b);
+            
+            // Crear un mapa de valores a rangos
+            const rankMap = {};
+            sorted.forEach((value, index) => {
+                if (!rankMap[value]) {
+                    rankMap[value] = index + 1;
+                }
+            });
+            
+            // Mapear los valores originales a sus rangos
+            return arr.map(value => rankMap[value]);
+        }
+
+        // Mostrar los resultados
+        function showResults() {
+            const compatibleCareers = calculateCompatibleCareers();
+            const careerList = document.getElementById('career-list');
+            careerList.innerHTML = '';
+            
+            compatibleCareers.forEach(([career, score], index) => {
+                const careerItem = document.createElement('li');
+                careerItem.className = 'career-item';
+                
+                // Convertir la correlación a un porcentaje para mostrar
+                const percentage = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
+                
+                careerItem.innerHTML = `
+                    <div>
+                        <div class="career-name">${index + 1}. ${career}</div>
+                        <div>Compatibilidad: ${percentage}%</div>
+                    </div>
+                    <div class="career-score">${percentage}%</div>
+                `;
+                
+                careerList.appendChild(careerItem);
+            });
+            
+            // Ocultar el contenedor del juego y mostrar los resultados
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+            
+            // Generar un código único para compartir
+            const userCode = generateUserCode();
+            document.getElementById('friend-code').placeholder = `Código de resultado de tu amigo (ej: ${userCode})`;
+        }
+
+        // Generar un código de usuario único
+        function generateUserCode() {
+            const scores = gameState.scores.join('');
+            const timestamp = Date.now().toString();
+            const code = btoa(scores + timestamp).substring(0, 8).replace(/[^a-zA-Z0-9]/g, '');
+            return code.toUpperCase();
+        }
+
+        // Decodificar un código de usuario
+        function decodeUserCode(code) {
+            try {
+                const decoded = atob(code);
+                const scores = decoded.substring(0, 10);
+                return scores.split('').map(Number);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Comparar resultados con un amigo
+        function compareResults() {
+            const friendCode = document.getElementById('friend-code').value.trim().toUpperCase();
+            if (!friendCode) {
+                showNotification('¡Hey! Ingresa un código válido para comparar. 🤔', 'warning');
+                return;
+            }
+            
+            const friendScores = decodeUserCode(friendCode);
+            if (!friendScores || friendScores.length !== 10) {
+                showNotification('¡Ups! Código inválido. Verifica e intenta de nuevo. ❌', 'error');
+                return;
+            }
+            
+            // Calcular la compatibilidad entre los dos perfiles
+            const compatibility = calculateProfileCompatibility(gameState.scores, friendScores);
+            
+            // Mostrar los resultados
+            const teamResults = document.getElementById('team-results');
+            teamResults.style.display = 'block';
+            
+            // Encontrar las carreras más compatibles para el equipo
+            const teamScores = gameState.scores.map((score, index) => (score + friendScores[index]) / 2);
+            const teamCompatibleCareers = calculateCompatibleCareersForScores(teamScores);
+            
+            teamResults.innerHTML = `
+                <h5>Compatibilidad de equipo: ${Math.round(compatibility * 100)}%</h5>
+                <p>Las carreras más compatibles para tu equipo son:</p>
+                <ul>
+                    ${teamCompatibleCareers.slice(0, 3).map(([career, score], index) => {
+                        const percentage = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
+                        return `<li>${index + 1}. ${career} (${percentage}%)</li>`;
+                    }).join('')}
+                </ul>
+            `;
+        }
+
+        // Calcular la compatibilidad entre dos perfiles
+        function calculateProfileCompatibility(profile1, profile2) {
+            // Calcular la correlación de Pearson entre los dos perfiles
+            let sum1 = 0, sum2 = 0, sum1Sq = 0, sum2Sq = 0, pSum = 0;
+            const n = profile1.length;
+            
+            for (let i = 0; i < n; i++) {
+                sum1 += profile1[i];
+                sum2 += profile2[i];
+                sum1Sq += profile1[i] * profile1[i];
+                sum2Sq += profile2[i] * profile2[i];
+                pSum += profile1[i] * profile2[i];
+            }
+            
+            const num = pSum - (sum1 * sum2 / n);
+            const den = Math.sqrt((sum1Sq - sum1 * sum1 / n) * (sum2Sq - sum2 * sum2 / n));
+            
+            if (den === 0) return 0;
+            return num / den;
+        }
+
+        // Calcular las carreras más compatibles para un perfil específico
+        function calculateCompatibleCareersForScores(scores) {
+            const careerScores = {};
+            
+            // Calcular la correlación de Spearman para cada carrera
+            for (const [career, careerScoresArray] of Object.entries(professionsMatrix)) {
+                let correlation = calculateSpearmanCorrelation(scores, careerScoresArray);
+                careerScores[career] = correlation;
+            }
+            
+            // Ordenar las carreras por correlación (de mayor a menor)
+            const sortedCareers = Object.entries(careerScores)
+                .sort((a, b) => b[1] - a[1]);
+            
+            return sortedCareers;
+        }
+
+        // Reiniciar el juego
+        function restartGame() {
+            gameState = {
+                completedChallenges: [],
+                scores: new Array(10).fill(0),
+                currentChallenge: null,
+                timer: null,
+                timeLeft: 120,
+                currentQuestions: [],
+                currentAnswers: [],
+                showingFeedback: false,
+                currentQuestionIndex: 0,
+                showingFunElement: false
+            };
+            
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            
+            renderKeys();
+        }
+
+        // Mostrar una notificación
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification show';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            } else if (type === 'warning') {
+                notification.classList.add('warning');
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Compartir en redes sociales
+        function shareOnSocial(platform) {
+            const compatibleCareers = calculateCompatibleCareers();
+            const topCareer = compatibleCareers[0][0];
+            const percentage = Math.max(0, Math.min(100, Math.round((compatibleCareers[0][1] + 1) * 50)));
+            const userCode = generateUserCode();
+            
+            const text = `¡Acabo de descubrir que mi carrera ideal es ${topCareer} con ${percentage}% de compatibilidad en Carrera Quest! ¡Descubre la tuya también! Mi código es ${userCode}`;
+            const url = window.location.href;
+            
+            let shareUrl = '';
+            
+            switch (platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+                    break;
+            }
+            
+            window.open(shareUrl, '_blank');
+        }
+
+        // Configurar los event listeners
+        function setupEventListeners() {
+            document.getElementById('close-modal').addEventListener('click', () => {
+                clearInterval(gameState.timer);
+                document.getElementById('challenge-modal').style.display = 'none';
+            });
+            
+            document.getElementById('show-results').addEventListener('click', showResults);
+            
+            document.getElementById('restart-game').addEventListener('click', restartGame);
+            
+            document.getElementById('compare-results').addEventListener('click', compareResults);
+            
+            document.getElementById('share-twitter').addEventListener('click', () => shareOnSocial('twitter'));
+            document.getElementById('share-facebook').addEventListener('click', () => shareOnSocial('facebook'));
+            document.getElementById('share-whatsapp').addEventListener('click', () => shareOnSocial('whatsapp'));
+        }
+
+        // Inicializar la aplicación cuando se carga la página
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
