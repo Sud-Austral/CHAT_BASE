@@ -1,0 +1,4179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrera Quest: Descubre tu Perfil Vocacional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === ESTILOS BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0b2a, #1a1a4c, #0c1f33);
+            background-size: 400% 400%;
+            color: #f0f4f8;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 1.5rem 0;
+            animation: gradientShift 20s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            body {
+                animation: none;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .background-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .layer-1 { background: radial-gradient(circle at 20% 30%, rgba(52, 152, 219, 0.15), transparent 60%); }
+        .layer-2 { background: radial-gradient(circle at 80% 70%, rgba(46, 204, 113, 0.1), transparent 60%); }
+        .layer-3 { background: radial-gradient(circle at 50% 20%, rgba(241, 196, 15, 0.1), transparent 70%); }
+
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            background: #fff;
+            box-shadow: 0 0 8px #fff;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+
+        .bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: floatBubble var(--duration, 15s) infinite linear;
+        }
+
+        .nebula {
+            background: radial-gradient(circle, rgba(91, 192, 222, 0.08), transparent 70%);
+            animation: drift var(--duration, 40s) infinite linear;
+        }
+
+        .meteor {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            border-radius: 0 0 2px 2px;
+            transform: rotate(-45deg);
+            animation: meteorFall var(--duration, 8s) infinite linear;
+            opacity: 0;
+        }
+
+        /* Partículas contextuales */
+        .binary-particle {
+            color: #3498db;
+            font-family: monospace;
+            font-size: 10px;
+            animation: floatBinary var(--duration, 10s) infinite linear;
+        }
+
+        .color-particle {
+            background: linear-gradient(45deg, #ff00cc, #00ff99, #00ccff);
+            animation: floatColor var(--duration, 12s) infinite linear;
+        }
+
+        .heart-particle {
+            color: #e74c3c;
+            animation: floatHeart var(--duration, 8s) infinite ease-in-out;
+        }
+
+        .nature-particle {
+            background: radial-gradient(circle, rgba(46, 204, 113, 0.6), transparent 70%);
+            animation: floatNature var(--duration, 15s) infinite linear;
+        }
+
+        .social-particle {
+            color: #9b59b6;
+            animation: floatSocial var(--duration, 10s) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, -100px); }
+        }
+
+        @keyframes meteorFall {
+            0% { transform: translateX(-100px) translateY(-100px) rotate(-45deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw) translateY(100vh) rotate(-45deg); opacity: 0; }
+        }
+
+        @keyframes floatBinary {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.5; }
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatColor {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.5; }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0.5);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-100vh) translateX(30px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatNature {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(-100vh) translateX(80px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatSocial {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.5; }
+            100% {
+                transform: translateY(-100vh) translateX(40px);
+                opacity: 0;
+            }
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            background: rgba(52, 152, 219, 0.7);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.8);
+            transform: translate(-50%, -50%);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.4rem;
+            margin-bottom: 0.7rem;
+            background: linear-gradient(90deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: titleGradient 8s ease infinite;
+            position: relative;
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+        }
+
+        @keyframes titleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header p {
+            font-size: 1rem;
+            max-width: 650px;
+            margin: 0 auto;
+            opacity: 0.95;
+            color: #d6eaf8;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid rgba(255, 255, 255, 0.7);
+            animation: typing 4s steps(60, end), blink 1s step-end infinite alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .narrative-text {
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            color: #e0f7fa;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .game-container {
+            background: rgba(10, 15, 35, 0.65);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .game-container::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            background-size: 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: containerGlow 12s linear infinite;
+            opacity: 0.6;
+            filter: blur(20px);
+        }
+
+        @keyframes containerGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        .game-container h2 {
+            text-align: center;
+            margin-bottom: 1.4rem;
+            font-size: 1.6rem;
+            color: #f1c40f;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+        }
+
+        .avatar-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .avatar {
+            width: 180px;
+            height: 180px;
+            background: rgba(30, 40, 80, 0.7);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .avatar-body {
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(145deg, #4a69bd, #1e3799);
+            border-radius: 50px 50px 0 0;
+            position: relative;
+        }
+
+        .avatar-head {
+            width: 70px;
+            height: 70px;
+            background: #f8b500;
+            border-radius: 50%;
+            position: absolute;
+            top: -35px;
+            left: 15px;
+        }
+
+        .avatar-accessory {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+        }
+
+        .avatar-accessory.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .avatar-glasses {
+            width: 50px;
+            height: 15px;
+            background: #3498db;
+            border-radius: 5px;
+            top: -20px;
+            left: 25px;
+        }
+
+        .avatar-tie {
+            width: 15px;
+            height: 40px;
+            background: #e74c3c;
+            top: 40px;
+            left: 42px;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+
+        .avatar-palette {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #ff00cc, #00ff99, #00ccff);
+            border-radius: 50%;
+            top: 20px;
+            right: 20px;
+        }
+
+        .avatar-plant {
+            width: 15px;
+            height: 25px;
+            background: #2ecc71;
+            border-radius: 0 100% 0 100%;
+            top: 10px;
+            left: 10px;
+        }
+
+        .avatar-handshake {
+            width: 25px;
+            height: 15px;
+            background: #9b59b6;
+            border-radius: 50%;
+            bottom: 30px;
+            right: 10px;
+        }
+
+        .avatar-book {
+            width: 20px;
+            height: 25px;
+            background: #16a085;
+            border-radius: 3px;
+            bottom: 20px;
+            left: 15px;
+        }
+
+        .avatar-magnifier {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #d35400;
+            border-radius: 50%;
+            bottom: 30px;
+            right: 30px;
+        }
+
+        .avatar-lightbulb {
+            width: 25px;
+            height: 25px;
+            background: #f39c12;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            top: 10px;
+            right: 30px;
+        }
+
+        .avatar-heart {
+            width: 20px;
+            height: 20px;
+            background: #e74c3c;
+            position: relative;
+            transform: rotate(-45deg);
+            top: 30px;
+            left: 30px;
+        }
+
+        .avatar-heart::before, .avatar-heart::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background: #e74c3c;
+            border-radius: 50%;
+        }
+
+        .avatar-heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .avatar-heart::after {
+            left: 10px;
+            top: 0;
+        }
+
+        .achievement-badge {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: rgba(30, 40, 80, 0.95);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            transition: right 0.5s ease;
+            border-left: 4px solid #f1c40f;
+        }
+
+        .achievement-badge.show {
+            right: 20px;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+            color: #f1c40f;
+        }
+
+        .achievement-text h3 {
+            margin: 0 0 5px;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .achievement-text p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #e0f7fa;
+        }
+
+        .progress-container {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.2, 0.8, 0.4, 1);
+            position: relative;
+        }
+
+        .progress.rainbow {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .progress-lock {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: rgba(20, 30, 60, 0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .progress-lock.unlocked {
+            animation: unlock 1s forwards;
+        }
+
+        @keyframes unlock {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-50%) rotate(20deg); }
+            100% { transform: translateY(-50%) rotate(0deg) scale(1.2); opacity: 0; }
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            opacity: 0.95;
+            color: #e0f7fa;
+            font-weight: 600;
+        }
+
+        .key-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .key-card {
+            background: linear-gradient(145deg, rgba(20, 25, 55, 0.8), rgba(10, 15, 40, 0.9));
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 1.4rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            border: 2px solid transparent;
+        }
+
+        .key-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+            opacity: 0.4;
+        }
+
+        .key-card:hover {
+            transform: translateY(-8px) rotateX(6deg) rotateY(4deg);
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.4),
+                0 0 18px var(--hover-glow, rgba(52, 152, 219, 0.5));
+            z-index: 10;
+        }
+
+        .key-card.completed {
+            animation: pulseGlow 2s infinite alternate;
+            box-shadow:
+                0 0 25px rgba(46, 204, 113, 0.6),
+                0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(46, 204, 113, 0.7);
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); }
+            to { box-shadow: 0 0 30px rgba(46, 204, 113, 0.8); }
+        }
+
+        .key-card i {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            transition: transform 0.4s ease, color 0.4s ease;
+            display: block;
+        }
+
+        .key-card:hover i {
+            transform: scale(1.15) rotate(8deg);
+        }
+
+        .key-card h3 {
+            font-size: 0.92rem;
+            color: #f0f4f8;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        .mini-progress {
+            height: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            margin-top: 0.9rem;
+            overflow: hidden;
+        }
+
+        .mini-progress-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+
+        :root {
+            --color-0: #3498db;
+            --color-1: #e74c3c;
+            --color-2: #9b59b6;
+            --color-3: #f39c12;
+            --color-4: #2ecc71;
+            --color-5: #34495e;
+            --color-6: #16a085;
+            --color-7: #d35400;
+            --color-8: #e67e22;
+            --color-9: #c0392b;
+        }
+
+        .key-card[data-id="0"] { --hover-glow: rgba(52, 152, 219, 0.6); }
+        .key-card[data-id="0"] i { color: var(--color-0); }
+        .key-card[data-id="0"].completed i { color: #2ecc71; }
+        .key-card[data-id="0"] .mini-progress-bar { background: var(--color-0); }
+        .key-card[data-id="1"] { --hover-glow: rgba(231, 76, 60, 0.6); }
+        .key-card[data-id="1"] i { color: var(--color-1); }
+        .key-card[data-id="1"].completed i { color: #2ecc71; }
+        .key-card[data-id="1"] .mini-progress-bar { background: var(--color-1); }
+        .key-card[data-id="2"] { --hover-glow: rgba(155, 89, 182, 0.6); }
+        .key-card[data-id="2"] i { color: var(--color-2); }
+        .key-card[data-id="2"].completed i { color: #2ecc71; }
+        .key-card[data-id="2"] .mini-progress-bar { background: var(--color-2); }
+        .key-card[data-id="3"] { --hover-glow: rgba(243, 156, 18, 0.6); }
+        .key-card[data-id="3"] i { color: var(--color-3); }
+        .key-card[data-id="3"].completed i { color: #2ecc71; }
+        .key-card[data-id="3"] .mini-progress-bar { background: var(--color-3); }
+        .key-card[data-id="4"] { --hover-glow: rgba(46, 204, 113, 0.6); }
+        .key-card[data-id="4"] i { color: var(--color-4); }
+        .key-card[data-id="4"].completed i { color: #2ecc71; }
+        .key-card[data-id="4"] .mini-progress-bar { background: var(--color-4); }
+        .key-card[data-id="5"] { --hover-glow: rgba(52, 73, 94, 0.6); }
+        .key-card[data-id="5"] i { color: var(--color-5); }
+        .key-card[data-id="5"].completed i { color: #2ecc71; }
+        .key-card[data-id="5"] .mini-progress-bar { background: var(--color-5); }
+        .key-card[data-id="6"] { --hover-glow: rgba(22, 160, 133, 0.6); }
+        .key-card[data-id="6"] i { color: var(--color-6); }
+        .key-card[data-id="6"].completed i { color: #2ecc71; }
+        .key-card[data-id="6"] .mini-progress-bar { background: var(--color-6); }
+        .key-card[data-id="7"] { --hover-glow: rgba(211, 84, 0, 0.6); }
+        .key-card[data-id="7"] i { color: var(--color-7); }
+        .key-card[data-id="7"].completed i { color: #2ecc71; }
+        .key-card[data-id="7"] .mini-progress-bar { background: var(--color-7); }
+        .key-card[data-id="8"] { --hover-glow: rgba(230, 126, 34, 0.6); }
+        .key-card[data-id="8"] i { color: var(--color-8); }
+        .key-card[data-id="8"].completed i { color: #2ecc71; }
+        .key-card[data-id="8"] .mini-progress-bar { background: var(--color-8); }
+        .key-card[data-id="9"] { --hover-glow: rgba(192, 57, 43, 0.6); }
+        .key-card[data-id="9"] i { color: var(--color-9); }
+        .key-card[data-id="9"].completed i { color: #2ecc71; }
+        .key-card[data-id="9"] .mini-progress-bar { background: var(--color-9); }
+
+        .challenge-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .challenge-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .challenge-content {
+            background: linear-gradient(145deg, rgba(15, 20, 45, 0.9), rgba(25, 35, 70, 0.95));
+            border-radius: 20px;
+            padding: 1.8rem;
+            max-width: 700px;
+            width: 94%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            color: #f0f4f8;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                0 20px 50px rgba(0, 0, 0, 0.6);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .challenge-modal.active .challenge-content {
+            transform: scale(1);
+        }
+
+        .challenge-content::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            background-size: 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: modalGlow 10s linear infinite;
+            opacity: 0.7;
+            filter: blur(15px);
+        }
+
+        @keyframes modalGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #f0f4f8;
+            background: rgba(20, 30, 60, 0.7);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .close-btn:hover {
+            background: rgba(231, 76, 60, 0.9);
+            transform: rotate(180deg) scale(1.1);
+            color: white;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+        }
+
+        .question-container {
+            margin-bottom: 1.6rem;
+            background: rgba(20, 30, 60, 0.55);
+            padding: 1.4rem;
+            border-radius: 12px;
+            border-left: 4px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: questionShimmer 2s infinite;
+            opacity: 0;
+        }
+
+        .question-container.active::after {
+            opacity: 0.3;
+        }
+
+        @keyframes questionShimmer {
+            100% { transform: translateX(100%); }
+        }
+
+        .question-container.active {
+            border-left-color: #3498db;
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.35);
+        }
+
+        .question {
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #f0f4f8;
+            opacity: 0;
+            animation: revealText 0.8s forwards;
+        }
+
+        @keyframes revealText {
+            to { opacity: 1; }
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option {
+            background: rgba(30, 40, 80, 0.65);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            border: 1px solid transparent;
+            color: #e0e7ff;
+            position: relative;
+            overflow: hidden;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(52, 152, 219, 0.2);
+            z-index: -1;
+            transition: width 0.4s ease;
+        }
+
+        .option:hover::before {
+            width: 100%;
+        }
+
+        .option:hover {
+            transform: translateX(5px);
+            border-color: rgba(52, 152, 219, 0.5);
+            color: white;
+        }
+
+        .option.selected {
+            background: rgba(52, 152, 219, 0.4);
+            border-left: 4px solid #3498db;
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.5);
+            color: white;
+        }
+
+        .option .feedback-icon {
+            margin-right: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .option:hover .feedback-icon {
+            opacity: 0.7;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 0.85rem 1.6rem;
+            border-radius: 32px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 1.2rem;
+            display: block;
+            width: fit-content;
+            margin: 1.6rem auto 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            z-index: -1;
+            transition: all 0.4s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.6);
+        }
+
+        .btn:hover::before {
+            background: linear-gradient(45deg, #3498db, #5dade2);
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .btn-submit::before {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+
+        .btn-submit:hover::before {
+            background: linear-gradient(45deg, #2ecc71, #58d68d);
+        }
+
+        #show-results {
+            animation: bouncePulse 2s infinite;
+        }
+
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .results-container {
+            display: none;
+            background: rgba(10, 15, 35, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: slideIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .results-container h2 {
+            text-align: center;
+            margin-bottom: 1.6rem;
+            color: #f1c40f;
+            font-size: 1.7rem;
+            text-shadow: 0 0 12px rgba(241, 196, 15, 0.7);
+        }
+
+        .career-list {
+            list-style: none;
+        }
+
+        .career-item {
+            background: rgba(20, 30, 60, 0.65);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .career-item.reveal {
+            animation: careerReveal 0.7s forwards;
+        }
+
+        @keyframes careerReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .career-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: careerShimmer 2s infinite;
+            opacity: 0;
+        }
+
+        .career-item:hover::before {
+            opacity: 0.4;
+        }
+
+        @keyframes careerShimmer {
+            100% { transform: translateX(100%); }
+        }
+
+        .career-item:hover {
+            transform: translateX(6px);
+            border-left-color: #f1c40f;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.25);
+        }
+
+        .career-name {
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: #f0f4f8;
+        }
+
+        .career-icon {
+            margin-right: 10px;
+            color: #f1c40f;
+        }
+
+        .career-badge {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .career-score {
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+            color: white;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 65px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: #d6eaf8;
+            position: relative;
+        }
+
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.9), transparent);
+            animation: wave 3s infinite linear;
+        }
+
+        @keyframes wave {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #f0f;
+            pointer-events: none;
+            z-index: 1001;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        .special-message {
+            text-align: center;
+            margin: 1.8rem 0;
+            padding: 1.3rem;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .all-tens-message {
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.3));
+            border: 2px solid rgba(46, 204, 113, 0.5);
+            color: #e8f8f5;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+        }
+
+        .all-ones-message {
+            background: linear-gradient(145deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.3));
+            border: 2px solid rgba(231, 76, 60, 0.5);
+            color: #fdecea;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .power-ups {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .power-up {
+            background: rgba(30, 40, 80, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.8rem;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .power-up:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .power-up.used {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .power-up i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #f1c40f;
+        }
+
+        .power-up p {
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .mini-game {
+            display: none;
+            background: rgba(20, 30, 60, 0.8);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .mini-game.active {
+            display: block;
+        }
+
+        .mini-game h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #f1c40f;
+        }
+
+        .mini-game-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mini-game-timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .mini-game-result {
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #2ecc71;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .mini-game-result.show {
+            opacity: 1;
+        }
+
+        .profile-unique {
+            background: rgba(20, 30, 60, 0.7);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: none;
+        }
+
+        .profile-unique.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .profile-unique h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #f1c40f;
+        }
+
+        .profile-chart {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+        }
+
+        .profile-bar {
+            width: 30px;
+            background: rgba(52, 152, 219, 0.3);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: height 1s ease;
+        }
+
+        .profile-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .profile-bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .social-comparison {
+            background: rgba(20, 30, 60, 0.7);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: none;
+        }
+
+        .social-comparison.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .social-comparison h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #f1c40f;
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.8rem 0;
+            padding: 0.5rem;
+            background: rgba(30, 40, 80, 0.5);
+            border-radius: 8px;
+        }
+
+        .comparison-label {
+            font-weight: 500;
+        }
+
+        .comparison-value {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        .response-time {
+            background: rgba(20, 30, 60, 0.7);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: none;
+        }
+
+        .response-time.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .response-time h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #f1c40f;
+        }
+
+        .response-time-result {
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+
+        .what-if-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .what-if-btn {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .what-if-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+        }
+
+        .what-if-results {
+            background: rgba(20, 30, 60, 0.7);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .what-if-results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 35, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-tip {
+            margin-top: 2rem;
+            text-align: center;
+            max-width: 80%;
+            color: #e0f7fa;
+        }
+
+        .loading-tip h3 {
+            margin-bottom: 0.5rem;
+            color: #f1c40f;
+        }
+
+        .quick-results {
+            display: none;
+            background: rgba(20, 30, 60, 0.7);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .quick-results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quick-results h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #f1c40f;
+        }
+
+        .quick-results-list {
+            list-style: none;
+        }
+
+        .quick-results-item {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: rgba(30, 40, 80, 0.5);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quick-results-name {
+            font-weight: 500;
+        }
+
+        .quick-results-score {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* === MEDIA QUERIES === */
+        @media (max-width: 768px) {
+            body {
+                padding: 1.2rem 0;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 0.95rem;
+                max-width: 90%;
+            }
+
+            .game-container, .results-container {
+                padding: 1.4rem;
+            }
+
+            .game-container h2, .results-container h2 {
+                font-size: 1.45rem;
+            }
+
+            .key-container {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+
+            .key-card {
+                padding: 1.2rem;
+                border-radius: 14px;
+            }
+
+            .key-card h3 {
+                font-size: 0.88rem;
+            }
+
+            .key-card i {
+                font-size: 1.6rem;
+            }
+
+            .avatar {
+                width: 150px;
+                height: 150px;
+            }
+
+            .avatar-body {
+                width: 80px;
+                height: 120px;
+            }
+
+            .avatar-head {
+                width: 60px;
+                height: 60px;
+                top: -30px;
+                left: 10px;
+            }
+
+            .challenge-content {
+                padding: 1.4rem;
+                max-height: 85vh;
+            }
+
+            .question {
+                font-size: 1rem;
+            }
+
+            .option {
+                padding: 0.9rem;
+                font-size: 0.95rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.4rem;
+                font-size: 0.95rem;
+            }
+
+            .career-item {
+                padding: 1rem;
+            }
+
+            .career-name {
+                font-size: 1rem;
+            }
+
+            footer {
+                margin-top: 2.5rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .key-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .game-container h2, .results-container h2 {
+                font-size: 1.35rem;
+            }
+
+            .progress-bar {
+                height: 10px;
+                border-radius: 5px;
+            }
+
+            .progress-text {
+                font-size: 0.9rem;
+            }
+
+            .challenge-content {
+                padding: 1.2rem;
+            }
+
+            .close-btn {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.3rem;
+                font-size: 0.9rem;
+            }
+
+            .career-score {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+                min-width: 60px;
+            }
+
+            .special-message {
+                font-size: 1rem;
+                padding: 1.1rem;
+            }
+
+            .power-ups {
+                flex-wrap: wrap;
+            }
+
+            .power-up {
+                width: 100px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .key-container {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.55rem;
+            }
+
+            .game-container, .results-container {
+                padding: 1.2rem;
+            }
+
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+
+            .avatar-body {
+                width: 60px;
+                height: 90px;
+            }
+
+            .avatar-head {
+                width: 50px;
+                height: 50px;
+                top: -25px;
+                left: 5px;
+            }
+        }
+
+        /* Animaciones adicionales */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .dimension-complete-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(46, 204, 113, 0.7), transparent 70%);
+            border-radius: 16px;
+            z-index: 5;
+            animation: dimensionCompletePulse 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes dimensionCompletePulse {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .level-up-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #f1c40f;
+            z-index: 6;
+            animation: levelUpStar 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes levelUpStar {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -150%) scale(0.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .emotional-feedback {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .emotional-feedback.show {
+            opacity: 1;
+        }
+
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .audio-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(30, 40, 80, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background: rgba(52, 152, 219, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-layers">
+        <div class="layer layer-1"></div>
+        <div class="layer layer-2"></div>
+        <div class="layer layer-3"></div>
+    </div>
+    <div class="particles-container" id="particles"></div>
+    <div class="cursor-trail" id="cursor-trail"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Carrera Quest: Descubre tu Perfil Vocacional</h1>
+            <p>Responde 2 preguntas por cada una de las 10 dimensiones para construir tu perfil único y encontrar tus carreras ideales.</p>
+            <div class="narrative-text" id="narrative-text">Descubriendo tu potencial...</div>
+        </header>
+        
+        <main>
+            <div class="game-container" id="game-container">
+                <h2>Dimensiones de tu Perfil</h2>
+                
+                <div class="avatar-container">
+                    <div class="avatar">
+                        <div class="avatar-body">
+                            <div class="avatar-head"></div>
+                            <div class="avatar-accessory avatar-glasses" id="avatar-glasses"></div>
+                            <div class="avatar-accessory avatar-tie" id="avatar-tie"></div>
+                            <div class="avatar-accessory avatar-palette" id="avatar-palette"></div>
+                            <div class="avatar-accessory avatar-plant" id="avatar-plant"></div>
+                            <div class="avatar-accessory avatar-handshake" id="avatar-handshake"></div>
+                            <div class="avatar-accessory avatar-book" id="avatar-book"></div>
+                            <div class="avatar-accessory avatar-magnifier" id="avatar-magnifier"></div>
+                            <div class="avatar-accessory avatar-lightbulb" id="avatar-lightbulb"></div>
+                            <div class="avatar-accessory avatar-heart" id="avatar-heart"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress-bar"></div>
+                        <div class="progress-lock" id="progress-lock">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Perfil: 0/10 dimensiones registradas</p>
+                </div>
+                
+                <div class="power-ups">
+                    <div class="power-up" id="power-up-visibility">
+                        <i class="fas fa-eye"></i>
+                        <p>Doble Visibilidad</p>
+                    </div>
+                    <div class="power-up" id="power-up-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        <p>Pista Rápida</p>
+                    </div>
+                </div>
+                
+                <div class="key-container" id="key-container"></div>
+                
+                <div style="text-align: center; margin-top: 1.8rem; display: none;" id="complete-btn-container">
+                    <button class="btn btn-submit" id="show-results">Ver mis carreras compatibles</button>
+                </div>
+                
+                <div class="quick-results" id="quick-results">
+                    <h3>Resultados Rápidos</h3>
+                    <p>Basado en tus respuestas hasta ahora:</p>
+                    <ul class="quick-results-list" id="quick-results-list"></ul>
+                </div>
+            </div>
+            
+            <div class="results-container" id="results-container">
+                <h2 id="results-title">Tus 5 Carreras Más Compatibles</h2>
+                
+                <div id="special-message-container"></div>
+                
+                <div class="profile-unique" id="profile-unique">
+                    <h3>Tu Perfil Único</h3>
+                    <div class="profile-chart" id="profile-chart"></div>
+                </div>
+                
+                <div class="social-comparison" id="social-comparison">
+                    <h3>Comparativa Social</h3>
+                    <div id="social-comparison-content"></div>
+                </div>
+                
+                <div class="response-time" id="response-time">
+                    <h3>Tu Estilo de Respuesta</h3>
+                    <div class="response-time-result" id="response-time-result"></div>
+                </div>
+                
+                <ul class="career-list" id="career-list"></ul>
+                
+                <div class="what-if-container">
+                    <h3>Explora Otras Posibilidades</h3>
+                    <button class="what-if-btn" id="what-if-technical">¿Y si fuera más técnico?</button>
+                    <button class="what-if-btn" id="what-if-creative">¿Y si fuera más creativo?</button>
+                    <button class="what-if-btn" id="what-if-social">¿Y si fuera más social?</button>
+                    
+                    <div class="what-if-results" id="what-if-results">
+                        <h3>Resultados Alternativos</h3>
+                        <ul class="career-list" id="what-if-career-list"></ul>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 1.8rem;">
+                    <button class="btn" id="restart-game">Reiniciar test</button>
+                </div>
+            </div>
+        </main>
+        
+        <div class="challenge-modal" id="challenge-modal">
+            <div class="challenge-content">
+                <span class="close-btn" id="close-modal">&times;</span>
+                <h2 id="challenge-title">Dimensión</h2>
+                
+                <div class="mini-game" id="mini-game">
+                    <h3>Mini-Juego: <span id="mini-game-title"></span></h3>
+                    <div class="mini-game-content" id="mini-game-content"></div>
+                    <div class="mini-game-timer" id="mini-game-timer">30</div>
+                    <div class="mini-game-result" id="mini-game-result"></div>
+                    <button class="btn" id="skip-mini-game">Saltar mini-juego</button>
+                </div>
+                
+                <div id="questions-container"></div>
+                
+                <button class="btn btn-submit" id="submit-challenge">Registrar respuestas</button>
+            </div>
+        </div>
+        
+        <div class="loading-screen" id="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-tip">
+                <h3 id="loading-tip-title">Preparando tu experiencia</h3>
+                <p id="loading-tip-text">Estamos analizando tus respuestas para encontrar las carreras ideales para ti.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Carrera Quest – Orientación Vocacional Profesional</p>
+        </footer>
+    </div>
+    
+    <div class="achievement-badge" id="achievement-badge">
+        <div class="achievement-icon" id="achievement-icon">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <div class="achievement-text">
+            <h3 id="achievement-title">Logro Desbloqueado</h3>
+            <p id="achievement-description">Has completado tu primera dimensión</p>
+        </div>
+    </div>
+    
+    <div class="audio-controls">
+        <div class="audio-btn" id="toggle-music">
+            <i class="fas fa-music"></i>
+        </div>
+        <div class="audio-btn" id="toggle-sound">
+            <i class="fas fa-volume-up"></i>
+        </div>
+    </div>
+    
+    <script src="base.js"></script>
+    <script src="basePreguntas.js"></script>
+    <script>
+        // === MATRIZ DE CARRERAS ===
+        // === BANCO DE PREGUNTAS PSICOMÉTRICAS ===
+        const dimensions = [
+            { id: 0, name: "Aptitud Técnica y Analítica", icon: "fa-calculator", color: "#3498db" },
+            { id: 1, name: "Empatía e Interacción Social", icon: "fa-users", color: "#e74c3c" },
+            { id: 2, name: "Innovación y Adaptación Digital", icon: "fa-robot", color: "#9b59b6" },
+            { id: 3, name: "Tolerancia al Riesgo", icon: "fa-chart-line", color: "#f39c12" },
+            { id: 4, name: "Preferencia por el Entorno", icon: "fa-mountain", color: "#2ecc71" },
+            { id: 5, name: "Liderazgo", icon: "fa-user-tie", color: "#34495e" },
+            { id: 6, name: "Aprendizaje Continuo", icon: "fa-book", color: "#16a085" },
+            { id: 7, name: "Orientación al Detalle", icon: "fa-search", color: "#d35400" },
+            { id: 8, name: "Creatividad", icon: "fa-palette", color: "#e67e22" },
+            { id: 9, name: "Impacto Social", icon: "fa-hands-helping", color: "#c0392b" }
+        ];
+        
+        const dimensionWeights = {
+            0: 1.3,
+            1: 1.1,
+            2: 1.4,
+            3: 0.9,
+            4: 0.8,
+            5: 1.0,
+            6: 1.2,
+            7: 1.0,
+            8: 1.1,
+            9: 1.0
+        };
+        
+        // Tips para la pantalla de carga
+        const loadingTips = [
+            {
+                title: "Sabías que...",
+                text: "El 70% de las personas cambian de carrera al menos una vez en su vida profesional."
+            },
+            {
+                title: "Consejo profesional",
+                text: "Las habilidades blandas como la comunicación y el liderazgo son tan importantes como las técnicas."
+            },
+            {
+                title: "Dato interesante",
+                text: "Las carreras relacionadas con tecnología y salud son las que más crecimiento han tenido en la última década."
+            },
+            {
+                title: "Reflexión",
+                text: "Elegir una carrera no es una decisión para toda la vida, sino el primer paso de un camino profesional."
+            },
+            {
+                title: "Inspírate",
+                text: "Los profesionales más exitosos combinan su pasión con sus habilidades únicas."
+            }
+        ];
+        
+        // Mini-juegos por dimensión
+        const miniGames = {
+            0: {
+                title: "Patrones Lógicos",
+                description: "Ordena los números en secuencia ascendente",
+                setup: function() {
+                    const numbers = [5, 2, 8, 1, 9, 3, 7, 4, 6];
+                    const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const numberContainer = document.createElement('div');
+                    numberContainer.style.display = 'flex';
+                    numberContainer.style.flexWrap = 'wrap';
+                    numberContainer.style.gap = '10px';
+                    numberContainer.style.justifyContent = 'center';
+                    
+                    shuffled.forEach(num => {
+                        const numEl = document.createElement('div');
+                        numEl.className = 'mini-game-number';
+                        numEl.textContent = num;
+                        numEl.style.width = '50px';
+                        numEl.style.height = '50px';
+                        numEl.style.background = 'rgba(52, 152, 219, 0.7)';
+                        numEl.style.borderRadius = '8px';
+                        numEl.style.display = 'flex';
+                        numEl.style.justifyContent = 'center';
+                        numEl.style.alignItems = 'center';
+                        numEl.style.fontSize = '1.2rem';
+                        numEl.style.fontWeight = 'bold';
+                        numEl.style.cursor = 'pointer';
+                        numEl.dataset.value = num;
+                        numEl.dataset.position = shuffled.indexOf(num);
+                        
+                        numEl.addEventListener('click', function() {
+                            const currentValue = this.dataset.value;
+                            const currentPosition = parseInt(this.dataset.position);
+                            
+                            // Find next position
+                            let nextPosition = (currentPosition + 1) % shuffled.length;
+                            
+                            // Swap with next element
+                            const nextEl = document.querySelector(`.mini-game-number[data-position="${nextPosition}"]`);
+                            if (nextEl) {
+                                const tempValue = nextEl.dataset.value;
+                                nextEl.dataset.value = currentValue;
+                                nextEl.textContent = currentValue;
+                                this.dataset.value = tempValue;
+                                this.textContent = tempValue;
+                                
+                                // Check if sorted
+                                const allNumbers = document.querySelectorAll('.mini-game-number');
+                                let isSorted = true;
+                                allNumbers.forEach((el, index) => {
+                                    if (parseInt(el.dataset.value) !== index + 1) {
+                                        isSorted = false;
+                                    }
+                                });
+                                
+                                if (isSorted) {
+                                    document.getElementById('mini-game-result').textContent = '¡Excelente! Has ordenado correctamente los números.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    setTimeout(() => {
+                                        document.getElementById('mini-game').classList.remove('active');
+                                        document.getElementById('questions-container').style.display = 'block';
+                                    }, 1500);
+                                }
+                            }
+                        });
+                        
+                        numberContainer.appendChild(numEl);
+                    });
+                    
+                    container.appendChild(numberContainer);
+                }
+            },
+            1: {
+                title: "Empatía Social",
+                description: "Elige la respuesta más empática",
+                setup: function() {
+                    const scenarios = [
+                        {
+                            question: "Un amigo te cuenta que está pasando por un momento difícil. ¿Qué le dices?",
+                            options: [
+                                "No te preocupes, todo va a estar bien. Estoy aquí para ti.",
+                                "Yo también he pasado por eso. Debes superar rápido.",
+                                "No sé qué decir, espero que mejores pronto.",
+                                "La vida es dura, tienes que ser más fuerte."
+                            ],
+                            correct: 0
+                        },
+                        {
+                            question: "Un compañero de trabajo comete un error que afecta tu trabajo. ¿Qué haces?",
+                            options: [
+                                "Le hablo en privado para entender qué pasó y cómo solucionarlo juntos.",
+                                "Le digo delante de todos que cometió un error grave.",
+                                "No digo nada pero le hago el vacío.",
+                                "Le reporto inmediatamente a nuestro superior."
+                            ],
+                            correct: 0
+                        }
+                    ];
+                    
+                    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const questionEl = document.createElement('p');
+                    questionEl.textContent = scenario.question;
+                    questionEl.style.marginBottom = '15px';
+                    container.appendChild(questionEl);
+                    
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.style.display = 'flex';
+                    optionsContainer.style.flexDirection = 'column';
+                    optionsContainer.style.gap = '10px';
+                    
+                    scenario.options.forEach((option, index) => {
+                        const optionEl = document.createElement('div');
+                        optionEl.className = 'mini-game-option';
+                        optionEl.textContent = option;
+                        optionEl.style.padding = '10px';
+                        optionEl.style.background = 'rgba(231, 76, 60, 0.7)';
+                        optionEl.style.borderRadius = '8px';
+                        optionEl.style.cursor = 'pointer';
+                        
+                        optionEl.addEventListener('click', function() {
+                            document.querySelectorAll('.mini-game-option').forEach(el => {
+                                el.style.background = 'rgba(231, 76, 60, 0.7)';
+                            });
+                            
+                            if (index === scenario.correct) {
+                                this.style.background = 'rgba(46, 204, 113, 0.7)';
+                                document.getElementById('mini-game-result').textContent = '¡Correcto! Has demostrado gran empatía.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                                setTimeout(() => {
+                                    document.getElementById('mini-game').classList.remove('active');
+                                    document.getElementById('questions-container').style.display = 'block';
+                                }, 1500);
+                            } else {
+                                this.style.background = 'rgba(231, 76, 60, 0.9)';
+                                document.getElementById('mini-game-result').textContent = 'Intenta de nuevo. Piensa en cómo te gustaría que te traten.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                            }
+                        });
+                        
+                        optionsContainer.appendChild(optionEl);
+                    });
+                    
+                    container.appendChild(optionsContainer);
+                }
+            },
+            2: {
+                title: "Innovación Digital",
+                description: "Conecta los conceptos tecnológicos",
+                setup: function() {
+                    const concepts = [
+                        { name: "IA", pair: "Inteligencia Artificial" },
+                        { name: "IoT", pair: "Internet de las Cosas" },
+                        { name: "VR", pair: "Realidad Virtual" },
+                        { name: "Blockchain", pair: "Cadena de Bloques" }
+                    ];
+                    
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const conceptsContainer = document.createElement('div');
+                    conceptsContainer.style.display = 'flex';
+                    conceptsContainer.style.justifyContent = 'space-around';
+                    conceptsContainer.style.marginBottom = '20px';
+                    
+                    const pairsContainer = document.createElement('div');
+                    pairsContainer.style.display = 'flex';
+                    pairsContainer.style.justifyContent = 'space-around';
+                    pairsContainer.style.flexWrap = 'wrap';
+                    
+                    // Mezclar los pares
+                    const allItems = [];
+                    concepts.forEach(concept => {
+                        allItems.push({ text: concept.name, type: 'concept', pair: concept.pair });
+                        allItems.push({ text: concept.pair, type: 'pair', pair: concept.name });
+                    });
+                    
+                    const shuffledItems = [...allItems].sort(() => Math.random() - 0.5);
+                    
+                    let selected = null;
+                    let matchedPairs = 0;
+                    
+                    shuffledItems.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'mini-game-item';
+                        itemEl.textContent = item.text;
+                        itemEl.style.padding = '10px 15px';
+                        itemEl.style.background = 'rgba(155, 89, 182, 0.7)';
+                        itemEl.style.borderRadius = '8px';
+                        itemEl.style.cursor = 'pointer';
+                        itemEl.dataset.type = item.type;
+                        itemEl.dataset.pair = item.pair;
+                        
+                        itemEl.addEventListener('click', function() {
+                            if (this.classList.contains('matched')) return;
+                            
+                            if (!selected) {
+                                selected = this;
+                                this.style.background = 'rgba(155, 89, 182, 0.9)';
+                                this.style.transform = 'scale(1.05)';
+                            } else if (selected === this) {
+                                selected = null;
+                                this.style.background = 'rgba(155, 89, 182, 0.7)';
+                                this.style.transform = 'scale(1)';
+                            } else {
+                                // Check if it's a match
+                                if (selected.dataset.pair === this.textContent && this.dataset.pair === selected.textContent) {
+                                    // Match found
+                                    this.style.background = 'rgba(46, 204, 113, 0.7)';
+                                    selected.style.background = 'rgba(46, 204, 113, 0.7)';
+                                    this.classList.add('matched');
+                                    selected.classList.add('matched');
+                                    matchedPairs++;
+                                    
+                                    if (matchedPairs === concepts.length) {
+                                        document.getElementById('mini-game-result').textContent = '¡Excelente! Has conectado todos los conceptos correctamente.';
+                                        document.getElementById('mini-game-result').classList.add('show');
+                                        setTimeout(() => {
+                                            document.getElementById('mini-game').classList.remove('active');
+                                            document.getElementById('questions-container').style.display = 'block';
+                                        }, 1500);
+                                    }
+                                } else {
+                                    // Not a match
+                                    this.style.background = 'rgba(231, 76, 60, 0.7)';
+                                    setTimeout(() => {
+                                        this.style.background = 'rgba(155, 89, 182, 0.7)';
+                                        selected.style.background = 'rgba(155, 89, 182, 0.7)';
+                                        selected.style.transform = 'scale(1)';
+                                    }, 500);
+                                }
+                                selected = null;
+                            }
+                        });
+                        
+                        if (item.type === 'concept') {
+                            conceptsContainer.appendChild(itemEl);
+                        } else {
+                            pairsContainer.appendChild(itemEl);
+                        }
+                    });
+                    
+                    container.appendChild(conceptsContainer);
+                    container.appendChild(pairsContainer);
+                }
+            },
+            3: {
+                title: "Tolerancia al Riesgo",
+                description: "Elige la opción con mayor potencial de ganancia",
+                setup: function() {
+                    const scenarios = [
+                        {
+                            question: "Tienes $1000 para invertir. ¿Qué opción eliges?",
+                            options: [
+                                "Invertir en un negocio nuevo con potencial del 200% pero alto riesgo.",
+                                "Ponerlo en un fondo de inversión seguro con 5% de retorno anual.",
+                                "Comprar un producto que podrías revender con 30% de ganancia.",
+                                "Guardarlo en efectivo bajo el colchón."
+                            ],
+                            correct: 0
+                        },
+                        {
+                            question: "Se te presenta una oportunidad de cambiar de trabajo. ¿Qué prefieres?",
+                            options: [
+                                "Un puesto en una startup con sueldo bajo pero participación en utilidades.",
+                                "Un trabajo estable en una empresa grande con sueldo fijo y beneficios.",
+                                "Un trabajo freelance con ingresos variables pero más libertad.",
+                                "Mantener tu trabajo actual aunque no estés completamente satisfecho."
+                            ],
+                            correct: 0
+                        }
+                    ];
+                    
+                    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const questionEl = document.createElement('p');
+                    questionEl.textContent = scenario.question;
+                    questionEl.style.marginBottom = '15px';
+                    container.appendChild(questionEl);
+                    
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.style.display = 'flex';
+                    optionsContainer.style.flexDirection = 'column';
+                    optionsContainer.style.gap = '10px';
+                    
+                    scenario.options.forEach((option, index) => {
+                        const optionEl = document.createElement('div');
+                        optionEl.className = 'mini-game-option';
+                        optionEl.textContent = option;
+                        optionEl.style.padding = '10px';
+                        optionEl.style.background = 'rgba(243, 156, 18, 0.7)';
+                        optionEl.style.borderRadius = '8px';
+                        optionEl.style.cursor = 'pointer';
+                        
+                        optionEl.addEventListener('click', function() {
+                            document.querySelectorAll('.mini-game-option').forEach(el => {
+                                el.style.background = 'rgba(243, 156, 18, 0.7)';
+                            });
+                            
+                            if (index === scenario.correct) {
+                                this.style.background = 'rgba(46, 204, 113, 0.7)';
+                                document.getElementById('mini-game-result').textContent = '¡Correcto! Demuestras alta tolerancia al riesgo.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                                setTimeout(() => {
+                                    document.getElementById('mini-game').classList.remove('active');
+                                    document.getElementById('questions-container').style.display = 'block';
+                                }, 1500);
+                            } else {
+                                this.style.background = 'rgba(243, 156, 18, 0.9)';
+                                document.getElementById('mini-game-result').textContent = 'Esa opción tiene menor riesgo pero también menor potencial de ganancia.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                            }
+                        });
+                        
+                        optionsContainer.appendChild(optionEl);
+                    });
+                    
+                    container.appendChild(optionsContainer);
+                }
+            },
+            4: {
+                title: "Conexión con la Naturaleza",
+                description: "Ordena los elementos naturales de menor a mayor impacto ambiental",
+                setup: function() {
+                    const elements = [
+                        { name: "Bolsa de plástico", impact: 4 },
+                        { name: "Botella de vidrio", impact: 2 },
+                        { name: "Pila", impact: 5 },
+                        { name: "Cáscara de plátano", impact: 1 },
+                        { name: "Papel", impact: 3 }
+                    ];
+                    
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const elementsContainer = document.createElement('div');
+                    elementsContainer.style.display = 'flex';
+                    elementsContainer.style.flexWrap = 'wrap';
+                    elementsContainer.style.gap = '10px';
+                    elementsContainer.style.justifyContent = 'center';
+                    
+                    // Mezclar elementos
+                    const shuffledElements = [...elements].sort(() => Math.random() - 0.5);
+                    
+                    let selectedElements = [];
+                    
+                    shuffledElements.forEach(element => {
+                        const elementEl = document.createElement('div');
+                        elementEl.className = 'mini-game-element';
+                        elementEl.textContent = element.name;
+                        elementEl.style.width = '100px';
+                        elementEl.style.height = '60px';
+                        elementEl.style.background = 'rgba(46, 204, 113, 0.7)';
+                        elementEl.style.borderRadius = '8px';
+                        elementEl.style.display = 'flex';
+                        elementEl.style.justifyContent = 'center';
+                        elementEl.style.alignItems = 'center';
+                        elementEl.style.fontSize = '0.9rem';
+                        elementEl.style.fontWeight = 'bold';
+                        elementEl.style.cursor = 'pointer';
+                        elementEl.dataset.impact = element.impact;
+                        elementEl.dataset.selected = 'false';
+                        
+                        elementEl.addEventListener('click', function() {
+                            if (this.dataset.selected === 'true') return;
+                            
+                            this.dataset.selected = 'true';
+                            selectedElements.push({
+                                element: this,
+                                impact: parseInt(this.dataset.impact)
+                            });
+                            
+                            this.style.background = 'rgba(46, 204, 113, 0.9)';
+                            this.style.transform = 'scale(1.05)';
+                            
+                            if (selectedElements.length === elements.length) {
+                                // Check if ordered correctly
+                                let isCorrect = true;
+                                for (let i = 1; i < selectedElements.length; i++) {
+                                    if (selectedElements[i-1].impact > selectedElements[i].impact) {
+                                        isCorrect = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if (isCorrect) {
+                                    document.getElementById('mini-game-result').textContent = '¡Correcto! Has ordenado los elementos por su impacto ambiental.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    setTimeout(() => {
+                                        document.getElementById('mini-game').classList.remove('active');
+                                        document.getElementById('questions-container').style.display = 'block';
+                                    }, 1500);
+                                } else {
+                                    document.getElementById('mini-game-result').textContent = 'No está ordenado correctamente. Intenta de nuevo.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    
+                                    // Reset selection
+                                    setTimeout(() => {
+                                        selectedElements.forEach(item => {
+                                            item.element.dataset.selected = 'false';
+                                            item.element.style.background = 'rgba(46, 204, 113, 0.7)';
+                                            item.element.style.transform = 'scale(1)';
+                                        });
+                                        selectedElements = [];
+                                    }, 1500);
+                                }
+                            }
+                        });
+                        
+                        elementsContainer.appendChild(elementEl);
+                    });
+                    
+                    container.appendChild(elementsContainer);
+                }
+            },
+            5: {
+                title: "Liderazgo",
+                description: "Elige la mejor acción para un líder",
+                setup: function() {
+                    const scenarios = [
+                        {
+                            question: "Tu equipo tiene un conflicto entre dos miembros. ¿Qué haces como líder?",
+                            options: [
+                                "Reúno a ambas partes para mediar y encontrar una solución conjunta.",
+                                "Decido yo mismo quién tiene la razón para resolver rápido.",
+                                "Ignoro el conflicto y espero que se resuelva solo.",
+                                "Les digo que dejen de discutir y se concentren en el trabajo."
+                            ],
+                            correct: 0
+                        },
+                        {
+                            question: "Un proyecto importante está atrasado. ¿Qué acción tomas?",
+                            options: [
+                                "Reúno al equipo para analizar las causas y reorganizar el trabajo.",
+                                "Aumento las horas de trabajo para todos hasta completarlo.",
+                                "Culpo a los responsables del retraso frente a todos.",
+                                "Pido una extensión de plazo sin explicar las razones."
+                            ],
+                            correct: 0
+                        }
+                    ];
+                    
+                    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const questionEl = document.createElement('p');
+                    questionEl.textContent = scenario.question;
+                    questionEl.style.marginBottom = '15px';
+                    container.appendChild(questionEl);
+                    
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.style.display = 'flex';
+                    optionsContainer.style.flexDirection = 'column';
+                    optionsContainer.style.gap = '10px';
+                    
+                    scenario.options.forEach((option, index) => {
+                        const optionEl = document.createElement('div');
+                        optionEl.className = 'mini-game-option';
+                        optionEl.textContent = option;
+                        optionEl.style.padding = '10px';
+                        optionEl.style.background = 'rgba(52, 73, 94, 0.7)';
+                        optionEl.style.borderRadius = '8px';
+                        optionEl.style.cursor = 'pointer';
+                        
+                        optionEl.addEventListener('click', function() {
+                            document.querySelectorAll('.mini-game-option').forEach(el => {
+                                el.style.background = 'rgba(52, 73, 94, 0.7)';
+                            });
+                            
+                            if (index === scenario.correct) {
+                                this.style.background = 'rgba(46, 204, 113, 0.7)';
+                                document.getElementById('mini-game-result').textContent = '¡Excelente! Demuestras habilidades de liderazgo efectivo.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                                setTimeout(() => {
+                                    document.getElementById('mini-game').classList.remove('active');
+                                    document.getElementById('questions-container').style.display = 'block';
+                                }, 1500);
+                            } else {
+                                this.style.background = 'rgba(52, 73, 94, 0.9)';
+                                document.getElementById('mini-game-result').textContent = 'Esa opción no es la más efectiva para un líder. Piensa en cómo motivar y unir al equipo.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                            }
+                        });
+                        
+                        optionsContainer.appendChild(optionEl);
+                    });
+                    
+                    container.appendChild(optionsContainer);
+                }
+            },
+            6: {
+                title: "Aprendizaje Continuo",
+                description: "Ordena las habilidades de más básica a más avanzada",
+                setup: function() {
+                    const skills = [
+                        { name: "Alfabetización", level: 1 },
+                        { name: "Programación", level: 3 },
+                        { name: "Aritmética", level: 2 },
+                        { name: "Inteligencia Artificial", level: 5 },
+                        { name: "Análisis de Datos", level: 4 }
+                    ];
+                    
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const skillsContainer = document.createElement('div');
+                    skillsContainer.style.display = 'flex';
+                    skillsContainer.style.flexWrap = 'wrap';
+                    skillsContainer.style.gap = '10px';
+                    skillsContainer.style.justifyContent = 'center';
+                    
+                    // Mezclar habilidades
+                    const shuffledSkills = [...skills].sort(() => Math.random() - 0.5);
+                    
+                    let selectedSkills = [];
+                    
+                    shuffledSkills.forEach(skill => {
+                        const skillEl = document.createElement('div');
+                        skillEl.className = 'mini-game-skill';
+                        skillEl.textContent = skill.name;
+                        skillEl.style.width = '120px';
+                        skillEl.style.height = '60px';
+                        skillEl.style.background = 'rgba(22, 160, 133, 0.7)';
+                        skillEl.style.borderRadius = '8px';
+                        skillEl.style.display = 'flex';
+                        skillEl.style.justifyContent = 'center';
+                        skillEl.style.alignItems = 'center';
+                        skillEl.style.fontSize = '0.9rem';
+                        skillEl.style.fontWeight = 'bold';
+                        skillEl.style.cursor = 'pointer';
+                        skillEl.dataset.level = skill.level;
+                        skillEl.dataset.selected = 'false';
+                        
+                        skillEl.addEventListener('click', function() {
+                            if (this.dataset.selected === 'true') return;
+                            
+                            this.dataset.selected = 'true';
+                            selectedSkills.push({
+                                element: this,
+                                level: parseInt(this.dataset.level)
+                            });
+                            
+                            this.style.background = 'rgba(22, 160, 133, 0.9)';
+                            this.style.transform = 'scale(1.05)';
+                            
+                            if (selectedSkills.length === skills.length) {
+                                // Check if ordered correctly
+                                let isCorrect = true;
+                                for (let i = 1; i < selectedSkills.length; i++) {
+                                    if (selectedSkills[i-1].level > selectedSkills[i].level) {
+                                        isCorrect = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if (isCorrect) {
+                                    document.getElementById('mini-game-result').textContent = '¡Correcto! Has ordenado las habilidades por su nivel de complejidad.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    setTimeout(() => {
+                                        document.getElementById('mini-game').classList.remove('active');
+                                        document.getElementById('questions-container').style.display = 'block';
+                                    }, 1500);
+                                } else {
+                                    document.getElementById('mini-game-result').textContent = 'No está ordenado correctamente. Intenta de nuevo.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    
+                                    // Reset selection
+                                    setTimeout(() => {
+                                        selectedSkills.forEach(item => {
+                                            item.element.dataset.selected = 'false';
+                                            item.element.style.background = 'rgba(22, 160, 133, 0.7)';
+                                            item.element.style.transform = 'scale(1)';
+                                        });
+                                        selectedSkills = [];
+                                    }, 1500);
+                                }
+                            }
+                        });
+                        
+                        skillsContainer.appendChild(skillEl);
+                    });
+                    
+                    container.appendChild(skillsContainer);
+                }
+            },
+            7: {
+                title: "Orientación al Detalle",
+                description: "Encuentra las diferencias entre las imágenes",
+                setup: function() {
+                    // Simulación de juego de diferencias con emojis
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const gameContainer = document.createElement('div');
+                    gameContainer.style.display = 'flex';
+                    gameContainer.style.justifyContent = 'space-around';
+                    gameContainer.style.marginBottom = '20px';
+                    
+                    const leftImage = document.createElement('div');
+                    leftImage.style.fontSize = '3rem';
+                    leftImage.style.textAlign = 'center';
+                    leftImage.style.lineHeight = '1.5';
+                    leftImage.innerHTML = '🌟🌙🌟🌙🌟<br>🌙🌟🌙🌟🌙<br>🌟🌙🌟🌙🌟';
+                    
+                    const rightImage = document.createElement('div');
+                    rightImage.style.fontSize = '3rem';
+                    rightImage.style.textAlign = 'center';
+                    rightImage.style.lineHeight = '1.5';
+                    rightImage.innerHTML = '🌟🌙🌟🌙🌟<br>🌙🌟🌟🌙🌙<br>🌟🌙🌙🌟🌟';
+                    
+                    gameContainer.appendChild(leftImage);
+                    gameContainer.appendChild(rightImage);
+                    
+                    const differencesContainer = document.createElement('div');
+                    differencesContainer.style.textAlign = 'center';
+                    differencesContainer.innerHTML = '<p>Hay 1 diferencia entre las imágenes. ¡Encuéntrala!</p>';
+                    
+                    let foundDifferences = 0;
+                    const totalDifferences = 1;
+                    
+                    // Simular encontrar diferencias haciendo clic en un botón
+                    const findDifferenceBtn = document.createElement('button');
+                    findDifferenceBtn.textContent = 'He encontrado la diferencia';
+                    findDifferenceBtn.className = 'btn';
+                    findDifferenceBtn.style.marginTop = '15px';
+                    
+                    findDifferenceBtn.addEventListener('click', function() {
+                        foundDifferences++;
+                        
+                        if (foundDifferences === totalDifferences) {
+                            document.getElementById('mini-game-result').textContent = '¡Correcto! Has encontrado todas las diferencias.';
+                            document.getElementById('mini-game-result').classList.add('show');
+                            setTimeout(() => {
+                                document.getElementById('mini-game').classList.remove('active');
+                                document.getElementById('questions-container').style.display = 'block';
+                            }, 1500);
+                        } else {
+                            document.getElementById('mini-game-result').textContent = `¡Bien! Has encontrado ${foundDifferences} de ${totalDifferences} diferencias.`;
+                            document.getElementById('mini-game-result').classList.add('show');
+                        }
+                    });
+                    
+                    differencesContainer.appendChild(findDifferenceBtn);
+                    
+                    container.appendChild(gameContainer);
+                    container.appendChild(differencesContainer);
+                }
+            },
+            8: {
+                title: "Creatividad",
+                description: "Completa la secuencia creativa",
+                setup: function() {
+                    const sequences = [
+                        {
+                            start: ['🔴', '🔵', '🔴', '🔵'],
+                            options: ['🔴', '🟢', '🔵', '🟡'],
+                            correct: 0
+                        },
+                        {
+                            start: ['△', '▢', '◯', '△'],
+                            options: ['▢', '◯', '⬟', '▽'],
+                            correct: 0
+                        },
+                        {
+                            start: ['🌱', '🌿', '🌳'],
+                            options: ['🌲', '🍃', '🌻', '🌷'],
+                            correct: 0
+                        }
+                    ];
+                    
+                    const sequence = sequences[Math.floor(Math.random() * sequences.length)];
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const sequenceContainer = document.createElement('div');
+                    sequenceContainer.style.display = 'flex';
+                    sequenceContainer.style.justifyContent = 'center';
+                    sequenceContainer.style.gap = '10px';
+                    sequenceContainer.style.marginBottom = '20px';
+                    sequenceContainer.style.fontSize = '2rem';
+                    
+                    sequence.start.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.textContent = item;
+                        sequenceContainer.appendChild(itemEl);
+                    });
+                    
+                    const questionMark = document.createElement('div');
+                    questionMark.textContent = '?';
+                    questionMark.style.color = '#f1c40f';
+                    questionMark.style.fontWeight = 'bold';
+                    sequenceContainer.appendChild(questionMark);
+                    
+                    container.appendChild(sequenceContainer);
+                    
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.style.display = 'flex';
+                    optionsContainer.style.justifyContent = 'center';
+                    optionsContainer.style.gap = '15px';
+                    optionsContainer.style.marginTop = '20px';
+                    
+                    sequence.options.forEach((option, index) => {
+                        const optionEl = document.createElement('div');
+                        optionEl.className = 'mini-game-option';
+                        optionEl.textContent = option;
+                        optionEl.style.fontSize = '2rem';
+                        optionEl.style.width = '60px';
+                        optionEl.style.height = '60px';
+                        optionEl.style.background = 'rgba(230, 126, 34, 0.7)';
+                        optionEl.style.borderRadius = '50%';
+                        optionEl.style.display = 'flex';
+                        optionEl.style.justifyContent = 'center';
+                        optionEl.style.alignItems = 'center';
+                        optionEl.style.cursor = 'pointer';
+                        
+                        optionEl.addEventListener('click', function() {
+                            document.querySelectorAll('.mini-game-option').forEach(el => {
+                                el.style.background = 'rgba(230, 126, 34, 0.7)';
+                            });
+                            
+                            if (index === sequence.correct) {
+                                this.style.background = 'rgba(46, 204, 113, 0.7)';
+                                document.getElementById('mini-game-result').textContent = '¡Correcto! Has completado la secuencia.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                                setTimeout(() => {
+                                    document.getElementById('mini-game').classList.remove('active');
+                                    document.getElementById('questions-container').style.display = 'block';
+                                }, 1500);
+                            } else {
+                                this.style.background = 'rgba(230, 126, 34, 0.9)';
+                                document.getElementById('mini-game-result').textContent = 'Esa opción no completa correctamente la secuencia. Intenta de nuevo.';
+                                document.getElementById('mini-game-result').classList.add('show');
+                            }
+                        });
+                        
+                        optionsContainer.appendChild(optionEl);
+                    });
+                    
+                    container.appendChild(optionsContainer);
+                }
+            },
+            9: {
+                title: "Impacto Social",
+                description: "Ordena las acciones de menor a mayor impacto social",
+                setup: function() {
+                    const actions = [
+                        { name: "Reciclar basura", impact: 2 },
+                        { name: "Donar a una causa", impact: 3 },
+                        { name: "Voluntariado regular", impact: 4 },
+                        { name: "Crear una fundación", impact: 5 },
+                        { name: "Compartir en redes", impact: 1 }
+                    ];
+                    
+                    const container = document.getElementById('mini-game-content');
+                    container.innerHTML = '';
+                    
+                    const actionsContainer = document.createElement('div');
+                    actionsContainer.style.display = 'flex';
+                    actionsContainer.style.flexWrap = 'wrap';
+                    actionsContainer.style.gap = '10px';
+                    actionsContainer.style.justifyContent = 'center';
+                    
+                    // Mezclar acciones
+                    const shuffledActions = [...actions].sort(() => Math.random() - 0.5);
+                    
+                    let selectedActions = [];
+                    
+                    shuffledActions.forEach(action => {
+                        const actionEl = document.createElement('div');
+                        actionEl.className = 'mini-game-action';
+                        actionEl.textContent = action.name;
+                        actionEl.style.width = '120px';
+                        actionEl.style.height = '60px';
+                        actionEl.style.background = 'rgba(192, 57, 43, 0.7)';
+                        actionEl.style.borderRadius = '8px';
+                        actionEl.style.display = 'flex';
+                        actionEl.style.justifyContent = 'center';
+                        actionEl.style.alignItems = 'center';
+                        actionEl.style.fontSize = '0.9rem';
+                        actionEl.style.fontWeight = 'bold';
+                        actionEl.style.cursor = 'pointer';
+                        actionEl.dataset.impact = action.impact;
+                        actionEl.dataset.selected = 'false';
+                        
+                        actionEl.addEventListener('click', function() {
+                            if (this.dataset.selected === 'true') return;
+                            
+                            this.dataset.selected = 'true';
+                            selectedActions.push({
+                                element: this,
+                                impact: parseInt(this.dataset.impact)
+                            });
+                            
+                            this.style.background = 'rgba(192, 57, 43, 0.9)';
+                            this.style.transform = 'scale(1.05)';
+                            
+                            if (selectedActions.length === actions.length) {
+                                // Check if ordered correctly
+                                let isCorrect = true;
+                                for (let i = 1; i < selectedActions.length; i++) {
+                                    if (selectedActions[i-1].impact > selectedActions[i].impact) {
+                                        isCorrect = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if (isCorrect) {
+                                    document.getElementById('mini-game-result').textContent = '¡Correcto! Has ordenado las acciones por su impacto social.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    setTimeout(() => {
+                                        document.getElementById('mini-game').classList.remove('active');
+                                        document.getElementById('questions-container').style.display = 'block';
+                                    }, 1500);
+                                } else {
+                                    document.getElementById('mini-game-result').textContent = 'No está ordenado correctamente. Intenta de nuevo.';
+                                    document.getElementById('mini-game-result').classList.add('show');
+                                    
+                                    // Reset selection
+                                    setTimeout(() => {
+                                        selectedActions.forEach(item => {
+                                            item.element.dataset.selected = 'false';
+                                            item.element.style.background = 'rgba(192, 57, 43, 0.7)';
+                                            item.element.style.transform = 'scale(1)';
+                                        });
+                                        selectedActions = [];
+                                    }, 1500);
+                                }
+                            }
+                        });
+                        
+                        actionsContainer.appendChild(actionEl);
+                    });
+                    
+                    container.appendChild(actionsContainer);
+                }
+            }
+        };
+        
+        // Frases narrativas
+        const narrativePhrases = [
+            "Descubriendo tu potencial...",
+            "Tu perfil único toma forma...",
+            "Explorando tus habilidades...",
+            "Construyendo tu camino profesional...",
+            "Revelando tus talentos ocultos...",
+            "Conectando con tus pasiones...",
+            "Diseñando tu futuro...",
+            "Tu perfil profesional se está creando...",
+            "Descubriendo nuevas posibilidades...",
+            "Tu vocación está tomando forma..."
+        ];
+        
+        // Badges de logros
+        const achievementBadges = [
+            {
+                id: 'first-dimension',
+                title: 'Explorador Novato',
+                description: 'Has completado tu primera dimensión',
+                icon: 'fa-compass',
+                condition: (gameState) => gameState.completedChallenges.length === 1
+            },
+            {
+                id: 'third-dimension',
+                title: 'Analista Intermedio',
+                description: 'Has completado 3 dimensiones',
+                icon: 'fa-chart-line',
+                condition: (gameState) => gameState.completedChallenges.length === 3
+            },
+            {
+                id: 'seventh-dimension',
+                title: 'Analista Avanzado',
+                description: 'Has completado 7 dimensiones',
+                icon: 'fa-user-graduate',
+                condition: (gameState) => gameState.completedChallenges.length === 7
+            },
+            {
+                id: 'all-dimensions',
+                title: 'Perfil Maestro',
+                description: 'Has completado todas las dimensiones',
+                icon: 'fa-trophy',
+                condition: (gameState) => gameState.completedChallenges.length === 10
+            }
+        ];
+        
+        // Iconos de carreras
+        const careerIcons = {
+            'Ingeniería': 'fa-cogs',
+            'Medicina': 'fa-stethoscope',
+            'Derecho': 'fa-balance-scale',
+            'Arquitectura': 'fa-building',
+            'Psicología': 'fa-brain',
+            'Educación': 'fa-chalkboard-teacher',
+            'Administración': 'fa-briefcase',
+            'Comunicación': 'fa-comments',
+            'Diseño': 'fa-paint-brush',
+            'Tecnología': 'fa-laptop-code',
+            'Ciencias': 'fa-flask',
+            'Economía': 'fa-chart-pie',
+            'Marketing': 'fa-bullhorn',
+            'Turismo': 'fa-plane',
+            'Deportes': 'fa-running',
+            'Arte': 'fa-palette',
+            'Música': 'fa-music',
+            'Cine': 'fa-film',
+            'Literatura': 'fa-book',
+            'Filosofía': 'fa-yin-yang'
+        };
+        
+        // Estado del juego
+        let gameState = {
+            completedChallenges: [],
+            scores: new Array(10).fill(5),
+            currentChallenge: null,
+            currentQuestions: [],
+            currentAnswers: [],
+            responseTimes: [],
+            startTime: null,
+            powerUps: {
+                visibility: false,
+                hint: false
+            },
+            avatarAccessories: {
+                glasses: false,
+                tie: false,
+                palette: false,
+                plant: false,
+                handshake: false,
+                book: false,
+                magnifier: false,
+                lightbulb: false,
+                heart: false
+            },
+            musicEnabled: true,
+            soundEnabled: true
+        };
+        
+        // === FUNCIONES AUXILIARES ===
+        function createParticles() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.classList.add('particle', 'star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                container.appendChild(star);
+            }
+            for (let i = 0; i < 30; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('particle', 'bubble');
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                const size = Math.random() * 20 + 5;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.setProperty('--duration', `${Math.random() * 10 + 15}s`);
+                container.appendChild(bubble);
+            }
+            for (let i = 0; i < 3; i++) {
+                const neb = document.createElement('div');
+                neb.classList.add('particle', 'nebula');
+                neb.style.left = `${Math.random() * 100}%`;
+                neb.style.top = `${Math.random() * 100}%`;
+                neb.style.width = `${Math.random() * 300 + 200}px`;
+                neb.style.height = `${Math.random() * 300 + 200}px`;
+                neb.style.setProperty('--duration', `${Math.random() * 30 + 30}s`);
+                container.appendChild(neb);
+            }
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const meteor = document.createElement('div');
+                    meteor.classList.add('particle', 'meteor');
+                    meteor.style.left = `${-20 + Math.random() * 20}%`;
+                    meteor.style.top = `${-20 + Math.random() * 20}%`;
+                    meteor.style.setProperty('--duration', `${Math.random() * 6 + 6}s`);
+                    container.appendChild(meteor);
+                    setTimeout(() => meteor.remove(), 10000);
+                }, i * 8000);
+            }
+        }
+        
+        function createContextualParticles(dimensionId) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const container = document.getElementById('particles');
+            
+            // Limpiar partículas contextuales anteriores
+            document.querySelectorAll('.binary-particle, .color-particle, .heart-particle, .nature-particle, .social-particle').forEach(p => p.remove());
+            
+            // Crear nuevas partículas según la dimensión
+            for (let i = 0; i < 20; i++) {
+                let particle;
+                
+                switch(dimensionId) {
+                    case 0: // Técnica y analítica
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'binary-particle');
+                        particle.textContent = Math.random() > 0.5 ? '0' : '1';
+                        break;
+                    case 2: // Innovación digital
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'binary-particle');
+                        particle.textContent = Math.random() > 0.5 ? '0' : '1';
+                        break;
+                    case 8: // Creatividad
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'color-particle');
+                        break;
+                    case 1: // Empatía e interacción social
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'heart-particle');
+                        particle.innerHTML = '<i class="fas fa-heart"></i>';
+                        break;
+                    case 9: // Impacto social
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'social-particle');
+                        particle.innerHTML = '<i class="fas fa-users"></i>';
+                        break;
+                    case 4: // Preferencia por el entorno
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'nature-particle');
+                        break;
+                    default:
+                        particle = document.createElement('div');
+                        particle.classList.add('particle', 'star');
+                        break;
+                }
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.setProperty('--duration', `${Math.random() * 10 + 10}s`);
+                container.appendChild(particle);
+            }
+        }
+        
+        function createCursorTrail() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const trail = document.getElementById('cursor-trail');
+            let posX = 0, posY = 0;
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            function animate() {
+                const distX = mouseX - posX;
+                const distY = mouseY - posY;
+                posX += distX / 8;
+                posY += distY / 8;
+                trail.style.left = `${posX}px`;
+                trail.style.top = `${posY}px`;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        
+        function playSound(soundType) {
+            if (!gameState.soundEnabled) return;
+            
+            // Crear un audio simple usando la API Web Audio
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(soundType) {
+                case 'select':
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 523.25; // C5
+                    gainNode.gain.value = 0.2;
+                    break;
+                case 'complete':
+                    oscillator.type = 'triangle';
+                    oscillator.frequency.value = 659.25; // E5
+                    gainNode.gain.value = 0.3;
+                    break;
+                case 'error':
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.value = 220; // A3
+                    gainNode.gain.value = 0.2;
+                    break;
+                case 'achievement':
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 783.99; // G5
+                    gainNode.gain.value = 0.3;
+                    break;
+                default:
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 440; // A4
+                    gainNode.gain.value = 0.2;
+            }
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+        
+        function hapticFeedback() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+        }
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.key-card') || e.target.closest('.option') || e.target.closest('.btn')) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = e.target.closest('.key-card,.option,.btn').getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+                
+                playSound('select');
+                hapticFeedback();
+            }
+        });
+        
+        function updateNarrativeText() {
+            const narrativeText = document.getElementById('narrative-text');
+            const completedCount = gameState.completedChallenges.length;
+            
+            if (completedCount < narrativePhrases.length) {
+                narrativeText.textContent = narrativePhrases[completedCount];
+                narrativeText.style.animation = 'none';
+                setTimeout(() => {
+                    narrativeText.style.animation = 'fadeIn 1s forwards';
+                }, 10);
+            } else if (completedCount === 10) {
+                narrativeText.textContent = "¡Has descubierto tu camino profesional!";
+                narrativeText.style.animation = 'none';
+                setTimeout(() => {
+                    narrativeText.style.animation = 'fadeIn 1s forwards';
+                }, 10);
+            }
+        }
+        
+        function updateAvatar() {
+            // Actualizar accesorios del avatar según las dimensiones completadas
+            if (gameState.completedChallenges.includes(0) && !gameState.avatarAccessories.glasses) {
+                document.getElementById('avatar-glasses').classList.add('active');
+                gameState.avatarAccessories.glasses = true;
+            }
+            
+            if (gameState.completedChallenges.includes(5) && !gameState.avatarAccessories.tie) {
+                document.getElementById('avatar-tie').classList.add('active');
+                gameState.avatarAccessories.tie = true;
+            }
+            
+            if (gameState.completedChallenges.includes(8) && !gameState.avatarAccessories.palette) {
+                document.getElementById('avatar-palette').classList.add('active');
+                gameState.avatarAccessories.palette = true;
+            }
+            
+            if (gameState.completedChallenges.includes(4) && !gameState.avatarAccessories.plant) {
+                document.getElementById('avatar-plant').classList.add('active');
+                gameState.avatarAccessories.plant = true;
+            }
+            
+            if (gameState.completedChallenges.includes(1) && !gameState.avatarAccessories.handshake) {
+                document.getElementById('avatar-handshake').classList.add('active');
+                gameState.avatarAccessories.handshake = true;
+            }
+            
+            if (gameState.completedChallenges.includes(6) && !gameState.avatarAccessories.book) {
+                document.getElementById('avatar-book').classList.add('active');
+                gameState.avatarAccessories.book = true;
+            }
+            
+            if (gameState.completedChallenges.includes(7) && !gameState.avatarAccessories.magnifier) {
+                document.getElementById('avatar-magnifier').classList.add('active');
+                gameState.avatarAccessories.magnifier = true;
+            }
+            
+            if (gameState.completedChallenges.includes(3) && !gameState.avatarAccessories.lightbulb) {
+                document.getElementById('avatar-lightbulb').classList.add('active');
+                gameState.avatarAccessories.lightbulb = true;
+            }
+            
+            if (gameState.completedChallenges.includes(9) && !gameState.avatarAccessories.heart) {
+                document.getElementById('avatar-heart').classList.add('active');
+                gameState.avatarAccessories.heart = true;
+            }
+        }
+        
+        function checkAchievements() {
+            achievementBadges.forEach(badge => {
+                if (badge.condition(gameState)) {
+                    showAchievement(badge);
+                }
+            });
+        }
+        
+        function showAchievement(badge) {
+            const badgeEl = document.getElementById('achievement-badge');
+            const iconEl = document.getElementById('achievement-icon');
+            const titleEl = document.getElementById('achievement-title');
+            const descriptionEl = document.getElementById('achievement-description');
+            
+            iconEl.innerHTML = `<i class="fas ${badge.icon}"></i>`;
+            titleEl.textContent = badge.title;
+            descriptionEl.textContent = badge.description;
+            
+            badgeEl.classList.add('show');
+            playSound('achievement');
+            
+            setTimeout(() => {
+                badgeEl.classList.remove('show');
+            }, 3000);
+        }
+        
+        function showDimensionComplete(dimensionName, score) {
+            const card = document.querySelector(`.key-card[data-id="${gameState.currentChallenge}"]`);
+            
+            // Efecto de completado
+            const effect = document.createElement('div');
+            effect.classList.add('dimension-complete-effect');
+            card.appendChild(effect);
+            
+            // Estrella de nivel up
+            const star = document.createElement('div');
+            star.classList.add('level-up-star');
+            star.innerHTML = '<i class="fas fa-star"></i>';
+            card.appendChild(star);
+            
+            setTimeout(() => {
+                effect.remove();
+                star.remove();
+            }, 1500);
+            
+            playSound('complete');
+            hapticFeedback();
+        }
+        
+        function updateQuickResults() {
+            if (gameState.completedChallenges.length < 3) return;
+            
+            const quickResults = document.getElementById('quick-results');
+            const quickResultsList = document.getElementById('quick-results-list');
+            
+            quickResultsList.innerHTML = '';
+            
+            // Calcular resultados parciales
+            const partialScores = calculateAllCareerScores(gameState.scores);
+            const topCareers = partialScores.slice(0, 3);
+            
+            topCareers.forEach(([career, score]) => {
+                const pct = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
+                const item = document.createElement('li');
+                item.className = 'quick-results-item';
+                item.innerHTML = `
+                    <span class="quick-results-name">${career}</span>
+                    <span class="quick-results-score">${pct}%</span>
+                `;
+                quickResultsList.appendChild(item);
+            });
+            
+            quickResults.classList.add('show');
+        }
+        
+        function init() {
+            createParticles();
+            createCursorTrail();
+            renderKeys();
+            setupEventListeners();
+            setupAudioControls();
+            updateNarrativeText();
+            
+            // Mostrar resultados rápidos después de completar 3 dimensiones
+            const checkQuickResults = setInterval(() => {
+                if (gameState.completedChallenges.length >= 3) {
+                    updateQuickResults();
+                    clearInterval(checkQuickResults);
+                }
+            }, 1000);
+        }
+        
+        function renderKeys() {
+            const container = document.getElementById('key-container');
+            container.innerHTML = '';
+            dimensions.forEach((dim, index) => {
+                const card = document.createElement('div');
+                card.className = gameState.completedChallenges.includes(dim.id) ? 'key-card completed' : 'key-card';
+                card.dataset.id = dim.id;
+                const isCompleted = gameState.completedChallenges.includes(dim.id);
+                const progressWidth = isCompleted ? '100%' : '0%';
+                card.innerHTML = `
+                    <i class="fas ${dim.icon}"></i>
+                    <h3>${dim.name}</h3>
+                    <div class="mini-progress">
+                        <div class="mini-progress-bar" style="width: ${progressWidth};"></div>
+                    </div>
+                `;
+                card.style.animation = `fadeInUp 0.5s ${index * 0.1}s ease both`;
+                card.addEventListener('click', () => {
+                    if (!isCompleted) openChallenge(dim.id);
+                });
+                container.appendChild(card);
+            });
+            updateProgress();
+            updateAvatar();
+        }
+        
+        function updateProgress() {
+            const progress = (gameState.completedChallenges.length / 10) * 100;
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            
+            if (progress === 100) {
+                progressBar.classList.add('rainbow');
+                document.getElementById('progress-lock').classList.add('unlocked');
+            } else {
+                progressBar.classList.remove('rainbow');
+            }
+            
+            document.getElementById('progress-text').textContent = `Perfil: ${gameState.completedChallenges.length}/10 dimensiones registradas`;
+            
+            if (gameState.completedChallenges.length === 10) {
+                document.getElementById('complete-btn-container').style.display = 'block';
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    createConfetti();
+                }
+            }
+        }
+        
+        function openChallenge(id) {
+            if (gameState.completedChallenges.includes(id)) return;
+            
+            // Mostrar pantalla de carga
+            showLoadingScreen();
+            
+            // Crear partículas contextuales
+            createContextualParticles(id);
+            
+            // Iniciar mini-juego después de un breve retraso
+            setTimeout(() => {
+                gameState.currentChallenge = id;
+                gameState.currentQuestions = selectRandomQuestions(gameState.currentChallenge);
+                gameState.currentAnswers = [null, null];
+                gameState.startTime = Date.now();
+                
+                document.getElementById('challenge-title').textContent = dimensions[id].name;
+                
+                // Mostrar mini-juego
+                const miniGame = document.getElementById('mini-game');
+                const miniGameTitle = document.getElementById('mini-game-title');
+                const questionsContainer = document.getElementById('questions-container');
+                
+                if (miniGames[id]) {
+                    miniGameTitle.textContent = miniGames[id].title;
+                    miniGame.classList.add('active');
+                    questionsContainer.style.display = 'none';
+                    miniGames[id].setup();
+                    
+                    // Configurar temporizador
+                    let timeLeft = 30;
+                    const timerEl = document.getElementById('mini-game-timer');
+                    
+                    const timer = setInterval(() => {
+                        timeLeft--;
+                        timerEl.textContent = timeLeft;
+                        
+                        if (timeLeft <= 0) {
+                            clearInterval(timer);
+                            document.getElementById('mini-game-result').textContent = '¡Tiempo agotado! Pasando a las preguntas.';
+                            document.getElementById('mini-game-result').classList.add('show');
+                            
+                            setTimeout(() => {
+                                miniGame.classList.remove('active');
+                                questionsContainer.style.display = 'block';
+                                renderQuestions();
+                            }, 1500);
+                        }
+                    }, 1000);
+                    
+                    // Configurar botón de saltar
+                    document.getElementById('skip-mini-game').addEventListener('click', function() {
+                        clearInterval(timer);
+                        miniGame.classList.remove('active');
+                        questionsContainer.style.display = 'block';
+                        renderQuestions();
+                    });
+                } else {
+                    miniGame.classList.remove('active');
+                    questionsContainer.style.display = 'block';
+                    renderQuestions();
+                }
+                
+                // Ocultar pantalla de carga
+                hideLoadingScreen();
+                
+                const modal = document.getElementById('challenge-modal');
+                modal.classList.add('active');
+            }, 1000);
+        }
+        
+        function showLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const tipTitle = document.getElementById('loading-tip-title');
+            const tipText = document.getElementById('loading-tip-text');
+            
+            // Seleccionar un tip aleatorio
+            const randomTip = loadingTips[Math.floor(Math.random() * loadingTips.length)];
+            tipTitle.textContent = randomTip.title;
+            tipText.textContent = randomTip.text;
+            
+            loadingScreen.classList.add('active');
+        }
+        
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.classList.remove('active');
+        }
+        
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            gameState.currentQuestions.forEach((q, idx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-container';
+                if (idx === 0) qDiv.classList.add('active');
+                
+                // Si el power-up de pista está activo, eliminar una opción incorrecta
+                let options = [...q.options];
+                if (gameState.powerUps.hint && !qDiv.classList.contains('hint-used')) {
+                    // Encontrar la opción con el valor más bajo y eliminarla
+                    options.sort((a, b) => a.value - b.value);
+                    options = options.slice(1);
+                    qDiv.classList.add('hint-used');
+                }
+                
+                const shuffledOptions = options.sort(() => Math.random() - 0.5);
+                const optionsHtml = shuffledOptions.map((opt, i) => `
+                    <div class="option" data-question="${idx}" data-option-value="${opt.value}">
+                        <span class="feedback-icon">😊</span>
+                        ${opt.text}
+                    </div>
+                `).join('');
+                qDiv.innerHTML = `
+                    <div class="question">Pregunta ${idx + 1}: ${q.question}</div>
+                    <div class="options">${optionsHtml}</div>
+                `;
+                container.appendChild(qDiv);
+            });
+            
+            container.addEventListener('click', (e) => {
+                const option = e.target.closest('.option');
+                if (!option) return;
+                const qIdx = parseInt(option.dataset.question);
+                const value = parseInt(option.dataset.optionValue);
+                document.querySelectorAll(`.option[data-question="${qIdx}"]`).forEach(el => {
+                    el.classList.remove('selected');
+                });
+                option.classList.add('selected');
+                gameState.currentAnswers[qIdx] = value;
+                
+                // Mostrar feedback emocional
+                const feedbackIcon = option.querySelector('.feedback-icon');
+                if (value >= 7) {
+                    feedbackIcon.textContent = '😊';
+                } else if (value >= 4) {
+                    feedbackIcon.textContent = '😐';
+                } else {
+                    feedbackIcon.textContent = '😔';
+                }
+                feedbackIcon.classList.add('show');
+                
+                document.querySelectorAll('.question-container').forEach(q => q.classList.remove('active'));
+                const nextQuestion = document.querySelectorAll('.question-container')[qIdx + 1];
+                if (nextQuestion) {
+                    nextQuestion.classList.add('active');
+                } else {
+                    document.querySelectorAll('.question-container')[qIdx].classList.add('active');
+                }
+                
+                playSound('select');
+            });
+        }
+        
+        function selectRandomQuestions(dimensionIndex) {
+            const dimensionQuestions = questionsBank[dimensionIndex];
+            const shuffled = [...dimensionQuestions].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 2);
+        }
+        
+        function submitChallenge() {
+            if (gameState.currentAnswers.some(a => a === null)) {
+                alert('Por favor, responde todas las preguntas.');
+                playSound('error');
+                return;
+            }
+            
+            // Calcular tiempo de respuesta
+            const responseTime = (Date.now() - gameState.startTime) / 1000;
+            gameState.responseTimes.push({
+                dimension: gameState.currentChallenge,
+                time: responseTime
+            });
+            
+            const avgScore = (gameState.currentAnswers[0] + gameState.currentAnswers[1]) / 2;
+            gameState.scores[gameState.currentChallenge] = avgScore;
+            gameState.completedChallenges.push(gameState.currentChallenge);
+            
+            showDimensionComplete(dimensions[gameState.currentChallenge].name, avgScore);
+            
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.remove('active');
+            
+            setTimeout(() => {
+                renderKeys();
+                checkAchievements();
+                updateNarrativeText();
+                showCompletionNotification(dimensions[gameState.currentChallenge].name);
+                
+                // Limpiar partículas contextuales
+                document.querySelectorAll('.binary-particle, .color-particle, .heart-particle, .nature-particle, .social-particle').forEach(p => p.remove());
+            }, 400);
+        }
+        
+        function showCompletionNotification(dimensionName) {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <i class="fas fa-user-check" style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <h3 style="margin: 0 0 6px; color: white;">¡Perfil actualizado!</h3>
+                <p style="margin: 0; color: #e8f4fc;">Tu dimensión "${dimensionName}" ha sido registrada</p>
+            `;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.background = 'rgba(30, 40, 70, 0.95)';
+            notification.style.color = 'white';
+            notification.style.padding = '16px 20px';
+            notification.style.borderRadius = '12px';
+            notification.style.zIndex = '2000';
+            notification.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.4)';
+            notification.style.maxWidth = '300px';
+            notification.style.borderLeft = '4px solid #2ecc71';
+            notification.style.animation = 'slideInRight 0.5s ease';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+        
+        function createConfetti() {
+            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+            const confettiCount = 150;
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 8 + 4;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                const duration = Math.random() * 3 + 2;
+                confetti.style.animationDuration = `${duration}s`;
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    document.body.removeChild(confetti);
+                }, duration * 1000);
+            }
+        }
+        
+        // === FUNCIONES DE SIMILITUD ===
+        function pearson(x, y) {
+            const n = x.length;
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((acc, xi, i) => acc + xi * y[i], 0);
+            const sumX2 = x.reduce((acc, xi) => acc + xi * xi, 0);
+            const sumY2 = y.reduce((acc, yi) => acc + yi * yi, 0);
+            const numerator = n * sumXY - sumX * sumY;
+            const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+            return denominator === 0 ? 0 : numerator / denominator;
+        }
+
+        function euclideanSimilarity(x, y) {
+            const distance = Math.sqrt(
+                x.reduce((sum, xi, i) => sum + Math.pow(xi - y[i], 2), 0)
+            );
+            const maxDistance = Math.sqrt(10 * 100);
+            return 1 - (distance / maxDistance);
+        }
+
+        function cosineSimilarity(x, y) {
+            const dotProduct = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const magX = Math.sqrt(x.reduce((sum, xi) => sum + xi * xi, 0));
+            const magY = Math.sqrt(y.reduce((sum, yi) => sum + yi * yi, 0));
+            return magX * magY === 0 ? 0 : dotProduct / (magX * magY);
+        }
+
+        function spearman(x, y) {
+            const rankX = getRanks(x);
+            const rankY = getRanks(y);
+            let d2 = 0;
+            for (let i = 0; i < rankX.length; i++) {
+                const d = rankX[i] - rankY[i];
+                d2 += d * d;
+            }
+            const n = rankX.length;
+            return n > 1 ? 1 - (6 * d2) / (n * (n * n - 1)) : 0;
+        }
+
+        function getRanks(arr) {
+            const sorted = [...arr].sort((a, b) => a - b);
+            const map = {};
+            sorted.forEach((v, i) => {
+                if (map[v] === undefined) map[v] = i + 1;
+            });
+            return arr.map(v => map[v]);
+        }
+
+        function hybridScore(user, career) {
+            const spearmanScore = spearman(user, career);
+            const pearsonScore = pearson(user, career);
+            const euclideanScore = euclideanSimilarity(user, career);
+            const cosineScore = cosineSimilarity(user, career);
+            return (
+                spearmanScore * 0.25 +
+                pearsonScore * 0.30 +
+                euclideanScore * 0.25 +
+                cosineScore * 0.20
+            );
+        }
+
+        function weightedEuclidean(x, y) {
+            const distance = x.reduce((sum, xi, i) => 
+                sum + dimensionWeights[i] * Math.pow(xi - y[i], 2), 0
+            );
+            const maxWeightedDistance = Object.values(dimensionWeights).reduce((sum, w) => sum + w * 100, 0);
+            return 1 - Math.sqrt(distance) / Math.sqrt(maxWeightedDistance);
+        }
+
+        function confidenceScore(user, career) {
+            const similarity = hybridScore(user, career);
+            const n = user.length;
+            const variance = user.reduce((sum, u, i) => 
+                sum + Math.pow(u - career[i], 2), 0) / n;
+            const stdError = Math.sqrt(variance / n);
+            const confidence = 1 - (stdError / 10);
+            return {
+                similarity,
+                confidence,
+                adjustedScore: similarity * confidence
+            };
+        }
+
+        function filterByThreshold(results, minScore = 0.4) {
+            return results.filter(([career, score]) => score >= minScore);
+        }
+
+        function calculateAllCareerScores(userScores) {
+            const results = [];
+            const isAllOnes = userScores.every(score => score === 1);
+            const isAllTens = userScores.every(score => score === 10);
+            if (isAllOnes) {
+                for (const career in professionsMatrix) {
+                    results.push([career, 0.1]);
+                }
+                return results;
+            }
+            if (isAllTens) {
+                for (const career in professionsMatrix) {
+                    results.push([career, 1.0]);
+                }
+                return results;
+            }
+            for (const [career, careerScores] of Object.entries(professionsMatrix)) {
+                const hybrid = hybridScore(userScores, careerScores);
+                const weighted = weightedEuclidean(userScores, careerScores);
+                const confidence = confidenceScore(userScores, careerScores);
+                const finalScore = (hybrid * 0.6 + weighted * 0.3 + confidence.adjustedScore * 0.1);
+                results.push([career, finalScore]);
+            }
+            const filtered = filterByThreshold(results, 0.4);
+            filtered.sort((a, b) => b[1] - a[1]);
+            return filtered;
+        }
+
+        function diversifiedRecommendations(allScores, topN = 5) {
+            const diverse = [];
+            const usedFamilies = new Set();
+            const families = {
+                'ingenieria': /Ingeniería/i,
+                'medicina': /Medicina|Enfermería|Salud|Odontología|Kinesiología|Terapia|Nutrición|Obstetricia|Veterinaria/i,
+                'pedagogia': /Pedagogía|Educación/i,
+                'ciencias': /Licenciatura|Ciencias|Matemáticas|Física|Química|Biología|Geología|Astronomía|Estadística|Oceanografía|Meteorología|Arqueología|Antropología|Sociología|Filosofía|Historia|Letras|Lingüística|Música|Artes/i
+            };
+            for (const [career, score] of allScores) {
+                if (diverse.length >= topN) break;
+                const family = Object.keys(families).find(f => families[f].test(career)) || 'otros';
+                if (!usedFamilies.has(family) || diverse.length > topN - 2) {
+                    diverse.push([career, score]);
+                    usedFamilies.add(family);
+                }
+            }
+            return diverse;
+        }
+
+        function calculateCompatibleCareers(userScores = null) {
+            const scores = userScores || gameState.scores;
+            const allScores = calculateAllCareerScores(scores);
+            const isAllTens = scores.every(score => score === 10);
+            if (isAllTens) {
+                return allScores.slice(0, 10);
+            } else {
+                return diversifiedRecommendations(allScores, 5);
+            }
+        }
+
+        function showResults() {
+            showLoadingScreen();
+            
+            setTimeout(() => {
+                const userScores = gameState.scores;
+                const isAllOnes = userScores.every(score => score === 1);
+                const isAllTens = userScores.every(score => score === 10);
+                let careers = calculateCompatibleCareers(userScores);
+                
+                const specialMessageContainer = document.getElementById('special-message-container');
+                specialMessageContainer.innerHTML = '';
+                
+                if (isAllTens) {
+                    const specialMessage = document.createElement('div');
+                    specialMessage.className = 'special-message all-tens-message';
+                    specialMessage.innerHTML = `
+                        <h3><i class="fas fa-trophy"></i> ¡Felicidades! Perfil Excepcional Detectado</h3>
+                        <p>Tienes un perfil extraordinariamente equilibrado y destacas en todas las dimensiones evaluadas.</p>
+                        <p>Eres una persona versátil con potencial para tener éxito en cualquier carrera que elijas.</p>
+                        <p>Aquí te presentamos las 10 carreras más destacadas que podrían ser de tu interés:</p>
+                    `;
+                    specialMessageContainer.appendChild(specialMessage);
+                    document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+                } else if (isAllOnes) {
+                    const specialMessage = document.createElement('div');
+                    specialMessage.className = 'special-message all-ones-message';
+                    specialMessage.innerHTML = `
+                        <h3><i class="fas fa-chart-line"></i> Áreas de Oportunidad Detectadas</h3>
+                        <p>Tu perfil actual muestra áreas de mejora en todas las dimensiones evaluadas.</p>
+                        <p>No te preocupes, esto es una excelente oportunidad para crecer y desarrollar nuevas habilidades.</p>
+                        <p>Te recomendamos explorar diferentes áreas para descubrir tus intereses y fortalezas:</p>
+                    `;
+                    specialMessageContainer.appendChild(specialMessage);
+                    document.getElementById('results-title').textContent = 'Oportunidades de Desarrollo Profesional';
+                } else {
+                    document.getElementById('results-title').textContent = 'Tus 5 Carreras Más Compatibles';
+                }
+                
+                // Mostrar perfil único
+                showProfileUnique();
+                
+                // Mostrar comparativa social
+                showSocialComparison();
+                
+                // Mostrar estilo de respuesta
+                showResponseStyle();
+                
+                const list = document.getElementById('career-list');
+                list.innerHTML = '';
+                
+                // Revelar carreras una por una
+                careers.forEach(([name, score], index) => {
+                    setTimeout(() => {
+                        const pct = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
+                        const matchLevel = pct >= 80 ? 'Excelente' : 
+                                          pct >= 70 ? 'Muy Bueno' : 
+                                          pct >= 60 ? 'Bueno' : 'Aceptable';
+                        const emoji = pct >= 80 ? '🌟' : pct >= 70 ? '✨' : pct >= 60 ? '👍' : '👌';
+                        
+                        // Obtener icono de la carrera
+                        let careerIcon = 'fa-briefcase';
+                        for (const [category, icon] of Object.entries(careerIcons)) {
+                            if (name.includes(category)) {
+                                careerIcon = icon;
+                                break;
+                            }
+                        }
+                        
+                        const item = document.createElement('li');
+                        item.className = 'career-item';
+                        item.innerHTML = `
+                            <div class="career-name">
+                                <i class="fas ${careerIcon} career-icon"></i>
+                                ${name}
+                                <div style="font-size: 0.85rem; color: #a0c4ff; margin-top: 4px;">
+                                    ${emoji} ${matchLevel}
+                                    <span class="career-badge">Nuevo</span>
+                                </div>
+                            </div>
+                            <div class="career-score" data-target="${pct}">0%</div>
+                        `;
+                        list.appendChild(item);
+                        
+                        // Animación de revelación
+                        setTimeout(() => {
+                            item.classList.add('reveal');
+                            const scoreElement = item.querySelector('.career-score');
+                            animateCounter(scoreElement, 0, pct, 1500);
+                            playSound('complete');
+                        }, 100);
+                    }, index * 500);
+                });
+                
+                document.getElementById('game-container').style.display = 'none';
+                document.getElementById('results-container').style.display = 'block';
+                
+                hideLoadingScreen();
+            }, 1500);
+        }
+        
+        function showProfileUnique() {
+            const profileUnique = document.getElementById('profile-unique');
+            const profileChart = document.getElementById('profile-chart');
+            
+            profileChart.innerHTML = '';
+            
+            // Obtener las 3 dimensiones más fuertes
+            const dimensionScores = gameState.scores.map((score, index) => ({
+                id: index,
+                name: dimensions[index].name,
+                score: score
+            }));
+            
+            dimensionScores.sort((a, b) => b.score - a.score);
+            const topDimensions = dimensionScores.slice(0, 3);
+            
+            // Crear gráfico de barras
+            topDimensions.forEach(dim => {
+                const barContainer = document.createElement('div');
+                barContainer.style.display = 'flex';
+                barContainer.style.flexDirection = 'column';
+                barContainer.style.alignItems = 'center';
+                barContainer.style.width = '30%';
+                
+                const bar = document.createElement('div');
+                bar.className = 'profile-bar';
+                bar.style.height = '0px';
+                bar.style.background = dimensions[dim.id].color;
+                
+                const value = document.createElement('div');
+                value.className = 'profile-bar-value';
+                value.textContent = dim.score;
+                
+                const label = document.createElement('div');
+                label.className = 'profile-bar-label';
+                label.textContent = dim.name.substring(0, 10) + (dim.name.length > 10 ? '...' : '');
+                
+                barContainer.appendChild(bar);
+                barContainer.appendChild(value);
+                barContainer.appendChild(label);
+                profileChart.appendChild(barContainer);
+                
+                // Animar la barra
+                setTimeout(() => {
+                    bar.style.height = `${dim.score * 10}px`;
+                }, 300);
+            });
+            
+            profileUnique.classList.add('show');
+        }
+        
+        function showSocialComparison() {
+            const socialComparison = document.getElementById('social-comparison');
+            const content = document.getElementById('social-comparison-content');
+            
+            content.innerHTML = '';
+            
+            // Simular comparativas sociales
+            const comparisons = [
+                { label: 'Tu perfil es similar al', value: `${Math.floor(Math.random() * 30) + 10}% de usuarios` },
+                { label: 'Eres más técnico que el', value: `${Math.floor(Math.random() * 50) + 30}% de personas` },
+                { label: 'Tu creatividad supera al', value: `${Math.floor(Math.random() * 60) + 20}% de usuarios` },
+                { label: 'Tienes mayor capacidad de liderazgo que el', value: `${Math.floor(Math.random() * 40) + 25}% de personas` }
+            ];
+            
+            comparisons.forEach(comp => {
+                const item = document.createElement('div');
+                item.className = 'comparison-item';
+                item.innerHTML = `
+                    <span class="comparison-label">${comp.label}</span>
+                    <span class="comparison-value">${comp.value}</span>
+                `;
+                content.appendChild(item);
+            });
+            
+            socialComparison.classList.add('show');
+        }
+        
+        function showResponseStyle() {
+            const responseTime = document.getElementById('response-time');
+            const result = document.getElementById('response-time-result');
+            
+            // Calcular tiempo promedio de respuesta
+            const avgTime = gameState.responseTimes.reduce((sum, item) => sum + item.time, 0) / gameState.responseTimes.length;
+            
+            let style;
+            if (avgTime < 15) {
+                style = 'Eres una persona decidida y resuelves las situaciones rápidamente.';
+            } else if (avgTime < 30) {
+                style = 'Tomas el tiempo necesario para reflexionar antes de tomar decisiones.';
+            } else {
+                style = 'Eres una persona analítica que considera cuidadosamente cada opción.';
+            }
+            
+            result.innerHTML = `
+                <p>Tiempo promedio de respuesta: <strong>${avgTime.toFixed(1)} segundos</strong></p>
+                <p>${style}</p>
+            `;
+            
+            responseTime.classList.add('show');
+        }
+        
+        function animateCounter(element, start, end, duration) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                element.textContent = `${end}%`;
+                return;
+            }
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = `${Math.round(current)}%`;
+            }, 16);
+        }
+        
+        function restartGame() {
+            gameState = {
+                completedChallenges: [],
+                scores: new Array(10).fill(5),
+                currentChallenge: null,
+                currentQuestions: [],
+                currentAnswers: [],
+                responseTimes: [],
+                startTime: null,
+                powerUps: {
+                    visibility: false,
+                    hint: false
+                },
+                avatarAccessories: {
+                    glasses: false,
+                    tie: false,
+                    palette: false,
+                    plant: false,
+                    handshake: false,
+                    book: false,
+                    magnifier: false,
+                    lightbulb: false,
+                    heart: false
+                },
+                musicEnabled: gameState.musicEnabled,
+                soundEnabled: gameState.soundEnabled
+            };
+            
+            // Restablecer power-ups
+            document.getElementById('power-up-visibility').classList.remove('used');
+            document.getElementById('power-up-hint').classList.remove('used');
+            
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('complete-btn-container').style.display = 'none';
+            document.getElementById('quick-results').classList.remove('show');
+            
+            renderKeys();
+            updateNarrativeText();
+        }
+        
+        function setupEventListeners() {
+            document.getElementById('close-modal').addEventListener('click', () => {
+                document.getElementById('challenge-modal').classList.remove('active');
+            });
+            
+            document.getElementById('submit-challenge').addEventListener('click', submitChallenge);
+            document.getElementById('show-results').addEventListener('click', showResults);
+            document.getElementById('restart-game').addEventListener('click', restartGame);
+            
+            // Power-ups
+            document.getElementById('power-up-visibility').addEventListener('click', function() {
+                if (!this.classList.contains('used') && !gameState.powerUps.visibility) {
+                    this.classList.add('used');
+                    gameState.powerUps.visibility = true;
+                    showCompletionNotification('Doble Visibilidad activado');
+                    playSound('achievement');
+                }
+            });
+            
+            document.getElementById('power-up-hint').addEventListener('click', function() {
+                if (!this.classList.contains('used') && !gameState.powerUps.hint) {
+                    this.classList.add('used');
+                    gameState.powerUps.hint = true;
+                    showCompletionNotification('Pista Rápida activada');
+                    playSound('achievement');
+                }
+            });
+            
+            // What-if scenarios
+            document.getElementById('what-if-technical').addEventListener('click', function() {
+                showWhatIfScenario('technical');
+            });
+            
+            document.getElementById('what-if-creative').addEventListener('click', function() {
+                showWhatIfScenario('creative');
+            });
+            
+            document.getElementById('what-if-social').addEventListener('click', function() {
+                showWhatIfScenario('social');
+            });
+        }
+        
+        function showWhatIfScenario(scenario) {
+            const whatIfResults = document.getElementById('what-if-results');
+            const whatIfCareerList = document.getElementById('what-if-career-list');
+            
+            // Crear una copia de los puntajes actuales
+            const modifiedScores = [...gameState.scores];
+            
+            // Modificar los puntajes según el escenario
+            switch(scenario) {
+                case 'technical':
+                    modifiedScores[0] = Math.min(10, modifiedScores[0] + 3); // Técnica y analítica
+                    modifiedScores[2] = Math.min(10, modifiedScores[2] + 2); // Innovación digital
+                    modifiedScores[7] = Math.min(10, modifiedScores[7] + 2); // Orientación al detalle
+                    break;
+                case 'creative':
+                    modifiedScores[8] = Math.min(10, modifiedScores[8] + 3); // Creatividad
+                    modifiedScores[3] = Math.min(10, modifiedScores[3] + 2); // Tolerancia al riesgo
+                    modifiedScores[2] = Math.min(10, modifiedScores[2] + 2); // Innovación digital
+                    break;
+                case 'social':
+                    modifiedScores[1] = Math.min(10, modifiedScores[1] + 3); // Empatía e interacción social
+                    modifiedScores[5] = Math.min(10, modifiedScores[5] + 2); // Liderazgo
+                    modifiedScores[9] = Math.min(10, modifiedScores[9] + 2); // Impacto social
+                    break;
+            }
+            
+            // Calcular carreras con los puntajes modificados
+            const careers = calculateCompatibleCareers(modifiedScores);
+            
+            // Mostrar resultados
+            whatIfCareerList.innerHTML = '';
+            careers.forEach(([name, score]) => {
+                const pct = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
+                const item = document.createElement('li');
+                item.className = 'career-item';
+                item.innerHTML = `
+                    <div class="career-name">${name}</div>
+                    <div class="career-score">${pct}%</div>
+                `;
+                whatIfCareerList.appendChild(item);
+            });
+            
+            whatIfResults.classList.add('show');
+        }
+        
+        function setupAudioControls() {
+            document.getElementById('toggle-music').addEventListener('click', function() {
+                gameState.musicEnabled = !gameState.musicEnabled;
+                this.innerHTML = gameState.musicEnabled ? '<i class="fas fa-music"></i>' : '<i class="fas fa-music-slash"></i>';
+            });
+            
+            document.getElementById('toggle-sound').addEventListener('click', function() {
+                gameState.soundEnabled = !gameState.soundEnabled;
+                this.innerHTML = gameState.soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

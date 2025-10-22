@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrera Quest: Descubre tu Perfil Vocacional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === MISMO CSS QUE ANTES (sin cambios) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0b2a, #1a1a4c, #0c1f33);
+            background-size: 400% 400%;
+            color: #f0f4f8;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 0;
+            animation: gradientShift 20s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .background-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .layer-1 { background: radial-gradient(circle at 20% 30%, rgba(52, 152, 219, 0.15), transparent 60%); }
+        .layer-2 { background: radial-gradient(circle at 80% 70%, rgba(46, 204, 113, 0.1), transparent 60%); }
+        .layer-3 { background: radial-gradient(circle at 50% 20%, rgba(241, 196, 15, 0.1), transparent 70%); }
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .star {
+            background: #fff;
+            box-shadow: 0 0 8px #fff;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+        .bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: floatBubble var(--duration, 15s) infinite linear;
+        }
+        .nebula {
+            background: radial-gradient(circle, rgba(91, 192, 222, 0.08), transparent 70%);
+            animation: drift var(--duration, 40s) infinite linear;
+        }
+        .meteor {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            border-radius: 0 0 2px 2px;
+            transform: rotate(-45deg);
+            animation: meteorFall var(--duration, 8s) infinite linear;
+            opacity: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, -100px); }
+        }
+        @keyframes meteorFall {
+            0% { transform: translateX(-100px) translateY(-100px) rotate(-45deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw) translateY(100vh) rotate(-45deg); opacity: 0; }
+        }
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            background: rgba(52, 152, 219, 0.7);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.8);
+            transform: translate(-50%, -50%);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 3;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(90deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: titleGradient 8s ease infinite;
+            position: relative;
+            text-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
+        }
+        @keyframes titleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.95;
+            color: #d6eaf8;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid rgba(255, 255, 255, 0.7);
+            animation: typing 4s steps(60, end), blink 1s step-end infinite alternate;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        .game-container {
+            background: rgba(10, 15, 35, 0.65);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 2.2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .game-container::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            background-size: 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: containerGlow 12s linear infinite;
+            opacity: 0.6;
+            filter: blur(20px);
+        }
+        @keyframes containerGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        .game-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.7rem;
+            color: #f1c40f;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+        }
+        .progress-container {
+            margin: 1.8rem 0;
+        }
+        .progress-bar {
+            height: 14px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .progress {
+            height: 100%;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.2, 0.8, 0.4, 1);
+            position: relative;
+        }
+        .progress.rainbow {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 0.6rem;
+            font-size: 1rem;
+            opacity: 0.95;
+            color: #e0f7fa;
+            font-weight: 600;
+        }
+        .key-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.8rem;
+        }
+        .key-card {
+            background: linear-gradient(145deg, rgba(20, 25, 55, 0.8), rgba(10, 15, 40, 0.9));
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 1.6rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            border: 2px solid transparent;
+        }
+        .key-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+            opacity: 0.4;
+        }
+        .key-card:hover {
+            transform: translateY(-10px) rotateX(8deg) rotateY(5deg);
+            box-shadow:
+                0 14px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px var(--hover-glow, rgba(52, 152, 219, 0.5));
+            z-index: 10;
+        }
+        .key-card.completed {
+            animation: pulseGlow 2s infinite alternate;
+            box-shadow:
+                0 0 25px rgba(46, 204, 113, 0.6),
+                0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(46, 204, 113, 0.7);
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); }
+            to { box-shadow: 0 0 30px rgba(46, 204, 113, 0.8); }
+        }
+        .key-card i {
+            font-size: 2.1rem;
+            margin-bottom: 0.9rem;
+            transition: transform 0.4s ease, color 0.4s ease;
+            display: block;
+        }
+        .key-card:hover i {
+            transform: scale(1.2) rotate(10deg);
+        }
+        .key-card h3 {
+            font-size: 0.98rem;
+            color: #f0f4f8;
+            margin-top: 0.6rem;
+            font-weight: 600;
+            text-shadow: 0 0 6px currentColor;
+        }
+        .mini-progress {
+            height: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        .mini-progress-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+        :root {
+            --color-0: #3498db;
+            --color-1: #e74c3c;
+            --color-2: #9b59b6;
+            --color-3: #f39c12;
+            --color-4: #2ecc71;
+            --color-5: #34495e;
+            --color-6: #16a085;
+            --color-7: #d35400;
+            --color-8: #e67e22;
+            --color-9: #c0392b;
+        }
+        .key-card[data-id="0"] { --hover-glow: rgba(52, 152, 219, 0.6); }
+        .key-card[data-id="0"] i { color: var(--color-0); }
+        .key-card[data-id="0"].completed i { color: #2ecc71; }
+        .key-card[data-id="0"] .mini-progress-bar { background: var(--color-0); }
+        .key-card[data-id="1"] { --hover-glow: rgba(231, 76, 60, 0.6); }
+        .key-card[data-id="1"] i { color: var(--color-1); }
+        .key-card[data-id="1"].completed i { color: #2ecc71; }
+        .key-card[data-id="1"] .mini-progress-bar { background: var(--color-1); }
+        .key-card[data-id="2"] { --hover-glow: rgba(155, 89, 182, 0.6); }
+        .key-card[data-id="2"] i { color: var(--color-2); }
+        .key-card[data-id="2"].completed i { color: #2ecc71; }
+        .key-card[data-id="2"] .mini-progress-bar { background: var(--color-2); }
+        .key-card[data-id="3"] { --hover-glow: rgba(243, 156, 18, 0.6); }
+        .key-card[data-id="3"] i { color: var(--color-3); }
+        .key-card[data-id="3"].completed i { color: #2ecc71; }
+        .key-card[data-id="3"] .mini-progress-bar { background: var(--color-3); }
+        .key-card[data-id="4"] { --hover-glow: rgba(46, 204, 113, 0.6); }
+        .key-card[data-id="4"] i { color: var(--color-4); }
+        .key-card[data-id="4"].completed i { color: #2ecc71; }
+        .key-card[data-id="4"] .mini-progress-bar { background: var(--color-4); }
+        .key-card[data-id="5"] { --hover-glow: rgba(52, 73, 94, 0.6); }
+        .key-card[data-id="5"] i { color: var(--color-5); }
+        .key-card[data-id="5"].completed i { color: #2ecc71; }
+        .key-card[data-id="5"] .mini-progress-bar { background: var(--color-5); }
+        .key-card[data-id="6"] { --hover-glow: rgba(22, 160, 133, 0.6); }
+        .key-card[data-id="6"] i { color: var(--color-6); }
+        .key-card[data-id="6"].completed i { color: #2ecc71; }
+        .key-card[data-id="6"] .mini-progress-bar { background: var(--color-6); }
+        .key-card[data-id="7"] { --hover-glow: rgba(211, 84, 0, 0.6); }
+        .key-card[data-id="7"] i { color: var(--color-7); }
+        .key-card[data-id="7"].completed i { color: #2ecc71; }
+        .key-card[data-id="7"] .mini-progress-bar { background: var(--color-7); }
+        .key-card[data-id="8"] { --hover-glow: rgba(230, 126, 34, 0.6); }
+        .key-card[data-id="8"] i { color: var(--color-8); }
+        .key-card[data-id="8"].completed i { color: #2ecc71; }
+        .key-card[data-id="8"] .mini-progress-bar { background: var(--color-8); }
+        .key-card[data-id="9"] { --hover-glow: rgba(192, 57, 43, 0.6); }
+        .key-card[data-id="9"] i { color: var(--color-9); }
+        .key-card[data-id="9"].completed i { color: #2ecc71; }
+        .key-card[data-id="9"] .mini-progress-bar { background: var(--color-9); }
+        .challenge-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .challenge-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .challenge-content {
+            background: linear-gradient(145deg, rgba(15, 20, 45, 0.9), rgba(25, 35, 70, 0.95));
+            border-radius: 20px;
+            padding: 2.2rem;
+            max-width: 720px;
+            width: 92%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            color: #f0f4f8;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                0 20px 50px rgba(0, 0, 0, 0.6);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .challenge-modal.active .challenge-content {
+            transform: scale(1);
+        }
+        .challenge-content::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            background-size: 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: modalGlow 10s linear infinite;
+            opacity: 0.7;
+            filter: blur(15px);
+        }
+        @keyframes modalGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #f0f4f8;
+            background: rgba(20, 30, 60, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .close-btn:hover {
+            background: rgba(231, 76, 60, 0.9);
+            transform: rotate(180deg) scale(1.1);
+            color: white;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+        }
+        .question-container {
+            margin-bottom: 2rem;
+            background: rgba(20, 30, 60, 0.55);
+            padding: 1.6rem;
+            border-radius: 14px;
+            border-left: 4px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .question-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: questionShimmer 2s infinite;
+            opacity: 0;
+        }
+        .question-container.active::after {
+            opacity: 0.3;
+        }
+        @keyframes questionShimmer {
+            100% { transform: translateX(100%); }
+        }
+        .question-container.active {
+            border-left-color: #3498db;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.35);
+        }
+        .question {
+            font-size: 1.15rem;
+            margin-bottom: 1.1rem;
+            font-weight: 600;
+            color: #f0f4f8;
+            opacity: 0;
+            animation: revealText 0.8s forwards;
+        }
+        @keyframes revealText {
+            to { opacity: 1; }
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .option {
+            background: rgba(30, 40, 80, 0.65);
+            padding: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            border: 1px solid transparent;
+            color: #e0e7ff;
+            position: relative;
+            overflow: hidden;
+        }
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(52, 152, 219, 0.2);
+            z-index: -1;
+            transition: width 0.4s ease;
+        }
+        .option:hover::before {
+            width: 100%;
+        }
+        .option:hover {
+            transform: translateX(6px);
+            border-color: rgba(52, 152, 219, 0.5);
+            color: white;
+        }
+        .option.selected {
+            background: rgba(52, 152, 219, 0.4);
+            border-left: 4px solid #3498db;
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.5);
+            color: white;
+        }
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 32px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-top: 1.2rem;
+            display: block;
+            width: fit-content;
+            margin: 1.8rem auto 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            z-index: -1;
+            transition: all 0.4s ease;
+        }
+        .btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+        .btn:hover::before {
+            background: linear-gradient(45deg, #3498db, #5dade2);
+        }
+        .btn-submit {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+        .btn-submit::before {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+        .btn-submit:hover::before {
+            background: linear-gradient(45deg, #2ecc71, #58d68d);
+        }
+        #show-results {
+            animation: bouncePulse 2s infinite;
+        }
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .results-container {
+            display: none;
+            background: rgba(10, 15, 35, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 2.2rem;
+            margin-top: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: slideIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .results-container h2 {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            color: #f1c40f;
+            font-size: 1.8rem;
+            text-shadow: 0 0 12px rgba(241, 196, 15, 0.7);
+        }
+        .career-list {
+            list-style: none;
+        }
+        .career-item {
+            background: rgba(20, 30, 60, 0.65);
+            padding: 1.4rem;
+            margin-bottom: 1rem;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .career-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: careerShimmer 2s infinite;
+            opacity: 0;
+        }
+        .career-item:hover::before {
+            opacity: 0.4;
+        }
+        @keyframes careerShimmer {
+            100% { transform: translateX(100%); }
+        }
+        .career-item:hover {
+            transform: translateX(8px);
+            border-left-color: #f1c40f;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+        .career-name {
+            font-weight: bold;
+            font-size: 1.15rem;
+            color: #f0f4f8;
+        }
+        .career-score {
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 22px;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+        footer {
+            text-align: center;
+            margin-top: 3.5rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 0.95rem;
+            opacity: 0.9;
+            color: #d6eaf8;
+            position: relative;
+        }
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.9), transparent);
+            animation: wave 3s infinite linear;
+        }
+        @keyframes wave {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #f0f;
+            pointer-events: none;
+            z-index: 1001;
+            animation: confetti-fall 5s linear forwards;
+        }
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleEffect {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        @media (max-width: 768px) {
+            .key-container {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1.2rem;
+            }
+            header h1 {
+                font-size: 2.1rem;
+            }
+            .challenge-content {
+                padding: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-layers">
+        <div class="layer layer-1"></div>
+        <div class="layer layer-2"></div>
+        <div class="layer layer-3"></div>
+    </div>
+    <div class="particles-container" id="particles"></div>
+    <div class="cursor-trail" id="cursor-trail"></div>
+    <div class="container">
+        <header>
+            <h1>Carrera Quest: Descubre tu Perfil Vocacional</h1>
+            <p>Responde 2 preguntas por cada una de las 10 dimensiones para construir tu perfil único y encontrar tus carreras ideales.</p>
+        </header>
+        <main>
+            <div class="game-container" id="game-container">
+                <h2>Dimensiones de tu Perfil</h2>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress-bar"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Perfil: 0/10 dimensiones registradas</p>
+                </div>
+                <div class="key-container" id="key-container"></div>
+                <div style="text-align: center; margin-top: 1.8rem; display: none;" id="complete-btn-container">
+                    <button class="btn btn-submit" id="show-results">Ver mis carreras compatibles</button>
+                </div>
+            </div>
+            <div class="results-container" id="results-container">
+                <h2>Tus 5 Carreras Más Compatibles</h2>
+                <ul class="career-list" id="career-list"></ul>
+                <div style="text-align: center; margin-top: 1.8rem;">
+                    <button class="btn" id="restart-game">Reiniciar test</button>
+                </div>
+            </div>
+        </main>
+        <div class="challenge-modal" id="challenge-modal">
+            <div class="challenge-content">
+                <span class="close-btn" id="close-modal">&times;</span>
+                <h2 id="challenge-title">Dimensión</h2>
+                <div id="questions-container"></div>
+                <button class="btn btn-submit" id="submit-challenge">Registrar respuestas</button>
+            </div>
+        </div>
+        <footer>
+            <p>&copy; 2025 Carrera Quest – Orientación Vocacional Profesional</p>
+        </footer>
+    </div>
+    <script>
+        // === MATRIZ DE CARRERAS ===
+        const professionsMatrix = {
+            "Agronomía": [8, 3, 6, 6, 4, 5, 7, 7, 4, 6],
+            "Arqueología": [7, 4, 5, 5, 3, 5, 7, 7, 5, 7],
+            "Astronomía": [10, 3, 8, 4, 10, 4, 9, 9, 3, 6],
+            "Bioingeniería": [9, 4, 9, 6, 7, 6, 9, 8, 4, 7],
+            "Biología": [8, 4, 6, 6, 7, 4, 8, 8, 3, 7],
+            "Bioquímica": [9, 3, 7, 6, 7, 4, 8, 9, 2, 6],
+            "Estadística": [9, 3, 7, 6, 9, 4, 8, 9, 2, 6],
+            "Física": [10, 3, 7, 3, 9, 4, 9, 9, 4, 6],
+            "Geofísica": [9, 3, 7, 5, 5, 5, 8, 8, 2, 6],
+            "Ingeniería Acústica": [8, 3, 7, 6, 6, 5, 7, 8, 5, 5],
+            "Ingeniería en Acuicultura": [7, 4, 6, 6, 3, 5, 7, 7, 3, 7],
+            "Ingeniería en Alimentos": [8, 5, 7, 6, 5, 5, 8, 9, 3, 7],
+            "Ingeniería en Bioinformática": [9, 3, 9, 6, 9, 4, 9, 9, 2, 6],
+            "Ingeniería en Biomasa": [8, 3, 8, 6, 5, 5, 8, 8, 3, 7],
+            "Ingeniería en Biomédica": [9, 5, 9, 6, 7, 6, 9, 8, 5, 8],
+            "Ingeniería en Biorremediación": [8, 4, 8, 6, 5, 5, 8, 8, 3, 9],
+            "Ingeniería en Cerámica": [7, 3, 6, 6, 4, 5, 7, 8, 5, 5],
+            "Ingeniería en Ciencia de los Materiales": [9, 3, 8, 6, 7, 5, 8, 8, 3, 6],
+            "Ingeniería en Conservación de la Biodiversidad": [8, 5, 7, 6, 3, 6, 8, 7, 3, 9],
+            "Ingeniería en Energía Eólica": [8, 4, 8, 5, 5, 6, 8, 7, 3, 7],
+            "Ingeniería en Energía Solar": [8, 4, 8, 5, 5, 6, 8, 7, 3, 7],
+            "Ingeniería en Energías No Convencionales": [8, 4, 9, 6, 6, 6, 9, 7, 4, 7],
+            "Ingeniería en Explotación de Minas": [8, 3, 6, 8, 3, 7, 7, 8, 2, 6],
+            "Ingeniería en Genómica": [9, 3, 9, 6, 7, 5, 9, 8, 2, 7],
+            "Ingeniería en Geotermia": [8, 3, 8, 7, 5, 6, 8, 7, 2, 7],
+            "Ingeniería en Gestión de Desastres": [8, 6, 7, 8, 4, 8, 8, 8, 3, 9],
+            "Ingeniería en Higiene y Seguridad Ocupacional": [8, 6, 6, 7, 3, 7, 7, 8, 2, 8],
+            "Ingeniería en Materiales": [9, 3, 8, 6, 7, 5, 8, 8, 3, 6],
+            "Ingeniería en Medio Ambiente": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
+            "Ingeniería en Metalurgia": [8, 3, 6, 5, 4, 5, 7, 9, 2, 5],
+            "Ingeniería en Metalurgia Extractiva": [8, 3, 6, 7, 4, 5, 7, 9, 2, 5],
+            "Ingeniería en Minerales": [8, 3, 6, 7, 4, 5, 7, 9, 2, 5],
+            "Ingeniería en Nanotecnología": [10, 3, 9, 6, 7, 5, 9, 8, 3, 6],
+            "Ingeniería en Petróleo y Gas": [8, 3, 6, 8, 4, 7, 7, 8, 2, 4],
+            "Ingeniería en Plásticos": [8, 3, 7, 6, 5, 5, 7, 8, 3, 5],
+            "Ingeniería en Polímeros": [8, 3, 7, 6, 5, 5, 7, 9, 3, 6],
+            "Ingeniería en Procesos Mineros": [8, 3, 6, 6, 4, 6, 7, 8, 2, 6],
+            "Ingeniería en Procesos Químicos": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
+            "Ingeniería en Protección Civil": [6, 6, 6, 7, 4, 8, 8, 8, 3, 9],
+            "Ingeniería en Recursos Hídricos": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
+            "Ingeniería en Recursos Naturales": [8, 5, 7, 6, 3, 6, 8, 7, 3, 8],
+            "Ingeniería en Seguridad Industrial": [8, 6, 6, 7, 3, 7, 7, 8, 2, 8],
+            "Ingeniería en Seguridad Minera": [8, 6, 6, 7, 3, 7, 7, 9, 2, 8],
+            "Ingeniería en Tejidos": [8, 4, 6, 6, 5, 5, 7, 8, 5, 5],
+            "Ingeniería Forestal": [8, 4, 6, 6, 3, 6, 7, 7, 3, 8],
+            "Ingeniería Naval": [8, 4, 7, 6, 4, 6, 7, 9, 3, 5],
+            "Matemáticas": [10, 2, 7, 4, 9, 4, 8, 10, 2, 4],
+            "Meteorología": [8, 4, 7, 5, 6, 5, 8, 8, 2, 7],
+            "Oceanografía": [8, 4, 7, 5, 4, 5, 8, 8, 3, 7],
+            "Química": [9, 3, 7, 6, 7, 4, 8, 8, 2, 6],
+            "Administración Pública": [7, 7, 6, 5, 6, 7, 7, 6, 3, 8],
+            "Análisis de Datos Avanzado (Big Data)": [9, 3, 8, 6, 9, 4, 9, 8, 3, 6],
+            "Antropología": [7, 7, 6, 5, 5, 5, 7, 7, 4, 8],
+            "Arquitectura": [8, 6, 6, 6, 5, 6, 7, 7, 9, 6],
+            "Contador Auditor": [8, 4, 6, 3, 7, 5, 7, 10, 2, 6],
+            "Data Science": [9, 3, 9, 6, 9, 5, 9, 8, 3, 6],
+            "Data Science y Machine Learning": [9, 3, 10, 6, 9, 5, 9, 8, 3, 6],
+            "Derecho": [7, 7, 5, 4, 6, 7, 7, 8, 3, 9],
+            "Diseño": [5, 5, 6, 5, 5, 5, 7, 7, 9, 6],
+            "Economía": [9, 5, 7, 6, 9, 6, 8, 7, 3, 6],
+            "Educación Física": [6, 7, 5, 5, 1, 6, 6, 6, 4, 8],
+            "Educación Parvularia": [5, 9, 5, 4, 3, 6, 6, 6, 6, 9],
+            "Enfermería": [7, 9, 6, 6, 2, 6, 7, 8, 2, 10],
+            "Fonoaudiología": [6, 9, 5, 6, 3, 6, 6, 8, 3, 9],
+            "Geología": [8, 4, 7, 6, 4, 6, 8, 7, 2, 6],
+            "Ingeniería Aeronáutica": [9, 4, 7, 6, 6, 6, 8, 8, 3, 6],
+            "Ingeniería Ambiental": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
+            "Ingeniería Civil Eléctrica": [9, 4, 8, 6, 7, 6, 8, 9, 2, 6],
+            "Ingeniería Civil en Computación": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
+            "Ingeniería Civil en Computación e Informática": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
+            "Ingeniería Civil en Construcción": [8, 4, 6, 6, 4, 6, 7, 8, 3, 6],
+            "Ingeniería Civil en Energía": [8, 4, 8, 5, 6, 6, 8, 7, 3, 7],
+            "Ingeniería Civil en Geografía": [8, 5, 6, 6, 4, 6, 7, 8, 3, 7],
+            "Ingeniería Civil en Geomensura y Cartografía": [8, 4, 6, 6, 5, 6, 7, 9, 2, 6],
+            "Ingeniería Civil en Hidráulica": [8, 4, 7, 6, 4, 6, 8, 7, 3, 6],
+            "Ingeniería Civil en Informática": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
+            "Ingeniería Civil en Matemáticas": [10, 2, 7, 4, 9, 4, 8, 10, 2, 4],
+            "Ingeniería Civil en Minas": [8, 4, 6, 8, 3, 7, 7, 8, 2, 6],
+            "Ingeniería Civil en Obras Civiles": [8, 4, 6, 6, 4, 6, 7, 8, 3, 6],
+            "Ingeniería Civil en Química": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
+            "Ingeniería Civil en Telecomunicaciones": [9, 4, 8, 6, 6, 6, 8, 9, 3, 6],
+            "Ingeniería Civil Industrial": [8, 6, 6, 6, 6, 7, 8, 8, 3, 6],
+            "Ingeniería Civil Mecánica": [9, 4, 6, 6, 6, 6, 8, 9, 3, 5],
+            "Ingeniería Civil Metalúrgica": [8, 3, 6, 5, 4, 6, 7, 9, 2, 5],
+            "Ingeniería Civil Química": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
+            "Ingeniería Comercial": [8, 6, 7, 6, 7, 7, 8, 8, 3, 7],
+            "Kinesiología": [6, 9, 6, 6, 2, 5, 7, 7, 4, 9],
+            "Licenciatura en Antropología Digital": [6, 7, 8, 5, 6, 6, 8, 7, 6, 8],
+            "Licenciatura en Arqueología": [7, 4, 5, 5, 3, 5, 7, 7, 5, 7],
+            "Licenciatura en Arqueología Digital": [8, 5, 7, 5, 6, 5, 8, 7, 6, 8],
+            "Licenciatura en Artes Escénicas": [5, 7, 5, 5, 4, 5, 6, 6, 10, 6],
+            "Licenciatura en Artes Plásticas": [6, 5, 5, 5, 4, 5, 6, 6, 10, 5],
+            "Licenciatura en Astronomía": [10, 3, 8, 6, 10, 4, 9, 9, 3, 6],
+            "Licenciatura en Biología": [8, 4, 6, 6, 7, 4, 8, 8, 3, 7],
+            "Licenciatura en Estudios Internacionales": [7, 8, 7, 5, 6, 6, 7, 6, 4, 8],
+            "Licenciatura en Filosofía": [5, 5, 5, 4, 10, 5, 7, 7, 5, 8],
+            "Licenciatura en Física": [10, 3, 7, 3, 9, 4, 9, 9, 4, 6],
+            "Licenciatura en Geología": [8, 4, 7, 6, 4, 6, 8, 7, 2, 6],
+            "Licenciatura en Historia": [7, 6, 5, 4, 9, 4, 7, 6, 4, 7],
+            "Licenciatura en Historia Digital": [8, 6, 7, 5, 6, 6, 8, 6, 5, 7],
+            "Licenciatura en Letras": [7, 6, 5, 4, 7, 4, 7, 6, 7, 6],
+            "Licenciatura en Lingüística": [8, 5, 5, 4, 6, 4, 7, 7, 4, 7],
+            "Licenciatura en Matemáticas": [10, 2, 7, 4, 9, 3, 8, 10, 2, 4],
+            "Licenciatura en Música": [6, 6, 5, 5, 5, 4, 6, 6, 10, 6],
+            "Licenciatura en Química": [9, 3, 7, 6, 7, 5, 8, 8, 2, 6],
+            "Licenciatura en Sociología Computacional": [8, 7, 8, 5, 9, 6, 8, 7, 5, 9],
+            "Medicina": [9, 9, 7, 6, 4, 6, 8, 9, 5, 10],
+            "Nutrición y Dietética": [7, 8, 6, 6, 3, 5, 7, 8, 3, 9],
+            "Obstetricia y Puericultura": [7, 9, 6, 6, 2, 5, 6, 8, 3, 10],
+            "Odontología": [8, 7, 6, 6, 4, 5, 7, 10, 5, 9],
+            "Pedagogía en Artes Visuales": [6, 7, 5, 5, 5, 6, 6, 6, 9, 8],
+            "Pedagogía en Ciencias Naturales": [7, 7, 6, 4, 5, 5, 7, 7, 4, 9],
+            "Pedagogía en Cine": [5, 6, 7, 5, 5, 5, 7, 6, 8, 7],
+            "Pedagogía en Danza": [5, 7, 6, 5, 4, 5, 6, 6, 10, 8],
+            "Pedagogía en Educación Básica": [5, 8, 6, 4, 4, 6, 7, 7, 5, 9],
+            "Pedagogía en Educación Diferencial": [6, 9, 6, 4, 6, 6, 6, 7, 6, 10],
+            "Pedagogía en Educación Física Digital": [7, 8, 7, 5, 4, 6, 8, 6, 6, 8],
+            "Pedagogía en Educación Musical": [6, 7, 6, 5, 5, 5, 7, 7, 9, 8],
+            "Pedagogía en Educación Técnico Profesional": [7, 8, 6, 5, 4, 7, 7, 7, 5, 8],
+            "Pedagogía en Filosofía": [5, 7, 5, 4, 6, 5, 7, 7, 5, 8],
+            "Pedagogía en Historia y Ciencias Sociales": [7, 7, 6, 4, 6, 5, 7, 6, 5, 9],
+            "Pedagogía en Inglés": [7, 7, 6, 4, 6, 5, 7, 6, 5, 8],
+            "Pedagogía en Lengua Castellana y Literatura": [7, 7, 6, 4, 9, 5, 7, 6, 6, 8],
+            "Pedagogía en Matemáticas Computacionales": [8, 6, 7, 3, 7, 6, 8, 7, 4, 8],
+            "Pedagogía en Matemáticas y Computación": [8, 6, 7, 3, 7, 6, 8, 7, 4, 8],
+            "Pedagogía en Religión": [5, 8, 6, 4, 8, 5, 6, 6, 4, 9],
+            "Pedagogía en Teatro": [5, 7, 5, 5, 4, 5, 6, 6, 10, 8],
+            "Periodismo": [7, 8, 6, 5, 6, 6, 7, 7, 6, 8],
+            "Psicología": [7, 9, 6, 4, 6, 6, 7, 8, 4, 10],
+            "Química y Farmacia": [9, 6, 7, 6, 6, 5, 8, 10, 2, 8],
+            "Sociología": [6, 8, 6, 5, 7, 6, 7, 6, 4, 9],
+            "Terapia Ocupacional": [6, 9, 6, 6, 3, 5, 6, 8, 5, 9],
+            "Trabajo Social": [6, 9, 6, 4, 6, 6, 7, 7, 4, 10],
+            "Veterinaria": [8, 7, 6, 6, 3, 5, 7, 8, 3, 8]
+        };
+
+        // === BANCO DE PREGUNTAS PSICOMÉTRICAS ===
+        const questionsBank = [
+            // Dimensión 0: Aptitud Técnica y Analítica
+            [
+                {
+                    question: "¿Cómo te sientes al resolver un problema lógico o matemático complejo?",
+                    options: [
+                        { text: "Me aburro rápidamente", value: 2 },
+                        { text: "Me interesa, pero prefiero delegar", value: 5 },
+                        { text: "Disfruto el reto y me concentro", value: 8 },
+                        { text: "Me apasiona y busco soluciones óptimas", value: 10 }
+                    ]
+                },
+                {
+                    question: "Al aprender algo nuevo, ¿prefieres?",
+                    options: [
+                        { text: "Seguir instrucciones paso a paso", value: 4 },
+                        { text: "Entender el porqué detrás de cada paso", value: 7 },
+                        { text: "Desarmar y reconstruir el concepto desde cero", value: 9 },
+                        { text: "Aplicarlo inmediatamente en un proyecto real", value: 6 }
+                    ]
+                }
+            ],
+            // Dimensión 1: Requerimiento Interpersonal y Empatía
+            [
+                {
+                    question: "En un grupo, ¿cómo sueles actuar?",
+                    options: [
+                        { text: "Prefiero trabajar solo", value: 2 },
+                        { text: "Participo si es necesario", value: 5 },
+                        { text: "Busco entender las emociones de los demás", value: 8 },
+                        { text: "Me convierto en el apoyo emocional del equipo", value: 10 }
+                    ]
+                },
+                {
+                    question: "Si un amigo está triste, tú...",
+                    options: [
+                        { text: "Le doy espacio", value: 3 },
+                        { text: "Le ofrezco una solución rápida", value: 5 },
+                        { text: "Escucho con atención y empatía", value: 9 },
+                        { text: "Me involucro profundamente en su problema", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 2: Capacidad de Innovación y Adaptación a IA
+            [
+                {
+                    question: "Ante una nueva tecnología, tú...",
+                    options: [
+                        { text: "Prefiero esperar a que otros la usen primero", value: 3 },
+                        { text: "La pruebo con precaución", value: 6 },
+                        { text: "La adopto rápido y busco usos creativos", value: 9 },
+                        { text: "Imagino cómo mejorarla o reinventarla", value: 10 }
+                    ]
+                },
+                {
+                    question: "¿Qué tan cómodo te sientes usando herramientas de IA?",
+                    options: [
+                        { text: "Me genera ansiedad", value: 2 },
+                        { text: "Lo uso solo si no hay alternativa", value: 5 },
+                        { text: "Lo integro en mi flujo de trabajo", value: 8 },
+                        { text: "Exploro sus límites y posibilidades", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 3: Tolerancia al Riesgo y Estabilidad Laboral
+            [
+                {
+                    question: "Al elegir un camino profesional, valoras más...",
+                    options: [
+                        { text: "Seguridad y estabilidad garantizada", value: 2 },
+                        { text: "Equilibrio entre estabilidad y crecimiento", value: 6 },
+                        { text: "Oportunidades de crecimiento, aunque con riesgo", value: 8 },
+                        { text: "Innovar, emprender o transformar, sin importar el riesgo", value: 10 }
+                    ]
+                },
+                {
+                    question: "¿Cómo reaccionas ante la incertidumbre laboral?",
+                    options: [
+                        { text: "Me genera mucha ansiedad", value: 2 },
+                        { text: "Busco opciones seguras", value: 5 },
+                        { text: "La veo como una oportunidad de cambio", value: 8 },
+                        { text: "Me emociona la posibilidad de crear algo nuevo", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 4: Preferencia por el Entorno
+            [
+                {
+                    question: "¿Dónde te sientes más productivo?",
+                    options: [
+                        { text: "En la naturaleza o campo", value: 2 },
+                        { text: "En un laboratorio o taller", value: 7 },
+                        { text: "En una oficina moderna", value: 5 },
+                        { text: "En cualquier lugar con mi computador", value: 9 }
+                    ]
+                },
+                {
+                    question: "Tu ideal de espacio de trabajo es...",
+                    options: [
+                        { text: "Tranquilo y aislado", value: 3 },
+                        { text: "Colaborativo y dinámico", value: 7 },
+                        { text: "Tecnológico y flexible", value: 9 },
+                        { text: "Con contacto directo con personas o comunidades", value: 6 }
+                    ]
+                }
+            ],
+            // Dimensión 5: Capacidad de Liderazgo
+            [
+                {
+                    question: "En un equipo, tú tiendes a...",
+                    options: [
+                        { text: "Seguir instrucciones sin cuestionar", value: 2 },
+                        { text: "Colaborar sin asumir responsabilidades", value: 5 },
+                        { text: "Guiar con el ejemplo y escuchar", value: 8 },
+                        { text: "Inspirar, motivar y tomar decisiones", value: 10 }
+                    ]
+                },
+                {
+                    question: "¿Qué define mejor tu estilo de liderazgo?",
+                    options: [
+                        { text: "No me considero líder", value: 2 },
+                        { text: "Lidero solo si no hay otra opción", value: 5 },
+                        { text: "Fomento la autonomía y el crecimiento del equipo", value: 9 },
+                        { text: "Visualizo el futuro y movilizo a otros hacia él", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 6: Aprendizaje Continuo
+            [
+                {
+                    question: "¿Con qué frecuencia buscas aprender algo nuevo fuera de lo obligatorio?",
+                    options: [
+                        { text: "Casi nunca", value: 2 },
+                        { text: "Una vez al año", value: 5 },
+                        { text: "Varias veces al mes", value: 8 },
+                        { text: "Constantemente, es parte de mi rutina", value: 10 }
+                    ]
+                },
+                {
+                    question: "Cuando algo cambia en tu área, tú...",
+                    options: [
+                        { text: "Me resisto al cambio", value: 2 },
+                        { text: "Me adapto lentamente", value: 5 },
+                        { text: "Aprovecho para aprender y crecer", value: 9 },
+                        { text: "Me convierto en pionero del cambio", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 7: Orientación al Detalle
+            [
+                {
+                    question: "Al revisar un trabajo, ¿qué te llama más la atención?",
+                    options: [
+                        { text: "La idea general", value: 3 },
+                        { text: "La coherencia del mensaje", value: 6 },
+                        { text: "Los errores de formato o gramática", value: 8 },
+                        { text: "Cada coma, espacio y alineación", value: 10 }
+                    ]
+                },
+                {
+                    question: "¿Cómo describes tu enfoque al realizar tareas precisas?",
+                    options: [
+                        { text: "Hago lo básico y rápido", value: 2 },
+                        { text: "Verifico lo esencial", value: 6 },
+                        { text: "Reviso minuciosamente cada paso", value: 9 },
+                        { text: "Busco la perfección en cada detalle", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 8: Creatividad
+            [
+                {
+                    question: "Cuando enfrentas un problema, ¿cómo sueles resolverlo?",
+                    options: [
+                        { text: "Sigo métodos probados", value: 3 },
+                        { text: "Me inspiro en soluciones existentes", value: 6 },
+                        { text: "Combino ideas de distintos campos", value: 8 },
+                        { text: "Creo una solución completamente original", value: 10 }
+                    ]
+                },
+                {
+                    question: "¿Qué tan importante es la expresión creativa en tu vida?",
+                    options: [
+                        { text: "No es relevante", value: 2 },
+                        { text: "Me gusta, pero no es prioritario", value: 5 },
+                        { text: "Es una parte esencial de quién soy", value: 9 },
+                        { text: "Vivo para crear e innovar", value: 10 }
+                    ]
+                }
+            ],
+            // Dimensión 9: Impacto Social
+            [
+                {
+                    question: "¿Qué te motiva más al elegir un trabajo?",
+                    options: [
+                        { text: "El salario y beneficios", value: 3 },
+                        { text: "El prestigio o reconocimiento", value: 5 },
+                        { text: "Contribuir al bienestar de otros", value: 9 },
+                        { text: "Transformar positivamente a la sociedad", value: 10 }
+                    ]
+                },
+                {
+                    question: "¿Cómo defines el éxito profesional?",
+                    options: [
+                        { text: "Tener estabilidad económica", value: 4 },
+                        { text: "Alcanzar una posición de poder", value: 6 },
+                        { text: "Ayudar a muchas personas", value: 9 },
+                        { text: "Dejar un legado que mejore el mundo", value: 10 }
+                    ]
+                }
+            ]
+        ];
+
+        const dimensions = [
+            { id: 0, name: "Aptitud Técnica y Analítica", icon: "fa-calculator", color: "#3498db" },
+            { id: 1, name: "Empatía e Interacción Social", icon: "fa-users", color: "#e74c3c" },
+            { id: 2, name: "Innovación y Adaptación Digital", icon: "fa-robot", color: "#9b59b6" },
+            { id: 3, name: "Tolerancia al Riesgo", icon: "fa-chart-line", color: "#f39c12" },
+            { id: 4, name: "Preferencia por el Entorno", icon: "fa-mountain", color: "#2ecc71" },
+            { id: 5, name: "Liderazgo", icon: "fa-user-tie", color: "#34495e" },
+            { id: 6, name: "Aprendizaje Continuo", icon: "fa-book", color: "#16a085" },
+            { id: 7, name: "Orientación al Detalle", icon: "fa-search", color: "#d35400" },
+            { id: 8, name: "Creatividad", icon: "fa-palette", color: "#e67e22" },
+            { id: 9, name: "Impacto Social", icon: "fa-hands-helping", color: "#c0392b" }
+        ];
+
+        const dimensionWeights = {
+            0: 1.3,
+            1: 1.1,
+            2: 1.4,
+            3: 0.9,
+            4: 0.8,
+            5: 1.0,
+            6: 1.2,
+            7: 1.0,
+            8: 1.1,
+            9: 1.0
+        };
+
+        let gameState = {
+            completedChallenges: [],
+            scores: new Array(10).fill(5),
+            currentChallenge: null,
+            currentQuestions: [],
+            currentAnswers: []
+        };
+
+        // === FUNCIONES AUXILIARES (sin cambios visuales) ===
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.classList.add('particle', 'star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                container.appendChild(star);
+            }
+            for (let i = 0; i < 30; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('particle', 'bubble');
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                const size = Math.random() * 20 + 5;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.setProperty('--duration', `${Math.random() * 10 + 15}s`);
+                container.appendChild(bubble);
+            }
+            for (let i = 0; i < 3; i++) {
+                const neb = document.createElement('div');
+                neb.classList.add('particle', 'nebula');
+                neb.style.left = `${Math.random() * 100}%`;
+                neb.style.top = `${Math.random() * 100}%`;
+                neb.style.width = `${Math.random() * 300 + 200}px`;
+                neb.style.height = `${Math.random() * 300 + 200}px`;
+                neb.style.setProperty('--duration', `${Math.random() * 30 + 30}s`);
+                container.appendChild(neb);
+            }
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const meteor = document.createElement('div');
+                    meteor.classList.add('particle', 'meteor');
+                    meteor.style.left = `${-20 + Math.random() * 20}%`;
+                    meteor.style.top = `${-20 + Math.random() * 20}%`;
+                    meteor.style.setProperty('--duration', `${Math.random() * 6 + 6}s`);
+                    container.appendChild(meteor);
+                    setTimeout(() => meteor.remove(), 10000);
+                }, i * 8000);
+            }
+        }
+
+        function createCursorTrail() {
+            const trail = document.getElementById('cursor-trail');
+            let posX = 0, posY = 0;
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            function animate() {
+                const distX = mouseX - posX;
+                const distY = mouseY - posY;
+                posX += distX / 8;
+                posY += distY / 8;
+                trail.style.left = `${posX}px`;
+                trail.style.top = `${posY}px`;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.key-card') || e.target.closest('.option') || e.target.closest('.btn')) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = e.target.closest('.key-card,.option,.btn').getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+
+        function init() {
+            createParticles();
+            createCursorTrail();
+            renderKeys();
+            setupEventListeners();
+        }
+
+        function renderKeys() {
+            const container = document.getElementById('key-container');
+            container.innerHTML = '';
+            dimensions.forEach((dim, index) => {
+                const card = document.createElement('div');
+                card.className = gameState.completedChallenges.includes(dim.id) ? 'key-card completed' : 'key-card';
+                card.dataset.id = dim.id;
+                const isCompleted = gameState.completedChallenges.includes(dim.id);
+                const progressWidth = isCompleted ? '100%' : '0%';
+                card.innerHTML = `
+                    <i class="fas ${dim.icon}"></i>
+                    <h3>${dim.name}</h3>
+                    <div class="mini-progress">
+                        <div class="mini-progress-bar" style="width: ${progressWidth};"></div>
+                    </div>
+                `;
+                card.style.animation = `fadeInUp 0.5s ${index * 0.1}s ease both`;
+                card.addEventListener('click', () => {
+                    if (!isCompleted) openChallenge(dim.id);
+                });
+                container.appendChild(card);
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (gameState.completedChallenges.length / 10) * 100;
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            if (progress === 100) {
+                progressBar.classList.add('rainbow');
+            } else {
+                progressBar.classList.remove('rainbow');
+            }
+            document.getElementById('progress-text').textContent = `Perfil: ${gameState.completedChallenges.length}/10 dimensiones registradas`;
+            if (gameState.completedChallenges.length === 10) {
+                document.getElementById('complete-btn-container').style.display = 'block';
+                createConfetti();
+            }
+        }
+
+        function openChallenge(id) {
+            if (gameState.completedChallenges.includes(id)) return;
+            gameState.currentChallenge = id;
+            gameState.currentQuestions = [...questionsBank[id]];
+            gameState.currentAnswers = [null, null];
+            document.getElementById('challenge-title').textContent = dimensions[id].name;
+            renderQuestions();
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.add('active');
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            gameState.currentQuestions.forEach((q, idx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-container';
+                if (idx === 0) qDiv.classList.add('active');
+                const optionsHtml = q.options.map((opt, i) => `
+                    <div class="option" data-question="${idx}" data-option="${i}">
+                        ${opt.text}
+                    </div>
+                `).join('');
+                qDiv.innerHTML = `<div class="question">Pregunta ${idx + 1}: ${q.question}</div><div class="options">${optionsHtml}</div>`;
+                container.appendChild(qDiv);
+            });
+            container.addEventListener('click', (e) => {
+                const option = e.target.closest('.option');
+                if (!option) return;
+                const qIdx = parseInt(option.dataset.question);
+                const oIdx = parseInt(option.dataset.option);
+                document.querySelectorAll(`.option[data-question="${qIdx}"]`).forEach(el => el.classList.remove('selected'));
+                option.classList.add('selected');
+                gameState.currentAnswers[qIdx] = questionsBank[gameState.currentChallenge][qIdx].options[oIdx].value;
+                document.querySelectorAll('.question-container').forEach(q => q.classList.remove('active'));
+                const nextQuestion = document.querySelectorAll('.question-container')[qIdx + 1];
+                if (nextQuestion) {
+                    nextQuestion.classList.add('active');
+                } else {
+                    document.querySelectorAll('.question-container')[qIdx].classList.add('active');
+                }
+            });
+        }
+
+        function submitChallenge() {
+            if (gameState.currentAnswers.some(a => a === null)) {
+                alert('Por favor, responde todas las preguntas.');
+                return;
+            }
+            const avgScore = (gameState.currentAnswers[0] + gameState.currentAnswers[1]) / 2;
+            gameState.scores[gameState.currentChallenge] = avgScore;
+            gameState.completedChallenges.push(gameState.currentChallenge);
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                renderKeys();
+                showCompletionNotification(dimensions[gameState.currentChallenge].name);
+            }, 400);
+        }
+
+        function showCompletionNotification(dimensionName) {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <i class="fas fa-user-check" style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <h3 style="margin: 0 0 6px; color: white;">¡Perfil actualizado!</h3>
+                <p style="margin: 0; color: #e8f4fc;">Tu dimensión "${dimensionName}" ha sido registrada</p>
+            `;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.background = 'rgba(30, 40, 70, 0.95)';
+            notification.style.color = 'white';
+            notification.style.padding = '16px 20px';
+            notification.style.borderRadius = '12px';
+            notification.style.zIndex = '2000';
+            notification.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.4)';
+            notification.style.maxWidth = '300px';
+            notification.style.borderLeft = '4px solid #2ecc71';
+            notification.style.animation = 'slideInRight 0.5s ease';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        function createConfetti() {
+            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+            const confettiCount = 150;
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 8 + 4;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                const duration = Math.random() * 3 + 2;
+                confetti.style.animationDuration = `${duration}s`;
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    document.body.removeChild(confetti);
+                }, duration * 1000);
+            }
+        }
+
+        // === FUNCIONES DE SIMILITUD ===
+        function pearson(x, y) {
+            const n = x.length;
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((acc, xi, i) => acc + xi * y[i], 0);
+            const sumX2 = x.reduce((acc, xi) => acc + xi * xi, 0);
+            const sumY2 = y.reduce((acc, yi) => acc + yi * yi, 0);
+            const numerator = n * sumXY - sumX * sumY;
+            const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+            return denominator === 0 ? 0 : numerator / denominator;
+        }
+
+        function euclideanSimilarity(x, y) {
+            const distance = Math.sqrt(
+                x.reduce((sum, xi, i) => sum + Math.pow(xi - y[i], 2), 0)
+            );
+            const maxDistance = Math.sqrt(10 * 100);
+            return 1 - (distance / maxDistance);
+        }
+
+        function cosineSimilarity(x, y) {
+            const dotProduct = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const magX = Math.sqrt(x.reduce((sum, xi) => sum + xi * xi, 0));
+            const magY = Math.sqrt(y.reduce((sum, yi) => sum + yi * yi, 0));
+            return magX * magY === 0 ? 0 : dotProduct / (magX * magY);
+        }
+
+        function spearman(x, y) {
+            const rankX = getRanks(x);
+            const rankY = getRanks(y);
+            let d2 = 0;
+            for (let i = 0; i < rankX.length; i++) {
+                const d = rankX[i] - rankY[i];
+                d2 += d * d;
+            }
+            const n = rankX.length;
+            return n > 1 ? 1 - (6 * d2) / (n * (n * n - 1)) : 0;
+        }
+
+        function getRanks(arr) {
+            const sorted = [...arr].sort((a, b) => a - b);
+            const map = {};
+            sorted.forEach((v, i) => {
+                if (map[v] === undefined) map[v] = i + 1;
+            });
+            return arr.map(v => map[v]);
+        }
+
+        function hybridScore(user, career) {
+            const spearmanScore = spearman(user, career);
+            const pearsonScore = pearson(user, career);
+            const euclideanScore = euclideanSimilarity(user, career);
+            const cosineScore = cosineSimilarity(user, career);
+            return (
+                spearmanScore * 0.25 +
+                pearsonScore * 0.30 +
+                euclideanScore * 0.25 +
+                cosineScore * 0.20
+            );
+        }
+
+        function weightedEuclidean(x, y) {
+            const distance = x.reduce((sum, xi, i) => 
+                sum + dimensionWeights[i] * Math.pow(xi - y[i], 2), 0
+            );
+            const maxWeightedDistance = Object.values(dimensionWeights).reduce((sum, w) => sum + w * 100, 0);
+            return 1 - Math.sqrt(distance) / Math.sqrt(maxWeightedDistance);
+        }
+
+        function confidenceScore(user, career) {
+            const similarity = hybridScore(user, career);
+            const n = user.length;
+            const variance = user.reduce((sum, u, i) => 
+                sum + Math.pow(u - career[i], 2), 0) / n;
+            const stdError = Math.sqrt(variance / n);
+            const confidence = 1 - (stdError / 10);
+            return {
+                similarity,
+                confidence,
+                adjustedScore: similarity * confidence
+            };
+        }
+
+        function filterByThreshold(results, minScore = 0.4) {
+            return results.filter(([career, score]) => score >= minScore);
+        }
+
+        // ✅ NUEVAS FUNCIONES SIN RECURSIÓN
+        function calculateAllCareerScores(userScores) {
+            const results = [];
+            for (const [career, careerScores] of Object.entries(professionsMatrix)) {
+                const hybrid = hybridScore(userScores, careerScores);
+                const weighted = weightedEuclidean(userScores, careerScores);
+                const confidence = confidenceScore(userScores, careerScores);
+                const finalScore = (hybrid * 0.6 + weighted * 0.3 + confidence.adjustedScore * 0.1);
+                results.push([career, finalScore]);
+            }
+            const filtered = filterByThreshold(results, 0.4);
+            filtered.sort((a, b) => b[1] - a[1]);
+            return filtered;
+        }
+
+        function diversifiedRecommendations(allScores, topN = 5) {
+            const diverse = [];
+            const usedFamilies = new Set();
+            const families = {
+                'ingenieria': /Ingeniería/i,
+                'medicina': /Medicina|Enfermería|Salud|Odontología|Kinesiología|Terapia|Nutrición|Obstetricia|Veterinaria/i,
+                'pedagogia': /Pedagogía|Educación/i,
+                'ciencias': /Licenciatura|Ciencias|Matemáticas|Física|Química|Biología|Geología|Astronomía|Estadística|Oceanografía|Meteorología|Arqueología|Antropología|Sociología|Filosofía|Historia|Letras|Lingüística|Música|Artes/i
+            };
+            for (const [career, score] of allScores) {
+                if (diverse.length >= topN) break;
+                const family = Object.keys(families).find(f => families[f].test(career)) || 'otros';
+                if (!usedFamilies.has(family) || diverse.length > topN - 2) {
+                    diverse.push([career, score]);
+                    usedFamilies.add(family);
+                }
+            }
+            return diverse;
+        }
+
+        function calculateCompatibleCareers(userScores = null) {
+            const scores = userScores || gameState.scores;
+            const allScores = calculateAllCareerScores(scores);
+            return diversifiedRecommendations(allScores, 5);
+        }
+
+        // === RESTO DEL CÓDIGO SIN CAMBIOS ===
+        function showResults() {
+            const careers = calculateCompatibleCareers();
+            const list = document.getElementById('career-list');
+            list.innerHTML = '';
+            careers.forEach(([name, score], index) => {
+                const pct = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
+                const matchLevel = pct >= 80 ? 'Excelente' : 
+                                  pct >= 70 ? 'Muy Bueno' : 
+                                  pct >= 60 ? 'Bueno' : 'Aceptable';
+                const emoji = pct >= 80 ? '🌟' : pct >= 70 ? '✨' : pct >= 60 ? '👍' : '👌';
+                const item = document.createElement('li');
+                item.className = 'career-item';
+                item.style.animation = `fadeInUp 0.5s ${index * 0.1}s ease both`;
+                item.innerHTML = `
+                    <div class="career-name">
+                        ${name}
+                        <div style="font-size: 0.85rem; color: #a0c4ff; margin-top: 4px;">
+                            ${emoji} ${matchLevel}
+                        </div>
+                    </div>
+                    <div class="career-score" data-target="${pct}">0%</div>
+                `;
+                list.appendChild(item);
+                const scoreElement = item.querySelector('.career-score');
+                animateCounter(scoreElement, 0, pct, 1500);
+            });
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+        }
+
+        function animateCounter(element, start, end, duration) {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = `${Math.round(current)}%`;
+            }, 16);
+        }
+
+        function restartGame() {
+            gameState = {
+                completedChallenges: [],
+                scores: new Array(10).fill(5),
+                currentChallenge: null,
+                currentQuestions: [],
+                currentAnswers: []
+            };
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('complete-btn-container').style.display = 'none';
+            renderKeys();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('close-modal').addEventListener('click', () => {
+                document.getElementById('challenge-modal').classList.remove('active');
+            });
+            document.getElementById('submit-challenge').addEventListener('click', submitChallenge);
+            document.getElementById('show-results').addEventListener('click', showResults);
+            document.getElementById('restart-game').addEventListener('click', restartGame);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

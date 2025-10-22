@@ -1,0 +1,135 @@
+Carrera,Puntuación
+"Agronomía",6.5
+"Arqueología",4.0
+"Astronomía",9.5
+"Bioingeniería",8.5
+"Biología",7.0
+"Bioquímica",7.2
+"Estadística",8.8
+"Física",9.7
+"Geofísica",8.7
+"Ingeniería Acústica",8.0
+"Ingeniería en Acuicultura",6.0
+"Ingeniería en Alimentos",7.0
+"Ingeniería en Bioinformática",9.3
+"Ingeniería en Biomasa",7.5
+"Ingeniería Biomédica",8.5
+"Ingeniería en Biorremediación",7.0
+"Ingeniería en Cerámica",7.0
+"Ingeniería en Ciencia de los Materiales",8.0
+"Ingeniería en Conservación de la Biodiversidad",5.5
+"Ingeniería en Energía Eólica",7.5
+"Ingeniería en Energía Solar",7.5
+"Ingeniería en Energías No Convencionales",7.8
+"Ingeniería en Explotación de Minas",7.0
+"Ingeniería en Genómica",9.2
+"Ingeniería en Geotermia",7.8
+"Ingeniería en Gestión de Desastres",6.5
+"Ingeniería en Higiene y Seguridad Ocupacional",5.0
+"Ingeniería en Materiales",8.0
+"Ingeniería en Medio Ambiente",7.0
+"Ingeniería en Metalurgia",7.5
+"Ingeniería en Metalurgia Extractiva",7.5
+"Ingeniería en Minerales",7.0
+"Ingeniería en Nanotecnología",9.6
+"Ingeniería en Petróleo y Gas",8.0
+"Ingeniería en Plásticos",7.0
+"Ingeniería en Polímeros",7.0
+"Ingeniería en Procesos Mineros",7.5
+"Ingeniería en Procesos Químicos",8.0
+"Ingeniería en Protección Civil",6.0
+"Ingeniería en Recursos Hídricos",7.0
+"Ingeniería en Recursos Naturales",5.5
+"Ingeniería en Seguridad Industrial",5.0
+"Ingeniería en Seguridad Minera",6.0
+"Ingeniería en Tejidos",6.0
+"Ingeniería Forestal",6.0
+"Ingeniería Naval",8.5
+"Matemáticas",9.8
+"Meteorología",8.0
+"Oceanografía",7.5
+"Química",7.5
+"Administración Pública",3.0
+"Análisis de Datos Avanzado (Big Data)",8.5
+"Antropología",4.0
+"Arquitectura",5.5
+"Contador Auditor",6.0
+"Data Science",10.0
+"Data Science y Machine Learning",10.0
+"Derecho",3.5
+"Diseño",4.5
+"Economía",7.0
+"Educación Física",2.0
+"Educación Parvularia",1.5
+"Enfermería",3.0
+"Fonoaudiología",4.0
+"Geología",7.0
+"Ingeniería Aeronáutica",9.0
+"Ingeniería Ambiental",7.0
+"Ingeniería Civil Eléctrica",8.5
+"Ingeniería Civil en Computación",8.8
+"Ingeniería Civil en Computación e Informática",8.8
+"Ingeniería Civil en Construcción",7.0
+"Ingeniería Civil en Energía",8.0
+"Ingeniería Civil en Geografía",7.5
+"Ingeniería Civil en Geomensura y Cartografía",7.5
+"Ingeniería Civil en Hidráulica",8.0
+"Ingeniería Civil en Informática",8.8
+"Ingeniería Civil en Matemáticas",9.0
+"Ingeniería Civil en Minas",7.0
+"Ingeniería Civil en Obras Civiles",7.0
+"Ingeniería Civil en Química",8.0
+"Ingeniería Civil en Telecomunicaciones",8.5
+"Ingeniería Civil Industrial",7.5
+"Ingeniería Civil Mecánica",8.5
+"Ingeniería Civil Metalúrgica",7.5
+"Ingeniería Civil Química",8.0
+"Ingeniería Comercial",6.0
+"Kinesiología",4.5
+"Licenciatura en Antropología Digital",5.0
+"Licenciatura en Arqueología",4.0
+"Licenciatura en Arqueología Digital",5.0
+"Licenciatura en Artes Escénicas",1.0
+"Licenciatura en Artes Plásticas",1.5
+"Licenciatura en Astronomía",9.5
+"Licenciatura en Biología",7.0
+"Licenciatura en Estudios Internacionales",4.5
+"Licenciatura en Filosofía",3.0
+"Licenciatura en Física",9.7
+"Licenciatura en Geología",7.0
+"Licenciatura en Historia",3.0
+"Licenciatura en Historia Digital",4.5
+"Licenciatura en Letras",2.5
+"Licenciatura en Lingüística",3.5
+"Licenciatura en Matemáticas",9.8
+"Licenciatura en Música",1.5
+"Licenciatura en Química",7.5
+"Licenciatura en Sociología Computacional",6.0
+"Medicina",5.0
+"Nutrición y Dietética",4.0
+"Obstetricia y Puericultura",3.0
+"Odontología",4.5
+"Pedagogía en Artes Visuales",2.0
+"Pedagogía en Ciencias Naturales",5.0
+"Pedagogía en Cine",2.0
+"Pedagogía en Danza",1.8
+"Pedagogía en Educación Básica",2.5
+"Pedagogía en Educación Diferencial",2.5
+"Pedagogía en Educación Física Digital",3.5
+"Pedagogía en Educación Musical",1.8
+"Pedagogía en Educación Técnico Profesional",4.0
+"Pedagogía en Filosofía",3.0
+"Pedagogía en Historia y Ciencias Sociales",3.0
+"Pedagogía en Inglés",2.5
+"Pedagogía en Lengua Castellana y Literatura",2.5
+"Pedagogía en Matemáticas Computacionales",7.0
+"Pedagogía en Matemáticas y Computación",7.0
+"Pedagogía en Religión",2.0
+"Pedagogía en Teatro",1.8
+"Periodismo",4.0
+"Psicología",5.0
+"Química y Farmacia",7.5
+"Sociología",3.5
+"Terapia Ocupacional",3.0
+"Trabajo Social",2.0
+"Veterinaria",5.5

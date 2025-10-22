@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrera Quest: Encuentra tu Carrera Ideal</title>
+    <title>Carrera Quest: Descubre tu Perfil Vocacional</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* === ESTILOS BASE === */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background: linear-gradient(135deg, #0f0b2a, #1a1a4c, #0c1f33);
@@ -19,18 +21,31 @@
             color: #f0f4f8;
             line-height: 1.6;
             min-height: 100vh;
-            padding: 2rem 0;
+            padding: 1.5rem 0;
             animation: gradientShift 20s ease infinite;
             overflow-x: hidden;
             position: relative;
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            body {
+                animation: none;
+            }
+        }
+
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* === FONDO CON AURORA Y PARALLAX === */
         .background-layers {
             position: fixed;
             top: 0;
@@ -40,6 +55,7 @@
             z-index: 0;
             overflow: hidden;
         }
+
         .layer {
             position: absolute;
             top: 0;
@@ -49,11 +65,11 @@
             background-repeat: no-repeat;
             background-size: cover;
         }
+
         .layer-1 { background: radial-gradient(circle at 20% 30%, rgba(52, 152, 219, 0.15), transparent 60%); }
         .layer-2 { background: radial-gradient(circle at 80% 70%, rgba(46, 204, 113, 0.1), transparent 60%); }
         .layer-3 { background: radial-gradient(circle at 50% 20%, rgba(241, 196, 15, 0.1), transparent 70%); }
 
-        /* === PARTÍCULAS AVANZADAS === */
         .particles-container {
             position: fixed;
             top: 0;
@@ -64,26 +80,31 @@
             z-index: 1;
             overflow: hidden;
         }
+
         .particle {
             position: absolute;
             border-radius: 50%;
             opacity: 0;
             pointer-events: none;
         }
+
         .star {
             background: #fff;
             box-shadow: 0 0 8px #fff;
             animation: twinkle var(--duration, 4s) infinite ease-in-out;
         }
+
         .bubble {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             animation: floatBubble var(--duration, 15s) infinite linear;
         }
+
         .nebula {
             background: radial-gradient(circle, rgba(91, 192, 222, 0.08), transparent 70%);
             animation: drift var(--duration, 40s) infinite linear;
         }
+
         .meteor {
             width: 4px;
             height: 40px;
@@ -98,6 +119,7 @@
             0%, 100% { opacity: 0.2; }
             50% { opacity: 1; }
         }
+
         @keyframes floatBubble {
             0% {
                 transform: translateY(100vh) translateX(0) scale(0);
@@ -110,10 +132,12 @@
                 opacity: 0;
             }
         }
+
         @keyframes drift {
             0% { transform: translate(0, 0); }
             100% { transform: translate(100px, -100px); }
         }
+
         @keyframes meteorFall {
             0% { transform: translateX(-100px) translateY(-100px) rotate(-45deg); opacity: 0; }
             10% { opacity: 1; }
@@ -121,7 +145,6 @@
             100% { transform: translateX(100vw) translateY(100vh) rotate(-45deg); opacity: 0; }
         }
 
-        /* === CURSOR CON RASTRO === */
         .cursor-trail {
             position: fixed;
             width: 6px;
@@ -137,20 +160,21 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 1.5rem;
             position: relative;
             z-index: 3;
         }
 
         header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
             position: relative;
         }
+
         header h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.8rem;
-            margin-bottom: 0.8rem;
+            font-size: 2.4rem;
+            margin-bottom: 0.7rem;
             background: linear-gradient(90deg, #ff00cc, #3333ff, #00ccff, #00ff99);
             -webkit-background-clip: text;
             background-clip: text;
@@ -158,16 +182,18 @@
             background-size: 300% 300%;
             animation: titleGradient 8s ease infinite;
             position: relative;
-            text-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
         }
+
         @keyframes titleGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+
         header p {
-            font-size: 1.1rem;
-            max-width: 700px;
+            font-size: 1rem;
+            max-width: 650px;
             margin: 0 auto;
             opacity: 0.95;
             color: #d6eaf8;
@@ -176,10 +202,12 @@
             border-right: 2px solid rgba(255, 255, 255, 0.7);
             animation: typing 4s steps(60, end), blink 1s step-end infinite alternate;
         }
+
         @keyframes typing {
             from { width: 0; }
             to { width: 100%; }
         }
+
         @keyframes blink {
             50% { border-color: transparent; }
         }
@@ -188,7 +216,7 @@
             background: rgba(10, 15, 35, 0.65);
             backdrop-filter: blur(16px);
             border-radius: 20px;
-            padding: 2.2rem;
+            padding: 1.8rem;
             margin-bottom: 2rem;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.18);
@@ -196,6 +224,7 @@
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         .game-container::before {
             content: "";
             position: absolute;
@@ -211,6 +240,7 @@
             opacity: 0.6;
             filter: blur(20px);
         }
+
         @keyframes containerGlow {
             0% { background-position: 0% 50%; }
             100% { background-position: 400% 50%; }
@@ -218,41 +248,46 @@
 
         .game-container h2 {
             text-align: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.7rem;
+            margin-bottom: 1.4rem;
+            font-size: 1.6rem;
             color: #f1c40f;
             text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
         }
 
         .progress-container {
-            margin: 1.8rem 0;
+            margin: 1.5rem 0;
         }
+
         .progress-bar {
-            height: 14px;
+            height: 12px;
             background: rgba(0, 0, 0, 0.25);
-            border-radius: 7px;
+            border-radius: 6px;
             overflow: hidden;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
         }
+
         .progress {
             height: 100%;
             width: 0%;
             transition: width 1s cubic-bezier(0.2, 0.8, 0.4, 1);
             position: relative;
         }
+
         .progress.rainbow {
             background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
             background-size: 200% 100%;
             animation: rainbow 3s linear infinite;
         }
+
         @keyframes rainbow {
             0% { background-position: 0% 50%; }
             100% { background-position: 200% 50%; }
         }
+
         .progress-text {
             text-align: center;
-            margin-top: 0.6rem;
-            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
             opacity: 0.95;
             color: #e0f7fa;
             font-weight: 600;
@@ -260,19 +295,19 @@
 
         .key-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.8rem;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
         }
 
         .key-card {
             background: linear-gradient(145deg, rgba(20, 25, 55, 0.8), rgba(10, 15, 40, 0.9));
             backdrop-filter: blur(12px);
-            border-radius: 18px;
-            padding: 1.6rem;
+            border-radius: 16px;
+            padding: 1.4rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
@@ -294,10 +329,10 @@
         }
 
         .key-card:hover {
-            transform: translateY(-10px) rotateX(8deg) rotateY(5deg);
+            transform: translateY(-8px) rotateX(6deg) rotateY(4deg);
             box-shadow:
-                0 14px 30px rgba(0, 0, 0, 0.4),
-                0 0 20px var(--hover-glow, rgba(52, 152, 219, 0.5));
+                0 12px 28px rgba(0, 0, 0, 0.4),
+                0 0 18px var(--hover-glow, rgba(52, 152, 219, 0.5));
             z-index: 10;
         }
 
@@ -308,43 +343,45 @@
                 0 8px 20px rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(46, 204, 113, 0.7);
         }
+
         @keyframes pulseGlow {
             from { box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); }
             to { box-shadow: 0 0 30px rgba(46, 204, 113, 0.8); }
         }
 
         .key-card i {
-            font-size: 2.1rem;
-            margin-bottom: 0.9rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
             transition: transform 0.4s ease, color 0.4s ease;
             display: block;
         }
+
         .key-card:hover i {
-            transform: scale(1.2) rotate(10deg);
+            transform: scale(1.15) rotate(8deg);
         }
 
         .key-card h3 {
-            font-size: 0.98rem;
+            font-size: 0.92rem;
             color: #f0f4f8;
-            margin-top: 0.6rem;
+            margin-top: 0.5rem;
             font-weight: 600;
-            text-shadow: 0 0 6px currentColor;
+            text-shadow: 0 0 5px currentColor;
         }
 
         .mini-progress {
-            height: 5px;
+            height: 4px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 3px;
-            margin-top: 1rem;
+            border-radius: 2px;
+            margin-top: 0.9rem;
             overflow: hidden;
         }
+
         .mini-progress-bar {
             height: 100%;
             width: 0%;
             transition: width 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
         }
 
-        /* === COLORES POR DIMENSIÓN === */
         :root {
             --color-0: #3498db;
             --color-1: #e74c3c;
@@ -362,53 +399,43 @@
         .key-card[data-id="0"] i { color: var(--color-0); }
         .key-card[data-id="0"].completed i { color: #2ecc71; }
         .key-card[data-id="0"] .mini-progress-bar { background: var(--color-0); }
-
         .key-card[data-id="1"] { --hover-glow: rgba(231, 76, 60, 0.6); }
         .key-card[data-id="1"] i { color: var(--color-1); }
         .key-card[data-id="1"].completed i { color: #2ecc71; }
         .key-card[data-id="1"] .mini-progress-bar { background: var(--color-1); }
-
         .key-card[data-id="2"] { --hover-glow: rgba(155, 89, 182, 0.6); }
         .key-card[data-id="2"] i { color: var(--color-2); }
         .key-card[data-id="2"].completed i { color: #2ecc71; }
         .key-card[data-id="2"] .mini-progress-bar { background: var(--color-2); }
-
         .key-card[data-id="3"] { --hover-glow: rgba(243, 156, 18, 0.6); }
         .key-card[data-id="3"] i { color: var(--color-3); }
         .key-card[data-id="3"].completed i { color: #2ecc71; }
         .key-card[data-id="3"] .mini-progress-bar { background: var(--color-3); }
-
         .key-card[data-id="4"] { --hover-glow: rgba(46, 204, 113, 0.6); }
         .key-card[data-id="4"] i { color: var(--color-4); }
         .key-card[data-id="4"].completed i { color: #2ecc71; }
         .key-card[data-id="4"] .mini-progress-bar { background: var(--color-4); }
-
         .key-card[data-id="5"] { --hover-glow: rgba(52, 73, 94, 0.6); }
         .key-card[data-id="5"] i { color: var(--color-5); }
         .key-card[data-id="5"].completed i { color: #2ecc71; }
         .key-card[data-id="5"] .mini-progress-bar { background: var(--color-5); }
-
         .key-card[data-id="6"] { --hover-glow: rgba(22, 160, 133, 0.6); }
         .key-card[data-id="6"] i { color: var(--color-6); }
         .key-card[data-id="6"].completed i { color: #2ecc71; }
         .key-card[data-id="6"] .mini-progress-bar { background: var(--color-6); }
-
         .key-card[data-id="7"] { --hover-glow: rgba(211, 84, 0, 0.6); }
         .key-card[data-id="7"] i { color: var(--color-7); }
         .key-card[data-id="7"].completed i { color: #2ecc71; }
         .key-card[data-id="7"] .mini-progress-bar { background: var(--color-7); }
-
         .key-card[data-id="8"] { --hover-glow: rgba(230, 126, 34, 0.6); }
         .key-card[data-id="8"] i { color: var(--color-8); }
         .key-card[data-id="8"].completed i { color: #2ecc71; }
         .key-card[data-id="8"] .mini-progress-bar { background: var(--color-8); }
-
         .key-card[data-id="9"] { --hover-glow: rgba(192, 57, 43, 0.6); }
         .key-card[data-id="9"] i { color: var(--color-9); }
         .key-card[data-id="9"].completed i { color: #2ecc71; }
         .key-card[data-id="9"] .mini-progress-bar { background: var(--color-9); }
 
-        /* === MODAL === */
         .challenge-modal {
             display: none;
             position: fixed;
@@ -424,17 +451,19 @@
             opacity: 0;
             transition: opacity 0.5s ease;
         }
+
         .challenge-modal.active {
             display: flex;
             opacity: 1;
         }
+
         .challenge-content {
             background: linear-gradient(145deg, rgba(15, 20, 45, 0.9), rgba(25, 35, 70, 0.95));
             border-radius: 20px;
-            padding: 2.2rem;
-            max-width: 720px;
-            width: 92%;
-            max-height: 90vh;
+            padding: 1.8rem;
+            max-width: 700px;
+            width: 94%;
+            max-height: 88vh;
             overflow-y: auto;
             position: relative;
             color: #f0f4f8;
@@ -447,9 +476,11 @@
             transform: scale(0.9);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         .challenge-modal.active .challenge-content {
             transform: scale(1);
         }
+
         .challenge-content::before {
             content: "";
             position: absolute;
@@ -465,6 +496,7 @@
             opacity: 0.7;
             filter: blur(15px);
         }
+
         @keyframes modalGlow {
             0% { background-position: 0% 50%; }
             100% { background-position: 400% 50%; }
@@ -472,14 +504,14 @@
 
         .close-btn {
             position: absolute;
-            top: 18px;
-            right: 18px;
-            font-size: 1.5rem;
+            top: 16px;
+            right: 16px;
+            font-size: 1.4rem;
             cursor: pointer;
             color: #f0f4f8;
             background: rgba(20, 30, 60, 0.7);
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -487,6 +519,7 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .close-btn:hover {
             background: rgba(231, 76, 60, 0.9);
             transform: rotate(180deg) scale(1.1);
@@ -495,15 +528,16 @@
         }
 
         .question-container {
-            margin-bottom: 2rem;
+            margin-bottom: 1.6rem;
             background: rgba(20, 30, 60, 0.55);
-            padding: 1.6rem;
-            border-radius: 14px;
+            padding: 1.4rem;
+            border-radius: 12px;
             border-left: 4px solid transparent;
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
         }
+
         .question-container::after {
             content: "";
             position: absolute;
@@ -516,35 +550,42 @@
             animation: questionShimmer 2s infinite;
             opacity: 0;
         }
+
         .question-container.active::after {
             opacity: 0.3;
         }
+
         @keyframes questionShimmer {
             100% { transform: translateX(100%); }
         }
+
         .question-container.active {
             border-left-color: #3498db;
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.35);
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.35);
         }
+
         .question {
-            font-size: 1.15rem;
-            margin-bottom: 1.1rem;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
             font-weight: 600;
             color: #f0f4f8;
             opacity: 0;
             animation: revealText 0.8s forwards;
         }
+
         @keyframes revealText {
             to { opacity: 1; }
         }
+
         .options {
             display: flex;
             flex-direction: column;
-            gap: 0.9rem;
+            gap: 0.8rem;
         }
+
         .option {
             background: rgba(30, 40, 80, 0.65);
-            padding: 1.1rem;
+            padding: 1rem;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.35s ease;
@@ -552,7 +593,11 @@
             color: #e0e7ff;
             position: relative;
             overflow: hidden;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
         }
+
         .option::before {
             content: "";
             position: absolute;
@@ -564,14 +609,17 @@
             z-index: -1;
             transition: width 0.4s ease;
         }
+
         .option:hover::before {
             width: 100%;
         }
+
         .option:hover {
-            transform: translateX(6px);
+            transform: translateX(5px);
             border-color: rgba(52, 152, 219, 0.5);
             color: white;
         }
+
         .option.selected {
             background: rgba(52, 152, 219, 0.4);
             border-left: 4px solid #3498db;
@@ -583,21 +631,26 @@
             background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
             border: none;
-            padding: 0.9rem 1.8rem;
+            padding: 0.85rem 1.6rem;
             border-radius: 32px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: 1rem;
             margin-top: 1.2rem;
             display: block;
             width: fit-content;
-            margin: 1.8rem auto 0;
+            margin: 1.6rem auto 0;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             z-index: 1;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         .btn::before {
             content: "";
             position: absolute;
@@ -609,10 +662,12 @@
             z-index: -1;
             transition: all 0.4s ease;
         }
+
         .btn:hover {
-            transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.6);
         }
+
         .btn:hover::before {
             background: linear-gradient(45deg, #3498db, #5dade2);
         }
@@ -620,9 +675,11 @@
         .btn-submit {
             background: linear-gradient(45deg, #2ecc71, #27ae60);
         }
+
         .btn-submit::before {
             background: linear-gradient(45deg, #27ae60, #2ecc71);
         }
+
         .btn-submit:hover::before {
             background: linear-gradient(45deg, #2ecc71, #58d68d);
         }
@@ -630,9 +687,10 @@
         #show-results {
             animation: bouncePulse 2s infinite;
         }
+
         @keyframes bouncePulse {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
         }
 
         .results-container {
@@ -640,16 +698,17 @@
             background: rgba(10, 15, 35, 0.7);
             backdrop-filter: blur(16px);
             border-radius: 20px;
-            padding: 2.2rem;
+            padding: 2rem;
             margin-top: 2rem;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.18);
             animation: slideIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(40px) scale(0.95);
+                transform: translateY(30px) scale(0.95);
             }
             to {
                 opacity: 1;
@@ -659,20 +718,21 @@
 
         .results-container h2 {
             text-align: center;
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.6rem;
             color: #f1c40f;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             text-shadow: 0 0 12px rgba(241, 196, 15, 0.7);
         }
 
         .career-list {
             list-style: none;
         }
+
         .career-item {
             background: rgba(20, 30, 60, 0.65);
-            padding: 1.4rem;
+            padding: 1.2rem;
             margin-bottom: 1rem;
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -681,6 +741,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .career-item::before {
             content: "";
             position: absolute;
@@ -693,43 +754,50 @@
             animation: careerShimmer 2s infinite;
             opacity: 0;
         }
+
         .career-item:hover::before {
             opacity: 0.4;
         }
+
         @keyframes careerShimmer {
             100% { transform: translateX(100%); }
         }
+
         .career-item:hover {
-            transform: translateX(8px);
+            transform: translateX(6px);
             border-left-color: #f1c40f;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.25);
         }
+
         .career-name {
             font-weight: bold;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             color: #f0f4f8;
         }
+
         .career-score {
             background: linear-gradient(45deg, #f1c40f, #e67e22);
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 22px;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
             font-weight: bold;
-            min-width: 70px;
+            min-width: 65px;
             text-align: center;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            font-size: 0.95rem;
         }
 
         footer {
             text-align: center;
-            margin-top: 3.5rem;
-            padding-top: 1.8rem;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             opacity: 0.9;
             color: #d6eaf8;
             position: relative;
         }
+
         footer::before {
             content: "";
             position: absolute;
@@ -740,12 +808,12 @@
             background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.9), transparent);
             animation: wave 3s infinite linear;
         }
+
         @keyframes wave {
             0% { left: -100%; }
             100% { left: 100%; }
         }
 
-        /* === CONFLICTOS Y EFECTOS === */
         .confetti {
             position: fixed;
             width: 8px;
@@ -755,6 +823,7 @@
             z-index: 1001;
             animation: confetti-fall 5s linear forwards;
         }
+
         @keyframes confetti-fall {
             to {
                 transform: translateY(100vh) rotate(720deg);
@@ -762,7 +831,6 @@
             }
         }
 
-        /* === ONDAS AL HACER CLIC === */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -771,6 +839,7 @@
             animation: rippleEffect 0.6s linear;
             pointer-events: none;
         }
+
         @keyframes rippleEffect {
             to {
                 transform: scale(2.5);
@@ -778,314 +847,266 @@
             }
         }
 
-        /* === RESPONSIVE === */
+        .special-message {
+            text-align: center;
+            margin: 1.8rem 0;
+            padding: 1.3rem;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .all-tens-message {
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.3));
+            border: 2px solid rgba(46, 204, 113, 0.5);
+            color: #e8f8f5;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+        }
+
+        .all-ones-message {
+            background: linear-gradient(145deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.3));
+            border: 2px solid rgba(231, 76, 60, 0.5);
+            color: #fdecea;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+        }
+
+        /* === MEDIA QUERIES === */
         @media (max-width: 768px) {
+            body {
+                padding: 1.2rem 0;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 0.95rem;
+                max-width: 90%;
+            }
+
+            .game-container, .results-container {
+                padding: 1.4rem;
+            }
+
+            .game-container h2, .results-container h2 {
+                font-size: 1.45rem;
+            }
+
             .key-container {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 1.2rem;
+                gap: 1rem;
             }
-            header h1 {
-                font-size: 2.1rem;
+
+            .key-card {
+                padding: 1.2rem;
+                border-radius: 14px;
             }
+
+            .key-card h3 {
+                font-size: 0.88rem;
+            }
+
+            .key-card i {
+                font-size: 1.6rem;
+            }
+
             .challenge-content {
-                padding: 1.6rem;
+                padding: 1.4rem;
+                max-height: 85vh;
+            }
+
+            .question {
+                font-size: 1rem;
+            }
+
+            .option {
+                padding: 0.9rem;
+                font-size: 0.95rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.4rem;
+                font-size: 0.95rem;
+            }
+
+            .career-item {
+                padding: 1rem;
+            }
+
+            .career-name {
+                font-size: 1rem;
+            }
+
+            footer {
+                margin-top: 2.5rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .key-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .game-container h2, .results-container h2 {
+                font-size: 1.35rem;
+            }
+
+            .progress-bar {
+                height: 10px;
+                border-radius: 5px;
+            }
+
+            .progress-text {
+                font-size: 0.9rem;
+            }
+
+            .challenge-content {
+                padding: 1.2rem;
+            }
+
+            .close-btn {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.3rem;
+                font-size: 0.9rem;
+            }
+
+            .career-score {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+                min-width: 60px;
+            }
+
+            .special-message {
+                font-size: 1rem;
+                padding: 1.1rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .key-container {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.55rem;
+            }
+
+            .game-container, .results-container {
+                padding: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- FONDO CON CAPAS PARALLAX -->
     <div class="background-layers">
         <div class="layer layer-1"></div>
         <div class="layer layer-2"></div>
         <div class="layer layer-3"></div>
     </div>
-
-    <!-- PARTÍCULAS DINÁMICAS -->
     <div class="particles-container" id="particles"></div>
-
-    <!-- CURSOR CON RASTRO -->
     <div class="cursor-trail" id="cursor-trail"></div>
-
     <div class="container">
         <header>
-            <h1>Carrera Quest: Encuentra tu Carrera Ideal</h1>
-            <p>Responde 2 preguntas por cada una de las 10 dimensiones para descubrir las carreras que mejor se alinean contigo.</p>
+            <h1>Carrera Quest: Descubre tu Perfil Vocacional</h1>
+            <p>Responde 2 preguntas por cada una de las 10 dimensiones para construir tu perfil único y encontrar tus carreras ideales.</p>
         </header>
         <main>
             <div class="game-container" id="game-container">
-                <h2>Dimensiones de Evaluación</h2>
+                <h2>Dimensiones de tu Perfil</h2>
                 <div class="progress-container">
                     <div class="progress-bar">
                         <div class="progress" id="progress-bar"></div>
                     </div>
-                    <p class="progress-text" id="progress-text">Progreso: 0/10 dimensiones completadas</p>
+                    <p class="progress-text" id="progress-text">Perfil: 0/10 dimensiones registradas</p>
                 </div>
-                <div class="key-container" id="key-container">
-                    <!-- Llaves generadas por JS -->
-                </div>
+                <div class="key-container" id="key-container"></div>
                 <div style="text-align: center; margin-top: 1.8rem; display: none;" id="complete-btn-container">
                     <button class="btn btn-submit" id="show-results">Ver mis carreras compatibles</button>
                 </div>
             </div>
             <div class="results-container" id="results-container">
-                <h2>Tus 5 Carreras Más Compatibles</h2>
-                <ul class="career-list" id="career-list">
-                    <!-- Resultados generados por JS -->
-                </ul>
+                <h2 id="results-title">Tus 5 Carreras Más Compatibles</h2>
+                <div id="special-message-container"></div>
+                <ul class="career-list" id="career-list"></ul>
                 <div style="text-align: center; margin-top: 1.8rem;">
                     <button class="btn" id="restart-game">Reiniciar test</button>
                 </div>
             </div>
         </main>
-
         <div class="challenge-modal" id="challenge-modal">
             <div class="challenge-content">
                 <span class="close-btn" id="close-modal">&times;</span>
                 <h2 id="challenge-title">Dimensión</h2>
                 <div id="questions-container"></div>
-                <button class="btn btn-submit" id="submit-challenge">Enviar respuestas</button>
+                <button class="btn btn-submit" id="submit-challenge">Registrar respuestas</button>
             </div>
         </div>
-
         <footer>
             <p>&copy; 2025 Carrera Quest – Orientación Vocacional Profesional</p>
         </footer>
     </div>
-
+    <script src="base.js"></script>
+    <script src="basePreguntas.js"></script>
     <script>
-        // === Matriz de profesiones ===
-        const professionsMatrix = {
-            "Agronomía": [8, 3, 6, 6, 4, 5, 7, 7, 4, 6],
-            "Arqueología": [7, 4, 5, 5, 3, 5, 7, 7, 5, 7],
-            "Astronomía": [10, 3, 8, 4, 10, 4, 9, 9, 3, 6],
-            "Bioingeniería": [9, 4, 9, 6, 7, 6, 9, 8, 4, 7],
-            "Biología": [8, 4, 6, 6, 7, 4, 8, 8, 3, 7],
-            "Bioquímica": [9, 3, 7, 6, 7, 4, 8, 9, 2, 6],
-            "Estadística": [9, 3, 7, 6, 9, 4, 8, 9, 2, 6],
-            "Física": [10, 3, 7, 3, 9, 4, 9, 9, 4, 6],
-            "Geofísica": [9, 3, 7, 5, 5, 5, 8, 8, 2, 6],
-            "Ingeniería Acústica": [8, 3, 7, 6, 6, 5, 7, 8, 5, 5],
-            "Ingeniería en Acuicultura": [7, 4, 6, 6, 3, 5, 7, 7, 3, 7],
-            "Ingeniería en Alimentos": [8, 5, 7, 6, 5, 5, 8, 9, 3, 7],
-            "Ingeniería en Bioinformática": [9, 3, 9, 6, 9, 4, 9, 9, 2, 6],
-            "Ingeniería en Biomasa": [8, 3, 8, 6, 5, 5, 8, 8, 3, 7],
-            "Ingeniería en Biomédica": [9, 5, 9, 6, 7, 6, 9, 8, 5, 8],
-            "Ingeniería en Biorremediación": [8, 4, 8, 6, 5, 5, 8, 8, 3, 9],
-            "Ingeniería en Cerámica": [7, 3, 6, 6, 4, 5, 7, 8, 5, 5],
-            "Ingeniería en Ciencia de los Materiales": [9, 3, 8, 6, 7, 5, 8, 8, 3, 6],
-            "Ingeniería en Conservación de la Biodiversidad": [8, 5, 7, 6, 3, 6, 8, 7, 3, 9],
-            "Ingeniería en Energía Eólica": [8, 4, 8, 5, 5, 6, 8, 7, 3, 7],
-            "Ingeniería en Energía Solar": [8, 4, 8, 5, 5, 6, 8, 7, 3, 7],
-            "Ingeniería en Energías No Convencionales": [8, 4, 9, 6, 6, 6, 9, 7, 4, 7],
-            "Ingeniería en Explotación de Minas": [8, 3, 6, 8, 3, 7, 7, 8, 2, 6],
-            "Ingeniería en Genómica": [9, 3, 9, 6, 7, 5, 9, 8, 2, 7],
-            "Ingeniería en Geotermia": [8, 3, 8, 7, 5, 6, 8, 7, 2, 7],
-            "Ingeniería en Gestión de Desastres": [8, 6, 7, 8, 4, 8, 8, 8, 3, 9],
-            "Ingeniería en Higiene y Seguridad Ocupacional": [8, 6, 6, 7, 3, 7, 7, 8, 2, 8],
-            "Ingeniería en Materiales": [9, 3, 8, 6, 7, 5, 8, 8, 3, 6],
-            "Ingeniería en Medio Ambiente": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
-            "Ingeniería en Metalurgia": [8, 3, 6, 5, 4, 5, 7, 9, 2, 5],
-            "Ingeniería en Metalurgia Extractiva": [8, 3, 6, 7, 4, 5, 7, 9, 2, 5],
-            "Ingeniería en Minerales": [8, 3, 6, 7, 4, 5, 7, 9, 2, 5],
-            "Ingeniería en Nanotecnología": [10, 3, 9, 6, 7, 5, 9, 8, 3, 6],
-            "Ingeniería en Petróleo y Gas": [8, 3, 6, 8, 4, 7, 7, 8, 2, 4],
-            "Ingeniería en Plásticos": [8, 3, 7, 6, 5, 5, 7, 8, 3, 5],
-            "Ingeniería en Polímeros": [8, 3, 7, 6, 5, 5, 7, 9, 3, 6],
-            "Ingeniería en Procesos Mineros": [8, 3, 6, 6, 4, 6, 7, 8, 2, 6],
-            "Ingeniería en Procesos Químicos": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
-            "Ingeniería en Protección Civil": [6, 6, 6, 7, 4, 8, 8, 8, 3, 9],
-            "Ingeniería en Recursos Hídricos": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
-            "Ingeniería en Recursos Naturales": [8, 5, 7, 6, 3, 6, 8, 7, 3, 8],
-            "Ingeniería en Seguridad Industrial": [8, 6, 6, 7, 3, 7, 7, 8, 2, 8],
-            "Ingeniería en Seguridad Minera": [8, 6, 6, 7, 3, 7, 7, 9, 2, 8],
-            "Ingeniería en Tejidos": [8, 4, 6, 6, 5, 5, 7, 8, 5, 5],
-            "Ingeniería Forestal": [8, 4, 6, 6, 3, 6, 7, 7, 3, 8],
-            "Ingeniería Naval": [8, 4, 7, 6, 4, 6, 7, 9, 3, 5],
-            "Matemáticas": [10, 2, 7, 4, 9, 4, 8, 10, 2, 4],
-            "Meteorología": [8, 4, 7, 5, 6, 5, 8, 8, 2, 7],
-            "Oceanografía": [8, 4, 7, 5, 4, 5, 8, 8, 3, 7],
-            "Química": [9, 3, 7, 6, 7, 4, 8, 8, 2, 6],
-            "Administración Pública": [7, 7, 6, 5, 6, 7, 7, 6, 3, 8],
-            "Análisis de Datos Avanzado (Big Data)": [9, 3, 8, 6, 9, 4, 9, 8, 3, 6],
-            "Antropología": [7, 7, 6, 5, 5, 5, 7, 7, 4, 8],
-            "Arquitectura": [8, 6, 6, 6, 5, 6, 7, 7, 9, 6],
-            "Contador Auditor": [8, 4, 6, 3, 7, 5, 7, 10, 2, 6],
-            "Data Science": [9, 3, 9, 6, 9, 5, 9, 8, 3, 6],
-            "Data Science y Machine Learning": [9, 3, 10, 6, 9, 5, 9, 8, 3, 6],
-            "Derecho": [7, 7, 5, 4, 6, 7, 7, 8, 3, 9],
-            "Diseño": [5, 5, 6, 5, 5, 5, 7, 7, 9, 6],
-            "Economía": [9, 5, 7, 6, 9, 6, 8, 7, 3, 6],
-            "Educación Física": [6, 7, 5, 5, 1, 6, 6, 6, 4, 8],
-            "Educación Parvularia": [5, 9, 5, 4, 3, 6, 6, 6, 6, 9],
-            "Enfermería": [7, 9, 6, 6, 2, 6, 7, 8, 2, 10],
-            "Fonoaudiología": [6, 9, 5, 6, 3, 6, 6, 8, 3, 9],
-            "Geología": [8, 4, 7, 6, 4, 6, 8, 7, 2, 6],
-            "Ingeniería Aeronáutica": [9, 4, 7, 6, 6, 6, 8, 8, 3, 6],
-            "Ingeniería Ambiental": [8, 5, 7, 6, 4, 6, 8, 8, 3, 8],
-            "Ingeniería Civil Eléctrica": [9, 4, 8, 6, 7, 6, 8, 9, 2, 6],
-            "Ingeniería Civil en Computación": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
-            "Ingeniería Civil en Computación e Informática": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
-            "Ingeniería Civil en Construcción": [8, 4, 6, 6, 4, 6, 7, 8, 3, 6],
-            "Ingeniería Civil en Energía": [8, 4, 8, 5, 6, 6, 8, 7, 3, 7],
-            "Ingeniería Civil en Geografía": [8, 5, 6, 6, 4, 6, 7, 8, 3, 7],
-            "Ingeniería Civil en Geomensura y Cartografía": [8, 4, 6, 6, 5, 6, 7, 9, 2, 6],
-            "Ingeniería Civil en Hidráulica": [8, 4, 7, 6, 4, 6, 8, 7, 3, 6],
-            "Ingeniería Civil en Informática": [9, 3, 9, 6, 9, 6, 9, 9, 3, 6],
-            "Ingeniería Civil en Matemáticas": [10, 2, 7, 4, 9, 4, 8, 10, 2, 4],
-            "Ingeniería Civil en Minas": [8, 4, 6, 8, 3, 7, 7, 8, 2, 6],
-            "Ingeniería Civil en Obras Civiles": [8, 4, 6, 6, 4, 6, 7, 8, 3, 6],
-            "Ingeniería Civil en Química": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
-            "Ingeniería Civil en Telecomunicaciones": [9, 4, 8, 6, 6, 6, 8, 9, 3, 6],
-            "Ingeniería Civil Industrial": [8, 6, 6, 6, 6, 7, 8, 8, 3, 6],
-            "Ingeniería Civil Mecánica": [9, 4, 6, 6, 6, 6, 8, 9, 3, 5],
-            "Ingeniería Civil Metalúrgica": [8, 3, 6, 5, 4, 6, 7, 9, 2, 5],
-            "Ingeniería Civil Química": [9, 3, 7, 6, 6, 6, 8, 8, 2, 6],
-            "Ingeniería Comercial": [8, 6, 7, 6, 7, 7, 8, 8, 3, 7],
-            "Kinesiología": [6, 9, 6, 6, 2, 5, 7, 7, 4, 9],
-            "Licenciatura en Antropología Digital": [6, 7, 8, 5, 6, 6, 8, 7, 6, 8],
-            "Licenciatura en Arqueología": [7, 4, 5, 5, 3, 5, 7, 7, 5, 7],
-            "Licenciatura en Arqueología Digital": [8, 5, 7, 5, 6, 5, 8, 7, 6, 8],
-            "Licenciatura en Artes Escénicas": [5, 7, 5, 5, 4, 5, 6, 6, 10, 6],
-            "Licenciatura en Artes Plásticas": [6, 5, 5, 5, 4, 5, 6, 6, 10, 5],
-            "Licenciatura en Astronomía": [10, 3, 8, 6, 10, 4, 9, 9, 3, 6],
-            "Licenciatura en Biología": [8, 4, 6, 6, 7, 4, 8, 8, 3, 7],
-            "Licenciatura en Estudios Internacionales": [7, 8, 7, 5, 6, 6, 7, 6, 4, 8],
-            "Licenciatura en Filosofía": [5, 5, 5, 4, 10, 5, 7, 7, 5, 8],
-            "Licenciatura en Física": [10, 3, 7, 3, 9, 4, 9, 9, 4, 6],
-            "Licenciatura en Geología": [8, 4, 7, 6, 4, 6, 8, 7, 2, 6],
-            "Licenciatura en Historia": [7, 6, 5, 4, 9, 4, 7, 6, 4, 7],
-            "Licenciatura en Historia Digital": [8, 6, 7, 5, 6, 6, 8, 6, 5, 7],
-            "Licenciatura en Letras": [7, 6, 5, 4, 7, 4, 7, 6, 7, 6],
-            "Licenciatura en Lingüística": [8, 5, 5, 4, 6, 4, 7, 7, 4, 7],
-            "Licenciatura en Matemáticas": [10, 2, 7, 4, 9, 3, 8, 10, 2, 4],
-            "Licenciatura en Música": [6, 6, 5, 5, 5, 4, 6, 6, 10, 6],
-            "Licenciatura en Química": [9, 3, 7, 6, 7, 5, 8, 8, 2, 6],
-            "Licenciatura en Sociología Computacional": [8, 7, 8, 5, 9, 6, 8, 7, 5, 9],
-            "Medicina": [9, 9, 7, 6, 4, 6, 8, 9, 5, 10],
-            "Nutrición y Dietética": [7, 8, 6, 6, 3, 5, 7, 8, 3, 9],
-            "Obstetricia y Puericultura": [7, 9, 6, 6, 2, 5, 6, 8, 3, 10],
-            "Odontología": [8, 7, 6, 6, 4, 5, 7, 10, 5, 9],
-            "Pedagogía en Artes Visuales": [6, 7, 5, 5, 5, 6, 6, 6, 9, 8],
-            "Pedagogía en Ciencias Naturales": [7, 7, 6, 4, 5, 5, 7, 7, 4, 9],
-            "Pedagogía en Cine": [5, 6, 7, 5, 5, 5, 7, 6, 8, 7],
-            "Pedagogía en Danza": [5, 7, 6, 5, 4, 5, 6, 6, 10, 8],
-            "Pedagogía en Educación Básica": [5, 8, 6, 4, 4, 6, 7, 7, 5, 9],
-            "Pedagogía en Educación Diferencial": [6, 9, 6, 4, 6, 6, 6, 7, 6, 10],
-            "Pedagogía en Educación Física Digital": [7, 8, 7, 5, 4, 6, 8, 6, 6, 8],
-            "Pedagogía en Educación Musical": [6, 7, 6, 5, 5, 5, 7, 7, 9, 8],
-            "Pedagogía en Educación Técnico Profesional": [7, 8, 6, 5, 4, 7, 7, 7, 5, 8],
-            "Pedagogía en Filosofía": [5, 7, 5, 4, 6, 5, 7, 7, 5, 8],
-            "Pedagogía en Historia y Ciencias Sociales": [7, 7, 6, 4, 6, 5, 7, 6, 5, 9],
-            "Pedagogía en Inglés": [7, 7, 6, 4, 6, 5, 7, 6, 5, 8],
-            "Pedagogía en Lengua Castellana y Literatura": [7, 7, 6, 4, 9, 5, 7, 6, 6, 8],
-            "Pedagogía en Matemáticas Computacionales": [8, 6, 7, 3, 7, 6, 8, 7, 4, 8],
-            "Pedagogía en Matemáticas y Computación": [8, 6, 7, 3, 7, 6, 8, 7, 4, 8],
-            "Pedagogía en Religión": [5, 8, 6, 4, 8, 5, 6, 6, 4, 9],
-            "Pedagogía en Teatro": [5, 7, 5, 5, 4, 5, 6, 6, 10, 8],
-            "Periodismo": [7, 8, 6, 5, 6, 6, 7, 7, 6, 8],
-            "Psicología": [7, 9, 6, 4, 6, 6, 7, 8, 4, 10],
-            "Química y Farmacia": [9, 6, 7, 6, 6, 5, 8, 10, 2, 8],
-            "Sociología": [6, 8, 6, 5, 7, 6, 7, 6, 4, 9],
-            "Terapia Ocupacional": [6, 9, 6, 6, 3, 5, 6, 8, 5, 9],
-            "Trabajo Social": [6, 9, 6, 4, 6, 6, 7, 7, 4, 10],
-            "Veterinaria": [8, 7, 6, 6, 3, 5, 7, 8, 3, 8]
-        };
-
-        const questionsBank = [
-            // Dimensión 0: Aptitud Técnica y Analítica
-            [
-                { question: "¿Cuál es el resultado de 15² + 23 × 4 - 18 ÷ 3?", options: ["311", "321", "301", "291"], correctAnswer: 0 },
-                { question: "Si un algoritmo tiene una complejidad O(n²), ¿qué significa esto?", options: ["El tiempo de ejecución es constante", "El tiempo de ejecución crece linealmente", "El tiempo de ejecución crece cuadráticamente", "El tiempo de ejecución es logarítmico"], correctAnswer: 2 }
-            ],
-            // Dimensión 1: Requerimiento Interpersonal y Empatía
-            [
-                { question: "Si un compañero está frustrado porque su idea fue rechazada, ¿cuál es la mejor respuesta?", options: ["Deberías aceptar la decisión", "Entiendo tu frustración. ¿Te gustaría analizar juntos por qué fue rechazada?", "No te preocupes, tu idea no era tan buena", "La decisión ya está tomada"], correctAnswer: 1 },
-                { question: "¿Cómo manejarías un conflicto entre dos miembros del equipo?", options: ["Ignorarlo", "Hablar con cada uno y luego organizar una reunión conjunta", "Decidir quién tiene la razón", "Evitar trabajar con ambos"], correctAnswer: 1 }
-            ],
-            // Dimensión 2: Capacidad de Innovación y Adaptación a IA
-            [
-                { question: "¿Qué es el aprendizaje automático (Machine Learning)?", options: ["Programación tradicional", "Capacidad de aprender a partir de datos sin programación explícita", "Un lenguaje de programación", "Hardware especializado"], correctAnswer: 1 },
-                { question: "¿Qué es la 'transformación digital'?", options: ["Digitalizar documentos", "Integrar tecnología digital en todas las áreas del negocio", "Usar redes sociales", "Implementar contabilidad digital"], correctAnswer: 1 }
-            ],
-            // Dimensión 3: Tolerancia al Riesgo y Estabilidad Laboral
-            [
-                { question: "Al evaluar una oportunidad profesional, ¿qué factor es más importante?", options: ["Salario inicial alto", "Oportunidades de crecimiento y aprendizaje", "Estabilidad laboral a largo plazo", "Ubicación conveniente"], correctAnswer: 1 },
-                { question: "¿Cómo abordarías un proyecto con alto potencial pero alto riesgo?", options: ["Rechazarlo", "Analizar riesgos y beneficios antes de decidir", "Aceptarlo sin considerar riesgos", "Delegarlo"], correctAnswer: 1 }
-            ],
-            // Dimensión 4: Preferencia por el Entorno
-            [
-                { question: "¿Qué tipo de entorno te resulta más atractivo para trabajar?", options: ["Oficina con vistas", "Laboratorio o taller con equipos", "Espacio digital o virtual", "Café o espacio compartido"], correctAnswer: 1 },
-                { question: "Al resolver un problema complejo, ¿qué prefieres?", options: ["Construir un prototipo físico", "Crear un modelo conceptual o diagrama", "Escribir código", "Discutir verbalmente"], correctAnswer: 1 }
-            ],
-            // Dimensión 5: Capacidad de Liderazgo
-            [
-                { question: "¿Qué cualidad es más importante en un líder?", options: ["Tomar decisiones rápidamente", "Escuchar y considerar diferentes perspectivas", "Conocimientos técnicos profundos", "Ser estricto"], correctAnswer: 1 },
-                { question: "¿Cómo motivarías a un equipo que está perdiendo interés?", options: ["Aumentar presión", "Reconocer logros y conectar con un propósito", "Cambiar el proyecto", "Reemplazar miembros"], correctAnswer: 1 }
-            ],
-            // Dimensión 6: Aprendizaje Continuo
-            [
-                { question: "¿Con qué frecuencia buscas aprender nuevas habilidades?", options: ["Raramente", "Regularmente", "Constantemente", "Solo cuando la empresa ofrece"], correctAnswer: 1 },
-                { question: "¿Cómo reaccionas ante una nueva tecnología en tu campo?", options: ["Me resisto", "Me entusiasmo y busco aprender", "Espero a que sea adoptada", "Dejo que otros la aprendan"], correctAnswer: 1 }
-            ],
-            // Dimensión 7: Orientación al Detalle
-            [
-                { question: "Al revisar un documento, ¿qué es lo primero que notas?", options: ["Contenido general", "Errores gramaticales y formato", "Estructura", "Longitud"], correctAnswer: 1 },
-                { question: "¿Cómo abordarías una tarea que requiere alta precisión?", options: ["Hacerla rápido y revisar", "Hacerla con cuidado, verificando cada paso", "Pedir que la revise otro", "Usar herramientas automáticas"], correctAnswer: 1 }
-            ],
-            // Dimensión 8: Creatividad
-            [
-                { question: "¿Qué actividad te resulta más atractiva?", options: ["Analizar datos", "Diseñar soluciones innovadoras", "Organizar proyectos", "Investigar información"], correctAnswer: 1 },
-                { question: "¿Cómo describirías tu proceso de resolución de problemas?", options: ["Sigo métodos establecidos", "Combino enfoques conocidos con ideas nuevas", "Busco soluciones originales", "Dependo de otros"], correctAnswer: 1 }
-            ],
-            // Dimensión 9: Impacto Social
-            [
-                { question: "¿Qué te motiva más en tu trabajo?", options: ["Reconocimiento", "Marcar una diferencia positiva", "Desafío intelectual", "Estabilidad económica"], correctAnswer: 1 },
-                { question: "¿Qué tipo de proyecto te interesaría más?", options: ["Alto potencial de lucro", "Resuelve un problema social", "Técnicamente innovador", "Buen equilibrio vida-trabajo"], correctAnswer: 1 }
-            ]
-        ];
-
+        // === MATRIZ DE CARRERAS ===
+        // === BANCO DE PREGUNTAS PSICOMÉTRICAS ===
         const dimensions = [
             { id: 0, name: "Aptitud Técnica y Analítica", icon: "fa-calculator", color: "#3498db" },
-            { id: 1, name: "Requerimiento Interpersonal y Empatía", icon: "fa-users", color: "#e74c3c" },
-            { id: 2, name: "Capacidad de Innovación y Adaptación a IA", icon: "fa-robot", color: "#9b59b6" },
-            { id: 3, name: "Tolerancia al Riesgo y Estabilidad Laboral", icon: "fa-chart-line", color: "#f39c12" },
+            { id: 1, name: "Empatía e Interacción Social", icon: "fa-users", color: "#e74c3c" },
+            { id: 2, name: "Innovación y Adaptación Digital", icon: "fa-robot", color: "#9b59b6" },
+            { id: 3, name: "Tolerancia al Riesgo", icon: "fa-chart-line", color: "#f39c12" },
             { id: 4, name: "Preferencia por el Entorno", icon: "fa-mountain", color: "#2ecc71" },
-            { id: 5, name: "Capacidad de Liderazgo", icon: "fa-user-tie", color: "#34495e" },
+            { id: 5, name: "Liderazgo", icon: "fa-user-tie", color: "#34495e" },
             { id: 6, name: "Aprendizaje Continuo", icon: "fa-book", color: "#16a085" },
             { id: 7, name: "Orientación al Detalle", icon: "fa-search", color: "#d35400" },
             { id: 8, name: "Creatividad", icon: "fa-palette", color: "#e67e22" },
             { id: 9, name: "Impacto Social", icon: "fa-hands-helping", color: "#c0392b" }
         ];
-
-        // Ponderación por dimensión
         const dimensionWeights = {
-            0: 1.3,  // Aptitud Técnica (más importante)
-            1: 1.1,  // Interpersonal
-            2: 1.4,  // Innovación IA (crítico)
-            3: 0.9,  // Tolerancia al Riesgo
-            4: 0.8,  // Preferencia Entorno
-            5: 1.0,  // Liderazgo
-            6: 1.2,  // Aprendizaje Continuo
-            7: 1.0,  // Detalle
-            8: 1.1,  // Creatividad
-            9: 1.0   // Impacto Social
+            0: 1.3,
+            1: 1.1,
+            2: 1.4,
+            3: 0.9,
+            4: 0.8,
+            5: 1.0,
+            6: 1.2,
+            7: 1.0,
+            8: 1.1,
+            9: 1.0
         };
-
         let gameState = {
             completedChallenges: [],
-            scores: new Array(10).fill(0),
+            scores: new Array(10).fill(5),
             currentChallenge: null,
             currentQuestions: [],
             currentAnswers: []
         };
 
-        // === CREAR PARTÍCULAS AVANZADAS ===
+        // === FUNCIONES AUXILIARES ===
         function createParticles() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
             const container = document.getElementById('particles');
-            const total = 120;
-
-            // Estrellas
             for (let i = 0; i < 40; i++) {
                 const star = document.createElement('div');
                 star.classList.add('particle', 'star');
@@ -1096,8 +1117,6 @@
                 star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
                 container.appendChild(star);
             }
-
-            // Burbujas
             for (let i = 0; i < 30; i++) {
                 const bubble = document.createElement('div');
                 bubble.classList.add('particle', 'bubble');
@@ -1109,8 +1128,6 @@
                 bubble.style.setProperty('--duration', `${Math.random() * 10 + 15}s`);
                 container.appendChild(bubble);
             }
-
-            // Nebulosas
             for (let i = 0; i < 3; i++) {
                 const neb = document.createElement('div');
                 neb.classList.add('particle', 'nebula');
@@ -1121,8 +1138,6 @@
                 neb.style.setProperty('--duration', `${Math.random() * 30 + 30}s`);
                 container.appendChild(neb);
             }
-
-            // Meteoritos
             for (let i = 0; i < 5; i++) {
                 setTimeout(() => {
                     const meteor = document.createElement('div');
@@ -1131,24 +1146,20 @@
                     meteor.style.top = `${-20 + Math.random() * 20}%`;
                     meteor.style.setProperty('--duration', `${Math.random() * 6 + 6}s`);
                     container.appendChild(meteor);
-                    setTimeout(() => {
-                        meteor.remove();
-                    }, 10000);
+                    setTimeout(() => meteor.remove(), 10000);
                 }, i * 8000);
             }
         }
 
-        // === RASTRO DE CURSOR ===
         function createCursorTrail() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
             const trail = document.getElementById('cursor-trail');
             let posX = 0, posY = 0;
             let mouseX = 0, mouseY = 0;
-
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
-
             function animate() {
                 const distX = mouseX - posX;
                 const distY = mouseY - posY;
@@ -1161,7 +1172,6 @@
             animate();
         }
 
-        // === ONDAS AL HACER CLIC ===
         document.addEventListener('click', (e) => {
             if (e.target.closest('.key-card') || e.target.closest('.option') || e.target.closest('.btn')) {
                 const ripple = document.createElement('span');
@@ -1219,17 +1229,19 @@
             } else {
                 progressBar.classList.remove('rainbow');
             }
-            document.getElementById('progress-text').textContent = `Progreso: ${gameState.completedChallenges.length}/10 dimensiones completadas`;
+            document.getElementById('progress-text').textContent = `Perfil: ${gameState.completedChallenges.length}/10 dimensiones registradas`;
             if (gameState.completedChallenges.length === 10) {
                 document.getElementById('complete-btn-container').style.display = 'block';
-                createConfetti();
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    createConfetti();
+                }
             }
         }
 
         function openChallenge(id) {
             if (gameState.completedChallenges.includes(id)) return;
             gameState.currentChallenge = id;
-            gameState.currentQuestions = [...questionsBank[id]];
+            gameState.currentQuestions = selectRandomQuestions(gameState.currentChallenge);
             gameState.currentAnswers = [null, null];
             document.getElementById('challenge-title').textContent = dimensions[id].name;
             renderQuestions();
@@ -1244,24 +1256,28 @@
                 const qDiv = document.createElement('div');
                 qDiv.className = 'question-container';
                 if (idx === 0) qDiv.classList.add('active');
-                const optionsHtml = q.options.map((opt, i) => `
-                    <div class="option" data-question="${idx}" data-option="${i}">
-                        ${opt}
+                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+                const optionsHtml = shuffledOptions.map((opt, i) => `
+                    <div class="option" data-question="${idx}" data-option-value="${opt.value}">
+                        ${opt.text}
                     </div>
                 `).join('');
-                qDiv.innerHTML = `<div class="question">Pregunta ${idx + 1}: ${q.question}</div><div class="options">${optionsHtml}</div>`;
+                qDiv.innerHTML = `
+                    <div class="question">Pregunta ${idx + 1}: ${q.question}</div>
+                    <div class="options">${optionsHtml}</div>
+                `;
                 container.appendChild(qDiv);
             });
-
-            // Delegación de eventos
             container.addEventListener('click', (e) => {
                 const option = e.target.closest('.option');
                 if (!option) return;
                 const qIdx = parseInt(option.dataset.question);
-                const oIdx = parseInt(option.dataset.option);
-                document.querySelectorAll(`.option[data-question="${qIdx}"]`).forEach(el => el.classList.remove('selected'));
+                const value = parseInt(option.dataset.optionValue);
+                document.querySelectorAll(`.option[data-question="${qIdx}"]`).forEach(el => {
+                    el.classList.remove('selected');
+                });
                 option.classList.add('selected');
-                gameState.currentAnswers[qIdx] = oIdx;
+                gameState.currentAnswers[qIdx] = value;
                 document.querySelectorAll('.question-container').forEach(q => q.classList.remove('active'));
                 const nextQuestion = document.querySelectorAll('.question-container')[qIdx + 1];
                 if (nextQuestion) {
@@ -1272,17 +1288,19 @@
             });
         }
 
+        function selectRandomQuestions(dimensionIndex) {
+            const dimensionQuestions = questionsBank[dimensionIndex];
+            const shuffled = [...dimensionQuestions].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 2);
+        }
+
         function submitChallenge() {
             if (gameState.currentAnswers.some(a => a === null)) {
                 alert('Por favor, responde todas las preguntas.');
                 return;
             }
-            let correct = 0;
-            gameState.currentAnswers.forEach((ans, idx) => {
-                if (ans === gameState.currentQuestions[idx].correctAnswer) correct++;
-            });
-            const score = Math.round((correct / 2) * 10);
-            gameState.scores[gameState.currentChallenge] = score;
+            const avgScore = (gameState.currentAnswers[0] + gameState.currentAnswers[1]) / 2;
+            gameState.scores[gameState.currentChallenge] = avgScore;
             gameState.completedChallenges.push(gameState.currentChallenge);
             const modal = document.getElementById('challenge-modal');
             modal.classList.remove('active');
@@ -1295,9 +1313,9 @@
         function showCompletionNotification(dimensionName) {
             const notification = document.createElement('div');
             notification.innerHTML = `
-                <i class="fas fa-check-circle" style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 8px;"></i>
-                <h3 style="margin: 0 0 6px; color: white;">¡Dimensión completada!</h3>
-                <p style="margin: 0; color: #e8f4fc;">${dimensionName} ha sido evaluada correctamente</p>
+                <i class="fas fa-user-check" style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <h3 style="margin: 0 0 6px; color: white;">¡Perfil actualizado!</h3>
+                <p style="margin: 0; color: #e8f4fc;">Tu dimensión "${dimensionName}" ha sido registrada</p>
             `;
             notification.style.position = 'fixed';
             notification.style.top = '20px';
@@ -1342,9 +1360,7 @@
             }
         }
 
-        // === MÉTRICAS MATEMÁTICAS MEJORADAS ===
-
-        // 1. Correlación de Pearson
+        // === FUNCIONES DE SIMILITUD ===
         function pearson(x, y) {
             const n = x.length;
             const sumX = x.reduce((a, b) => a + b, 0);
@@ -1352,33 +1368,19 @@
             const sumXY = x.reduce((acc, xi, i) => acc + xi * y[i], 0);
             const sumX2 = x.reduce((acc, xi) => acc + xi * xi, 0);
             const sumY2 = y.reduce((acc, yi) => acc + yi * yi, 0);
-            
             const numerator = n * sumXY - sumX * sumY;
             const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
-            
             return denominator === 0 ? 0 : numerator / denominator;
         }
 
-        // 2. Distancia Euclidiana Normalizada
         function euclideanSimilarity(x, y) {
             const distance = Math.sqrt(
                 x.reduce((sum, xi, i) => sum + Math.pow(xi - y[i], 2), 0)
             );
-            const maxDistance = Math.sqrt(10 * 100); // 10 dimensiones, máx diff = 10
+            const maxDistance = Math.sqrt(10 * 100);
             return 1 - (distance / maxDistance);
         }
 
-        // 3. Distancia de Manhattan Ponderada
-        function manhattanSimilarity(x, y, weights = null) {
-            const w = weights || new Array(10).fill(1);
-            const distance = x.reduce((sum, xi, i) => 
-                sum + w[i] * Math.abs(xi - y[i]), 0
-            );
-            const maxDistance = w.reduce((sum, wi) => sum + wi * 10, 0);
-            return 1 - (distance / maxDistance);
-        }
-
-        // 4. Similitud de Coseno
         function cosineSimilarity(x, y) {
             const dotProduct = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
             const magX = Math.sqrt(x.reduce((sum, xi) => sum + xi * xi, 0));
@@ -1386,47 +1388,6 @@
             return magX * magY === 0 ? 0 : dotProduct / (magX * magY);
         }
 
-        // 5. Score Compuesto Multi-Métrica
-        function hybridScore(user, career) {
-            const spearmanScore = spearman(user, career);
-            const pearsonScore = pearson(user, career);
-            const euclideanScore = euclideanSimilarity(user, career);
-            const cosineScore = cosineSimilarity(user, career);
-            
-            // Ponderación optimizada
-            return (
-                spearmanScore * 0.25 +
-                pearsonScore * 0.30 +
-                euclideanScore * 0.25 +
-                cosineScore * 0.20
-            );
-        }
-
-        // 6. Euclidiana Ponderada por Dimensión
-        function weightedEuclidean(x, y) {
-            const distance = x.reduce((sum, xi, i) => 
-                sum + dimensionWeights[i] * Math.pow(xi - y[i], 2), 0
-            );
-            const maxWeightedDistance = Object.values(dimensionWeights).reduce((sum, w) => sum + w * 100, 0);
-            return 1 - Math.sqrt(distance) / Math.sqrt(maxWeightedDistance);
-        }
-
-        // 7. Ajuste por Desviación Estándar
-        function normalizedScore(user, career) {
-            const differences = user.map((u, i) => Math.abs(u - career[i]));
-            const mean = differences.reduce((a, b) => a + b) / differences.length;
-            const std = Math.sqrt(
-                differences.reduce((sum, d) => sum + Math.pow(d - mean, 2), 0) / differences.length
-            );
-            
-            // Penalizar alta variabilidad
-            const consistency = 1 / (1 + std);
-            const baseScore = euclideanSimilarity(user, career);
-            
-            return baseScore * (0.7 + 0.3 * consistency);
-        }
-
-        // 8. Spearman (original)
         function spearman(x, y) {
             const rankX = getRanks(x);
             const rankY = getRanks(y);
@@ -1448,40 +1409,34 @@
             return arr.map(v => map[v]);
         }
 
-        // 9. Manejo Robusto de Empates en Rankings
-        function getRanksWithTies(arr) {
-            const indexed = arr.map((val, idx) => ({val, idx}));
-            indexed.sort((a, b) => a.val - b.val);
-            
-            const ranks = new Array(arr.length);
-            let i = 0;
-            while (i < indexed.length) {
-                let j = i;
-                // Encontrar empates
-                while (j < indexed.length && indexed[j].val === indexed[i].val) {
-                    j++;
-                }
-                // Asignar rango promedio
-                const avgRank = (i + j + 1) / 2;
-                for (let k = i; k < j; k++) {
-                    ranks[indexed[k].idx] = avgRank;
-                }
-                i = j;
-            }
-            return ranks;
+        function hybridScore(user, career) {
+            const spearmanScore = spearman(user, career);
+            const pearsonScore = pearson(user, career);
+            const euclideanScore = euclideanSimilarity(user, career);
+            const cosineScore = cosineSimilarity(user, career);
+            return (
+                spearmanScore * 0.25 +
+                pearsonScore * 0.30 +
+                euclideanScore * 0.25 +
+                cosineScore * 0.20
+            );
         }
 
-        // 10. Score de Confianza Estadístico
+        function weightedEuclidean(x, y) {
+            const distance = x.reduce((sum, xi, i) => 
+                sum + dimensionWeights[i] * Math.pow(xi - y[i], 2), 0
+            );
+            const maxWeightedDistance = Object.values(dimensionWeights).reduce((sum, w) => sum + w * 100, 0);
+            return 1 - Math.sqrt(distance) / Math.sqrt(maxWeightedDistance);
+        }
+
         function confidenceScore(user, career) {
             const similarity = hybridScore(user, career);
             const n = user.length;
-            
-            // Calcular intervalo de confianza
             const variance = user.reduce((sum, u, i) => 
                 sum + Math.pow(u - career[i], 2), 0) / n;
             const stdError = Math.sqrt(variance / n);
-            const confidence = 1 - (stdError / 10); // Normalizado
-            
+            const confidence = 1 - (stdError / 10);
             return {
                 similarity,
                 confidence,
@@ -1489,161 +1444,109 @@
             };
         }
 
-        // 11. Filtrado por Umbral Mínimo
-        function filterByThreshold(results, minScore = 0.5) {
-            return results.filter(([career, score]) => {
-                const normalizedScore = (score + 1) / 2; // [-1,1] -> [0,1]
-                return normalizedScore >= minScore;
-            });
+        function filterByThreshold(results, minScore = 0.4) {
+            return results.filter(([career, score]) => score >= minScore);
         }
 
-        // 12. Diversidad en Recomendaciones
-        function diversifiedRecommendations(userScores, topN = 5) {
-            const allScores = calculateCompatibleCareers(userScores);
+        function calculateAllCareerScores(userScores) {
+            const results = [];
+            const isAllOnes = userScores.every(score => score === 1);
+            const isAllTens = userScores.every(score => score === 10);
+            if (isAllOnes) {
+                for (const career in professionsMatrix) {
+                    results.push([career, 0.1]);
+                }
+                return results;
+            }
+            if (isAllTens) {
+                for (const career in professionsMatrix) {
+                    results.push([career, 1.0]);
+                }
+                return results;
+            }
+            for (const [career, careerScores] of Object.entries(professionsMatrix)) {
+                const hybrid = hybridScore(userScores, careerScores);
+                const weighted = weightedEuclidean(userScores, careerScores);
+                const confidence = confidenceScore(userScores, careerScores);
+                const finalScore = (hybrid * 0.6 + weighted * 0.3 + confidence.adjustedScore * 0.1);
+                results.push([career, finalScore]);
+            }
+            const filtered = filterByThreshold(results, 0.4);
+            filtered.sort((a, b) => b[1] - a[1]);
+            return filtered;
+        }
+
+        function diversifiedRecommendations(allScores, topN = 5) {
             const diverse = [];
             const usedFamilies = new Set();
-            
-            // Agrupar por familias de carreras
             const families = {
                 'ingenieria': /Ingeniería/i,
-                'medicina': /Medicina|Enfermería|Salud/i,
+                'medicina': /Medicina|Enfermería|Salud|Odontología|Kinesiología|Terapia|Nutrición|Obstetricia|Veterinaria/i,
                 'pedagogia': /Pedagogía|Educación/i,
-                'ciencias': /Licenciatura|Ciencias/i
+                'ciencias': /Licenciatura|Ciencias|Matemáticas|Física|Química|Biología|Geología|Astronomía|Estadística|Oceanografía|Meteorología|Arqueología|Antropología|Sociología|Filosofía|Historia|Letras|Lingüística|Música|Artes/i
             };
-            
             for (const [career, score] of allScores) {
                 if (diverse.length >= topN) break;
-                
-                const family = Object.keys(families).find(f => 
-                    families[f].test(career)
-                ) || 'otros';
-                
-                // Evitar saturación de una familia
+                const family = Object.keys(families).find(f => families[f].test(career)) || 'otros';
                 if (!usedFamilies.has(family) || diverse.length > topN - 2) {
                     diverse.push([career, score]);
                     usedFamilies.add(family);
                 }
             }
-            
             return diverse;
         }
 
-        // 13. Normalización de Scores de Usuario
-        function normalizeUserScores(scores) {
-            const mean = scores.reduce((a, b) => a + b) / scores.length;
-            const std = Math.sqrt(
-                scores.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / scores.length
-            );
-            
-            // Z-score normalization
-            return scores.map(s => 5 + ((s - mean) / std) * 2);
-        }
-
-        // 14. Detección de Respuestas Inconsistentes
-        function detectInconsistencies(answers) {
-            // Detectar si el usuario respondió al azar
-            const variance = calculateVariance(answers);
-            const isRandom = variance < 1.5; // Muy poca variación
-            
-            if (isRandom) {
-                console.warn('Patrón de respuestas inusual detectado');
-                return true;
-            }
-            return false;
-        }
-
-        function calculateVariance(arr) {
-            const mean = arr.reduce((a, b) => a + b) / arr.length;
-            return arr.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / arr.length;
-        }
-
-        // 15. Validación de Matriz de Profesiones
-        function validateProfessionsMatrix() {
-            const errors = [];
-            for (const [career, scores] of Object.entries(professionsMatrix)) {
-                if (scores.length !== 10) {
-                    errors.push(`${career}: dimensiones incorrectas`);
-                }
-                if (scores.some(s => s < 0 || s > 10)) {
-                    errors.push(`${career}: valores fuera de rango`);
-                }
-            }
-            return errors;
-        }
-
-        // 16. A/B Testing de Algoritmos
-        const algorithms = {
-            spearman: spearman,
-            pearson: pearson,
-            euclidean: euclideanSimilarity,
-            hybrid: hybridScore
-        };
-
-        function testAlgorithms(userScores) {
-            const results = {};
-            for (const [name, algo] of Object.entries(algorithms)) {
-                results[name] = Object.entries(professionsMatrix)
-                    .map(([career, scores]) => [career, algo(userScores, scores)])
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-            }
-            return results;
-        }
-
-        // Función principal para calcular carreras compatibles
         function calculateCompatibleCareers(userScores = null) {
             const scores = userScores || gameState.scores;
-            
-            // Normalizar scores del usuario
-            const normalizedScores = normalizeUserScores(scores);
-            
-            // Detectar inconsistencias
-            if (detectInconsistencies(scores)) {
-                console.warn('Se detectaron respuestas inconsistentes. Los resultados pueden no ser precisos.');
+            const allScores = calculateAllCareerScores(scores);
+            const isAllTens = scores.every(score => score === 10);
+            if (isAllTens) {
+                return allScores.slice(0, 10);
+            } else {
+                return diversifiedRecommendations(allScores, 5);
             }
-            
-            // Validar matriz de profesiones
-            const validationErrors = validateProfessionsMatrix();
-            if (validationErrors.length > 0) {
-                console.error('Errores en la matriz de profesiones:', validationErrors);
-            }
-            
-            // Calcular scores con diferentes algoritmos
-            const results = [];
-            for (const [career, careerScores] of Object.entries(professionsMatrix)) {
-                const hybrid = hybridScore(normalizedScores, careerScores);
-                const weighted = weightedEuclidean(normalizedScores, careerScores);
-                const confidence = confidenceScore(normalizedScores, careerScores);
-                
-                // Score final combinado
-                const finalScore = (hybrid * 0.6 + weighted * 0.3 + confidence.adjustedScore * 0.1);
-                
-                results.push([career, finalScore]);
-            }
-            
-            // Filtrar por umbral mínimo
-            const filteredResults = filterByThreshold(results, 0.4);
-            
-            // Aplicar diversidad
-            return diversifiedRecommendations(normalizedScores, 5);
         }
 
         function showResults() {
-            const careers = calculateCompatibleCareers();
+            const userScores = gameState.scores;
+            const isAllOnes = userScores.every(score => score === 1);
+            const isAllTens = userScores.every(score => score === 10);
+            let careers = calculateCompatibleCareers(userScores);
+            const specialMessageContainer = document.getElementById('special-message-container');
+            specialMessageContainer.innerHTML = '';
+            if (isAllTens) {
+                const specialMessage = document.createElement('div');
+                specialMessage.className = 'special-message all-tens-message';
+                specialMessage.innerHTML = `
+                    <h3><i class="fas fa-trophy"></i> ¡Felicidades! Perfil Excepcional Detectado</h3>
+                    <p>Tienes un perfil extraordinariamente equilibrado y destacas en todas las dimensiones evaluadas.</p>
+                    <p>Eres una persona versátil con potencial para tener éxito en cualquier carrera que elijas.</p>
+                    <p>Aquí te presentamos las 10 carreras más destacadas que podrían ser de tu interés:</p>
+                `;
+                specialMessageContainer.appendChild(specialMessage);
+                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+            } else if (isAllOnes) {
+                const specialMessage = document.createElement('div');
+                specialMessage.className = 'special-message all-ones-message';
+                specialMessage.innerHTML = `
+                    <h3><i class="fas fa-chart-line"></i> Áreas de Oportunidad Detectadas</h3>
+                    <p>Tu perfil actual muestra áreas de mejora en todas las dimensiones evaluadas.</p>
+                    <p>No te preocupes, esto es una excelente oportunidad para crecer y desarrollar nuevas habilidades.</p>
+                    <p>Te recomendamos explorar diferentes áreas para descubrir tus intereses y fortalezas:</p>
+                `;
+                specialMessageContainer.appendChild(specialMessage);
+                document.getElementById('results-title').textContent = 'Oportunidades de Desarrollo Profesional';
+            } else {
+                document.getElementById('results-title').textContent = 'Tus 5 Carreras Más Compatibles';
+            }
             const list = document.getElementById('career-list');
             list.innerHTML = '';
-            
-            careers.forEach(([name, corr], index) => {
-                // Convertir score a porcentaje (de [-1,1] a [0,100])
-                const pct = Math.max(0, Math.min(100, Math.round((corr + 1) * 50)));
-                
-                // Determinar nivel de ajuste
+            careers.forEach(([name, score], index) => {
+                const pct = Math.max(0, Math.min(100, Math.round((score + 1) * 50)));
                 const matchLevel = pct >= 80 ? 'Excelente' : 
                                   pct >= 70 ? 'Muy Bueno' : 
                                   pct >= 60 ? 'Bueno' : 'Aceptable';
-                
                 const emoji = pct >= 80 ? '🌟' : pct >= 70 ? '✨' : pct >= 60 ? '👍' : '👌';
-                
                 const item = document.createElement('li');
                 item.className = 'career-item';
                 item.style.animation = `fadeInUp 0.5s ${index * 0.1}s ease both`;
@@ -1660,12 +1563,15 @@
                 const scoreElement = item.querySelector('.career-score');
                 animateCounter(scoreElement, 0, pct, 1500);
             });
-            
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('results-container').style.display = 'block';
         }
 
         function animateCounter(element, start, end, duration) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                element.textContent = `${end}%`;
+                return;
+            }
             const range = end - start;
             const increment = range / (duration / 16);
             let current = start;
@@ -1682,7 +1588,7 @@
         function restartGame() {
             gameState = {
                 completedChallenges: [],
-                scores: new Array(10).fill(0),
+                scores: new Array(10).fill(5),
                 currentChallenge: null,
                 currentQuestions: [],
                 currentAnswers: []
