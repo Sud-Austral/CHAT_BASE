@@ -1471,58 +1471,13 @@
             filtered.sort((a, b) => b[1] - a[1]);
             return filtered;
         }
-        function diversifiedRecommendations2(allScores, topN = 5) {
-            const diverse = [];
-            const usedFamilies = new Set();
-            const families = {
-                'ingenieria': /Ingeniería/i,
-                'medicina': /Medicina|Enfermería|Salud|Odontología|Kinesiología|Terapia|Nutrición|Obstetricia|Veterinaria/i,
-                'pedagogia': /Pedagogía|Educación/i,
-                'ciencias': /Licenciatura|Ciencias|Matemáticas|Física|Química|Biología|Geología|Astronomía|Estadística|Oceanografía|Meteorología|Arqueología|Antropología|Sociología|Filosofía|Historia|Letras|Lingüística|Música|Artes/i
-            };
-            for (const [career, score] of allScores) {
-                if (diverse.length >= topN) break;
-                const family = Object.keys(families).find(f => families[f].test(career)) || 'otros';
-                if (!usedFamilies.has(family) || diverse.length > topN - 2) {
-                    diverse.push([career, score]);
-                    usedFamilies.add(family);
-                }
-            }
-            return diverse;
-        }
-
         function diversifiedRecommendations(allScores, topN = 5) {
-            const diverse = [];
-            const usedFamilies = new Set();
-            const families = {
-                'ingenieria': /Ingeniería/i,
-                'medicina': /Medicina|Enfermería|Salud|Odontología|Kinesiología|Terapia|Nutrición|Obstetricia|Veterinaria/i,
-                'pedagogia': /Pedagogía|Educación/i,
-                'ciencias': /Licenciatura|Ciencias|Matemáticas|Física|Química|Biología|Geología|Astronomía|Estadística|Oceanografía|Meteorología|Arqueología|Antropología|Sociología|Filosofía|Historia|Letras|Lingüística|Música|Artes/i
-            };
-
-            const leftovers = []; // Para guardar carreras que no se añaden por familia duplicada
-
-            for (const [career, score] of allScores) {
-                if (diverse.length >= topN) break;
-                const family = Object.keys(families).find(f => families[f].test(career)) || 'otros';
-                if (!usedFamilies.has(family)) {
-                    diverse.push([career, score]);
-                    usedFamilies.add(family);
-                } else {
-                    leftovers.push([career, score]);
-                }
-            }
-
-            // Si no llegamos a topN, completamos con los que quedaron
-            for (const item of leftovers) {
-                if (diverse.length >= topN) break;
-                diverse.push(item);
-            }
-
-            return diverse;
+            // Ordenamos de mayor a menor según el score
+            const sorted = allScores.sort((a, b) => b[1] - a[1]);
+            
+            // Tomamos solo los topN
+            return sorted.slice(0, topN);
         }
-
         function calculateCompatibleCareers(userScores = null) {
             const scores = userScores || gameState.scores;
             const allScores = calculateAllCareerScores(scores);
@@ -1542,8 +1497,9 @@
         }
 
         function showResults() {
-            const userScores = gameState.scores;
-            //const userScores = [2,2,2,2,1,2,2,2,1,2]
+            //const userScores = gameState.scores;
+            //const userScores=[ 1, 2, 3, 4, 5, 6, 7, 8, 9,10]
+            const userScores = [ 8.8, 6, 8, 6.4, 8, 6.6, 8, 8, 6.2, 6.6]
             const isAllOnes = userScores.every(score => score === 1);
             const isAllTens = userScores.every(score => score === 10);
             let careers = calculateCompatibleCareers(userScores);
