@@ -174,14 +174,14 @@
         }
         header p {
             font-size: 1rem;
-            max-width: 650px;
+            max-width: 800px;
             margin: 0 auto;
             opacity: 0.95;
             color: #d6eaf8;
             white-space: nowrap;
             overflow: hidden;
             border-right: 2px solid rgba(255, 255, 255, 0.7);
-            animation: typing 4s steps(60, end), blink 1s step-end infinite alternate;
+            animation: typing 5s steps(80, end), blink 1s step-end infinite alternate;
         }
         @keyframes typing {
             from { width: 0; }
@@ -345,7 +345,7 @@
             --color-2: #9b59b6;
             --color-3: #f39c12;
             --color-4: #2ecc71;
-            --color-5: #34495e;
+            --color-5: #e67e22;
             --color-6: #16a085;
             --color-7: #d35400;
             --color-8: #e67e22;
@@ -371,7 +371,7 @@
         .key-card[data-id="4"] i { color: var(--color-4); }
         .key-card[data-id="4"].completed i { color: #2ecc71; }
         .key-card[data-id="4"] .mini-progress-bar { background: var(--color-4); }
-        .key-card[data-id="5"] { --hover-glow: rgba(52, 73, 94, 0.6); }
+        .key-card[data-id="5"] { --hover-glow: rgba(230, 126, 34, 0.6); }
         .key-card[data-id="5"] i { color: var(--color-5); }
         .key-card[data-id="5"].completed i { color: #2ecc71; }
         .key-card[data-id="5"] .mini-progress-bar { background: var(--color-5); }
@@ -891,6 +891,94 @@
                 padding: 1.2rem;
             }
         }
+        /**/
+        .btn {
+            background: transparent;
+            border: 2px solid rgba(0, 200, 255, 0.65);
+            padding: 0.9rem 1.9rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #dff9ff;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            box-shadow: 0 0 12px rgba(0, 200, 255, 0.25), inset 0 0 14px rgba(0, 200, 255, 0.15);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        /* Glow exterior + efecto movimiento */
+        .btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #00eaff, #007bff);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: glowBorder 3s linear infinite;
+            opacity: .8;
+        }
+
+        @keyframes glowBorder {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Hover: desplazamiento sutil + brillo total */
+        .btn:hover {
+            transform: translateY(-4px) scale(1.04);
+            background: rgba(0, 180, 255, 0.12);
+            box-shadow:
+                0 0 18px rgba(0, 200, 255, 0.8),
+                0 0 40px rgba(0, 200, 255, 0.6);
+            color: #ffffff;
+        }
+
+        /* Active: feedback al hacer click */
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        #btnCarreraDetalle .btn {
+            border-color: rgba(255, 215, 0, 0.7);
+            box-shadow: 0 0 14px rgba(255, 215, 0, 0.3);
+        }
+
+        #btnCarreraDetalle .btn:hover {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        /* Normaliza los botones dentro de enlaces */
+        .results-container a {
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        /* Asegura alineación uniforme */
+        .results-container a button.btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0; /* Elimina margen adicional del navegador */
+        }
+
+        /* Arregla el desbalance del spacing */
+        #results-container .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+
 
     </style>
 </head>
@@ -925,7 +1013,11 @@
                 <h2 id="results-title">Tus 5 Carreras Más Compatibles</h2>
                 <div id="special-message-container"></div>
                 <ul class="career-list" id="career-list" role="list"></ul>
-                <div style="text-align: center; margin-top: 1.8rem;">
+                <!--
+                <div style="display: flex; justify-content: center; gap: 0.8rem; margin-top: 1.8rem; flex-wrap: wrap;">
+                
+                <div class="result-buttons">
+
                     <button class="btn" id="restart-game">Reiniciar test</button>
                     <a id="btnCarreraDetalle" target="_blank" href="../profesional_ia/app_final3.html">
                     <button class="btn">Ver Carrera Detalle</button>
@@ -933,6 +1025,20 @@
                     <a target="_blank" href="../profesional_ia/app_final3.html">
                     <button class="btn">Portal Carreras</button></a>
                 </div>
+                    -->
+                <div class="result-buttons">
+                    <button class="btn" id="restart-game">Reiniciar test</button>
+
+                    <a id="btnCarreraDetalle" class="btn" target="_blank" href="../profesional_ia/app_final4.html">
+                        Ver Carrera Detalle
+                    </a>
+
+                    <a class="btn" target="_blank" href="../profesional_ia/app_final4.html">
+                        Portal Carreras
+                    </a>
+
+                </div>
+
             </section>
         </main>
         <div class="challenge-modal" id="challenge-modal" role="dialog" aria-modal="true" aria-labelledby="challenge-title">
@@ -958,7 +1064,7 @@
             { id: 2, name: "Innovación y Adaptación Digital", icon: "fa-robot", color: "#9b59b6" },
             { id: 3, name: "Tolerancia al Riesgo", icon: "fa-chart-line", color: "#f39c12" },
             { id: 4, name: "Preferencia por el Entorno", icon: "fa-mountain", color: "#2ecc71" },
-            { id: 5, name: "Liderazgo", icon: "fa-user-tie", color: "#34495e" },
+            { id: 5, name: "Liderazgo", icon: "fa-user-tie", color: "#e67e22" },
             { id: 6, name: "Aprendizaje Continuo", icon: "fa-book", color: "#16a085" },
             { id: 7, name: "Orientación al Detalle", icon: "fa-search", color: "#d35400" },
             { id: 8, name: "Creatividad", icon: "fa-palette", color: "#e67e22" },
@@ -1430,7 +1536,7 @@
         }
         function setHrefWithLista(listaCarrera) {
             const enlace = document.querySelector('#btnCarreraDetalle');
-            const baseUrl = "../profesional_ia/app_final3.html";
+            const baseUrl = "../profesional_ia/app_final4.html";
             const query = `?lista=${encodeURIComponent(JSON.stringify(listaCarrera))}`;
             enlace.href = baseUrl + query;
         }
