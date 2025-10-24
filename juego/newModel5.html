@@ -1542,8 +1542,8 @@
         }
 
         function showResults() {
-            //const userScores = gameState.scores;
-            const userScores = [2,2,2,2,1,2,2,2,1,2]
+            const userScores = gameState.scores;
+            //const userScores = [2,2,2,2,1,2,2,2,1,2]
             const isAllOnes = userScores.every(score => score === 1);
             const isAllTens = userScores.every(score => score === 10);
             let careers = calculateCompatibleCareers(userScores);

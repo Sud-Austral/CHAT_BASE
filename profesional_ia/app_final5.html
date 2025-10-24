@@ -654,6 +654,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="professions.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
 
@@ -664,44 +665,7 @@
         const lista = listaParam ? JSON.parse(decodeURIComponent(listaParam)) : [];
         
         // Datos de profesiones (completos)
-        const allProfessionsData = [
-            {
-                id: 1,
-                name: "Agronomía",
-                category: "Universitaria",
-                sector: "Agricultura",
-                employability: 91,
-                salary: 1600000,
-                currentDemand: 1200,
-                projectedDemand: 1500,
-                currentSupply: 400,
-                automation: 4,
-                humanSkills: 7,
-                integration: 6,
-                riskCategory: "Expansión y crecimiento",
-                recommendation: "RECOMENDADA: Agroexportación frutas vinos Chile. Demanda creciente con IA en precisión.",
-                curriculumChanges: "Incorporar: Agricultura precisión sensores IoT, Análisis suelos IA, Modelado rendimientos ML, Drones agro, Sostenibilidad agrícola digital."
-            },
-            {
-                id: 2,
-                name: "Arqueología",
-                category: "Universitaria",
-                sector: "Cultura",
-                employability: 78,
-                salary: 1100000,
-                currentDemand: 150,
-                projectedDemand: 180,
-                currentSupply: 50,
-                automation: 3,
-                humanSkills: 8,
-                integration: 5,
-                riskCategory: "Expansión y crecimiento",
-                recommendation: "CON PRECAUCIÓN: Preservación patrimonio cultural. IA en arqueología digital acelera análisis pero interpretación humana esencial.",
-                curriculumChanges: "Incorporar: Arqueología computacional, Modelado 3D sitios ML, Análisis artefactos IA, VR patrimonio cultural, Ética patrimonial digital."
-            },
-            // Aquí deberías incluir el resto de profesiones
-        ];
-
+       
         // Aplicar filtro temporal si existe la lista
         let professionsData = lista.length > 0 
             ? allProfessionsData.filter(profession => lista.includes(profession.id))
