@@ -1471,7 +1471,7 @@
             filtered.sort((a, b) => b[1] - a[1]);
             return filtered;
         }
-        function diversifiedRecommendations(allScores, topN = 5) {
+        function diversifiedRecommendations(allScores, topN = 10) {
             // Ordenamos de mayor a menor según el score
             const sorted = allScores.sort((a, b) => b[1] - a[1]);
             
@@ -1486,7 +1486,7 @@
             if (isAllTens) {
                 return allScores.slice(0, 10);
             } else {
-                return diversifiedRecommendations(allScores, 5);
+                return diversifiedRecommendations(allScores, 10);
             }
         }
         function setHrefWithLista(listaCarrera) {
