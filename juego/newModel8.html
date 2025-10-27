@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test vocacional interactivo para descubrir carreras compatibles con tu perfil personal.">
+    <meta name="author" content="Carrera Quest">
+    <meta name="keywords" content="orientación vocacional, test de carrera, perfil profesional, elección de carrera">
+    <title>Carrera Quest: Descubre tu Perfil Vocacional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        /* === ESTILOS BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0b2a, #1a1a4c, #0c1f33);
+            background-size: 400% 400%;
+            color: #f0f4f8;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 1.5rem 0;
+            animation: gradientShift 20s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            body {
+                animation: none;
+            }
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .background-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .layer-1 { background: radial-gradient(circle at 20% 30%, rgba(52, 152, 219, 0.15), transparent 60%); }
+        .layer-2 { background: radial-gradient(circle at 80% 70%, rgba(46, 204, 113, 0.1), transparent 60%); }
+        .layer-3 { background: radial-gradient(circle at 50% 20%, rgba(241, 196, 15, 0.1), transparent 70%); }
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .star {
+            background: #fff;
+            box-shadow: 0 0 8px #fff;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+        .bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: floatBubble var(--duration, 15s) infinite linear;
+        }
+        .nebula {
+            background: radial-gradient(circle, rgba(91, 192, 222, 0.08), transparent 70%);
+            animation: drift var(--duration, 40s) infinite linear;
+        }
+        .meteor {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            border-radius: 0 0 2px 2px;
+            transform: rotate(-45deg);
+            animation: meteorFall var(--duration, 8s) infinite linear;
+            opacity: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, -100px); }
+        }
+        @keyframes meteorFall {
+            0% { transform: translateX(-100px) translateY(-100px) rotate(-45deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw) translateY(100vh) rotate(-45deg); opacity: 0; }
+        }
+        .cursor-trail {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            background: rgba(52, 152, 219, 0.7);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.8);
+            transform: translate(-50%, -50%);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 3;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.4rem;
+            margin-bottom: 0.7rem;
+            background: linear-gradient(90deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: titleGradient 8s ease infinite;
+            position: relative;
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+        }
+        @keyframes titleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        header p {
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+            color: #d6eaf8;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid rgba(255, 255, 255, 0.7);
+            animation: typing 5s steps(80, end), blink 1s step-end infinite alternate;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        .game-container {
+            background: rgba(10, 15, 35, 0.65);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .game-container::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            background-size: 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: containerGlow 12s linear infinite;
+            opacity: 0.6;
+            filter: blur(20px);
+        }
+        @keyframes containerGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        .game-container h2 {
+            text-align: center;
+            margin-bottom: 1.4rem;
+            font-size: 1.6rem;
+            color: #f1c40f;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+        }
+        .progress-container {
+            margin: 1.5rem 0;
+        }
+        .progress-bar {
+            height: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .progress {
+            height: 100%;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.2, 0.8, 0.4, 1);
+            position: relative;
+        }
+        .progress.rainbow {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 200% 100%;
+            animation: rainbow 3s linear infinite;
+        }
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            opacity: 0.95;
+            color: #e0f7fa;
+            font-weight: 600;
+        }
+        .key-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+        .key-card {
+            background: linear-gradient(145deg, rgba(20, 25, 55, 0.8), rgba(10, 15, 40, 0.9));
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 1.4rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            border: 2px solid transparent;
+        }
+        .key-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+            opacity: 0.4;
+        }
+        .key-card:hover {
+            transform: translateY(-8px) rotateX(6deg) rotateY(4deg);
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.4),
+                0 0 18px var(--hover-glow, rgba(52, 152, 219, 0.5));
+            z-index: 10;
+        }
+        .key-card.completed {
+            animation: pulseGlow 2s infinite alternate;
+            box-shadow:
+                0 0 25px rgba(46, 204, 113, 0.6),
+                0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(46, 204, 113, 0.7);
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); }
+            to { box-shadow: 0 0 30px rgba(46, 204, 113, 0.8); }
+        }
+        .key-card i {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            transition: transform 0.4s ease, color 0.4s ease;
+            display: block;
+        }
+        .key-card:hover i {
+            transform: scale(1.15) rotate(8deg);
+        }
+        .key-card h3 {
+            font-size: 0.92rem;
+            color: #f0f4f8;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            text-shadow: 0 0 5px currentColor;
+        }
+        .mini-progress {
+            height: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            margin-top: 0.9rem;
+            overflow: hidden;
+        }
+        .mini-progress-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+        :root {
+            --color-0: #3498db;
+            --color-1: #e74c3c;
+            --color-2: #9b59b6;
+            --color-3: #f39c12;
+            --color-4: #2ecc71;
+            --color-5: #e67e22;
+            --color-6: #16a085;
+            --color-7: #d35400;
+            --color-8: #e67e22;
+            --color-9: #c0392b;
+        }
+        .key-card[data-id="0"] { --hover-glow: rgba(52, 152, 219, 0.6); }
+        .key-card[data-id="0"] i { color: var(--color-0); }
+        .key-card[data-id="0"].completed i { color: #2ecc71; }
+        .key-card[data-id="0"] .mini-progress-bar { background: var(--color-0); }
+        .key-card[data-id="1"] { --hover-glow: rgba(231, 76, 60, 0.6); }
+        .key-card[data-id="1"] i { color: var(--color-1); }
+        .key-card[data-id="1"].completed i { color: #2ecc71; }
+        .key-card[data-id="1"] .mini-progress-bar { background: var(--color-1); }
+        .key-card[data-id="2"] { --hover-glow: rgba(155, 89, 182, 0.6); }
+        .key-card[data-id="2"] i { color: var(--color-2); }
+        .key-card[data-id="2"].completed i { color: #2ecc71; }
+        .key-card[data-id="2"] .mini-progress-bar { background: var(--color-2); }
+        .key-card[data-id="3"] { --hover-glow: rgba(243, 156, 18, 0.6); }
+        .key-card[data-id="3"] i { color: var(--color-3); }
+        .key-card[data-id="3"].completed i { color: #2ecc71; }
+        .key-card[data-id="3"] .mini-progress-bar { background: var(--color-3); }
+        .key-card[data-id="4"] { --hover-glow: rgba(46, 204, 113, 0.6); }
+        .key-card[data-id="4"] i { color: var(--color-4); }
+        .key-card[data-id="4"].completed i { color: #2ecc71; }
+        .key-card[data-id="4"] .mini-progress-bar { background: var(--color-4); }
+        .key-card[data-id="5"] { --hover-glow: rgba(230, 126, 34, 0.6); }
+        .key-card[data-id="5"] i { color: var(--color-5); }
+        .key-card[data-id="5"].completed i { color: #2ecc71; }
+        .key-card[data-id="5"] .mini-progress-bar { background: var(--color-5); }
+        .key-card[data-id="6"] { --hover-glow: rgba(22, 160, 133, 0.6); }
+        .key-card[data-id="6"] i { color: var(--color-6); }
+        .key-card[data-id="6"].completed i { color: #2ecc71; }
+        .key-card[data-id="6"] .mini-progress-bar { background: var(--color-6); }
+        .key-card[data-id="7"] { --hover-glow: rgba(211, 84, 0, 0.6); }
+        .key-card[data-id="7"] i { color: var(--color-7); }
+        .key-card[data-id="7"].completed i { color: #2ecc71; }
+        .key-card[data-id="7"] .mini-progress-bar { background: var(--color-7); }
+        .key-card[data-id="8"] { --hover-glow: rgba(230, 126, 34, 0.6); }
+        .key-card[data-id="8"] i { color: var(--color-8); }
+        .key-card[data-id="8"].completed i { color: #2ecc71; }
+        .key-card[data-id="8"] .mini-progress-bar { background: var(--color-8); }
+        .key-card[data-id="9"] { --hover-glow: rgba(192, 57, 43, 0.6); }
+        .key-card[data-id="9"] i { color: var(--color-9); }
+        .key-card[data-id="9"].completed i { color: #2ecc71; }
+        .key-card[data-id="9"] .mini-progress-bar { background: var(--color-9); }
+        .challenge-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .challenge-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .challenge-content {
+            background: linear-gradient(145deg, rgba(15, 20, 45, 0.9), rgba(25, 35, 70, 0.95));
+            border-radius: 20px;
+            padding: 1.8rem;
+            max-width: 700px;
+            width: 94%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+            color: #f0f4f8;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                0 20px 50px rgba(0, 0, 0, 0.6);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .challenge-modal.active .challenge-content {
+            transform: scale(1);
+        }
+        .challenge-content::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #00ff99);
+            background-size: 400%;
+            border-radius: 22px;
+            z-index: -1;
+            animation: modalGlow 10s linear infinite;
+            opacity: 0.7;
+            filter: blur(15px);
+        }
+        @keyframes modalGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #f0f4f8;
+            background: rgba(20, 30, 60, 0.7);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+        .close-btn:hover {
+            background: rgba(231, 76, 60, 0.9);
+            transform: rotate(180deg) scale(1.1);
+            color: white;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+        }
+        .question-container {
+            margin-bottom: 1.6rem;
+            background: rgba(20, 30, 60, 0.55);
+            padding: 1.4rem;
+            border-radius: 12px;
+            border-left: 4px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .question-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: questionShimmer 2s infinite;
+            opacity: 0;
+        }
+        .question-container.active::after {
+            opacity: 0.3;
+        }
+        @keyframes questionShimmer {
+            100% { transform: translateX(100%); }
+        }
+        .question-container.active {
+            border-left-color: #3498db;
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.35);
+        }
+        .question {
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #f0f4f8;
+            opacity: 0;
+            animation: revealText 0.8s forwards;
+        }
+        @keyframes revealText {
+            to { opacity: 1; }
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .option {
+            background: rgba(30, 40, 80, 0.65);
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            border: 1px solid transparent;
+            color: #e0e7ff;
+            position: relative;
+            overflow: hidden;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(52, 152, 219, 0.2);
+            z-index: -1;
+            transition: width 0.4s ease;
+        }
+        .option:hover::before {
+            width: 100%;
+        }
+        .option:hover {
+            transform: translateX(5px);
+            border-color: rgba(52, 152, 219, 0.5);
+            color: white;
+        }
+        .option.selected {
+            background: rgba(52, 152, 219, 0.4);
+            border-left: 4px solid #3498db;
+            box-shadow: 0 0 12px rgba(52, 152, 219, 0.5);
+            color: white;
+        }
+        .btn {
+            background: transparent;
+            border: 2px solid rgba(0, 200, 255, 0.65);
+            padding: 0.9rem 1.9rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #dff9ff;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            box-shadow: 0 0 12px rgba(0, 200, 255, 0.25), inset 0 0 14px rgba(0, 200, 255, 0.15);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+        .btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #00eaff, #007bff);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: glowBorder 3s linear infinite;
+            opacity: .8;
+        }
+        @keyframes glowBorder {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        .btn:hover {
+            transform: translateY(-4px) scale(1.04);
+            background: rgba(0, 180, 255, 0.12);
+            box-shadow:
+                0 0 18px rgba(0, 200, 255, 0.8),
+                0 0 40px rgba(0, 200, 255, 0.6);
+            color: #ffffff;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-submit {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+        .btn-submit::before {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+        .btn-submit:hover::before {
+            background: linear-gradient(45deg, #2ecc71, #58d68d);
+        }
+        #show-results {
+            animation: bouncePulse 2s infinite;
+        }
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .results-container {
+            display: none;
+            background: rgba(10, 15, 35, 0.7);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: slideIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .results-container h2 {
+            text-align: center;
+            margin-bottom: 1.6rem;
+            color: #f1c40f;
+            font-size: 1.7rem;
+            text-shadow: 0 0 12px rgba(241, 196, 15, 0.7);
+        }
+        .career-list {
+            list-style: none;
+        }
+        .career-item {
+            background: rgba(20, 30, 60, 0.65);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        .career-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: careerShimmer 2s infinite;
+            opacity: 0;
+        }
+        .career-item:hover::before {
+            opacity: 0.4;
+        }
+        @keyframes careerShimmer {
+            100% { transform: translateX(100%); }
+        }
+        .career-item:hover {
+            transform: translateX(6px);
+            border-left-color: #f1c40f;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.25);
+        }
+        .career-name {
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: #f0f4f8;
+        }
+        .career-score {
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+            color: white;
+            padding: 0.45rem 0.9rem;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 65px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            font-size: 0.95rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: #d6eaf8;
+            position: relative;
+        }
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(241, 196, 15, 0.9), transparent);
+            animation: wave 3s infinite linear;
+        }
+        @keyframes wave {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #f0f;
+            pointer-events: none;
+            z-index: 1001;
+            animation: confetti-fall 5s linear forwards;
+        }
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleEffect {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        .special-message {
+            text-align: center;
+            margin: 1.8rem 0;
+            padding: 1.3rem;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        .all-tens-message {
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.3));
+            border: 2px solid rgba(46, 204, 113, 0.5);
+            color: #e8f8f5;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+        }
+        .all-ones-message {
+            background: linear-gradient(145deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.3));
+            border: 2px solid rgba(231, 76, 60, 0.5);
+            color: #fdecea;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.3);
+        }
+        .low-variance-message {
+            background: linear-gradient(145deg, rgba(241, 196, 15, 0.2), rgba(230, 126, 34, 0.3));
+            border: 2px solid rgba(241, 196, 15, 0.5);
+            color: #fef9e7;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+        }
+        .no-match-message {
+            background: linear-gradient(145deg, rgba(52, 152, 219, 0.2), rgba(41, 128, 185, 0.3));
+            border: 2px solid rgba(52, 152, 219, 0.5);
+            color: #ebf5fb;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+        /* === MEDIA QUERIES === */
+        @media (max-width: 768px) {
+            body {
+                padding: 1.2rem 0;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            header p {
+                font-size: 0.95rem;
+                max-width: 90%;
+            }
+            .game-container, .results-container {
+                padding: 1.4rem;
+            }
+            .game-container h2, .results-container h2 {
+                font-size: 1.45rem;
+            }
+            .key-container {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+            .key-card {
+                padding: 1.2rem;
+                border-radius: 14px;
+            }
+            .key-card h3 {
+                font-size: 0.88rem;
+            }
+            .key-card i {
+                font-size: 1.6rem;
+            }
+            .challenge-content {
+                padding: 1.4rem;
+                max-height: 85vh;
+            }
+            .question {
+                font-size: 1rem;
+            }
+            .option {
+                padding: 0.9rem;
+                font-size: 0.95rem;
+            }
+            .btn {
+                padding: 0.8rem 1.4rem;
+                font-size: 0.95rem;
+            }
+            .career-item {
+                padding: 1rem;
+            }
+            .career-name {
+                font-size: 1rem;
+            }
+            footer {
+                margin-top: 2.5rem;
+                font-size: 0.85rem;
+            }
+        }
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+            header p {
+                font-size: 0.9rem;
+            }
+            .key-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .game-container h2, .results-container h2 {
+                font-size: 1.35rem;
+            }
+            .progress-bar {
+                height: 10px;
+                border-radius: 5px;
+            }
+            .progress-text {
+                font-size: 0.9rem;
+            }
+            .challenge-content {
+                padding: 1.2rem;
+            }
+            .close-btn {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 1.2rem;
+            }
+            .btn {
+                padding: 0.75rem 1.3rem;
+                font-size: 0.9rem;
+            }
+            .career-score {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+                min-width: 60px;
+            }
+            .special-message {
+                font-size: 1rem;
+                padding: 1.1rem;
+            }
+        }
+        @media (max-width: 360px) {
+            .key-container {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.55rem;
+            }
+            .game-container, .results-container {
+                padding: 1.2rem;
+            }
+        }
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .result-buttons a {
+            display: inline-block;
+            text-decoration: none;
+        }
+        .result-buttons a button.btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-layers" aria-hidden="true">
+        <div class="layer layer-1"></div>
+        <div class="layer layer-2"></div>
+        <div class="layer layer-3"></div>
+    </div>
+    <div class="particles-container" id="particles" aria-hidden="true"></div>
+    <div class="cursor-trail" id="cursor-trail" aria-hidden="true"></div>
+    <div class="container">
+        <header>
+            <h1>Carrera Quest: Descubre tu Perfil Vocacional</h1>
+            <p>Responde 2 preguntas por cada una de las 10 dimensiones para construir tu perfil único y encontrar tus carreras ideales.</p>
+        </header>
+        <main>
+            <section class="game-container" id="game-container" aria-live="polite">
+                <h2>Dimensiones de tu Perfil</h2>
+                <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="progress-aria">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress-bar"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Perfil: 0/10 dimensiones registradas</p>
+                </div>
+                <div class="key-container" id="key-container" role="list"></div>
+                <div style="text-align: center; margin-top: 1.8rem; display: none;" id="complete-btn-container">
+                    <button class="btn btn-submit" id="show-results">Ver mis carreras compatibles</button>
+                </div>
+            </section>
+            <section class="results-container" id="results-container" aria-live="polite">
+                <h2 id="results-title">Tus 10 Carreras Más Compatibles</h2>
+                <div id="special-message-container"></div>
+                <ul class="career-list" id="career-list" role="list"></ul>
+                <div class="result-buttons">
+                    <button class="btn" id="restart-game">Reiniciar test</button>
+                    <a id="btnCarreraDetalle" class="btn" target="_blank" href="../profesional_ia/app_final8.html">
+                        Ver Carrera Detalle
+                    </a>
+                    <a class="btn" target="_blank" href="../profesional_ia/app_final8.html">
+                        Portal Carreras
+                    </a>
+                </div>
+            </section>
+        </main>
+        <div class="challenge-modal" id="challenge-modal" role="dialog" aria-modal="true" aria-labelledby="challenge-title">
+            <div class="challenge-content">
+                <button class="close-btn" id="close-modal" aria-label="Cerrar modal">&times;</button>
+                <h2 id="challenge-title">Dimensión</h2>
+                <div id="questions-container" role="form"></div>
+                <button class="btn btn-submit" id="submit-challenge">Registrar respuestas</button>
+            </div>
+        </div>
+        <footer>
+            <p>&copy; 2025 Carrera Quest – Orientación Vocacional Profesional</p>
+        </footer>
+    </div>
+    <script src="base.js"></script>
+    <script src="basePreguntas.js"></script>
+    <script>
+        // === MATRIZ DE CARRERAS ===
+        // === BANCO DE PREGUNTAS PSICOMÉTRICAS ===
+        const dimensions = [
+            { id: 0, name: "Aptitud Técnica y Analítica", icon: "fa-calculator", color: "#3498db" },
+            { id: 1, name: "Empatía e Interacción Social", icon: "fa-users", color: "#e74c3c" },
+            { id: 2, name: "Innovación y Adaptación Digital", icon: "fa-robot", color: "#9b59b6" },
+            { id: 3, name: "Tolerancia al Riesgo", icon: "fa-chart-line", color: "#f39c12" },
+            { id: 4, name: "Preferencia por el Entorno", icon: "fa-mountain", color: "#2ecc71" },
+            { id: 5, name: "Liderazgo", icon: "fa-user-tie", color: "#e67e22" },
+            { id: 6, name: "Aprendizaje Continuo", icon: "fa-book", color: "#16a085" },
+            { id: 7, name: "Orientación al Detalle", icon: "fa-search", color: "#d35400" },
+            { id: 8, name: "Creatividad", icon: "fa-palette", color: "#e67e22" },
+            { id: 9, name: "Impacto Social", icon: "fa-hands-helping", color: "#c0392b" }
+        ];
+
+        // Pesos base diferenciados (basados en entropía y expertos)
+        const dimensionWeights = {
+            0: 1.2, // Alta relevancia técnica
+            1: 1.1,
+            2: 1.3, // Alta variabilidad digital
+            3: 1.0,
+            4: 0.9,
+            5: 1.1,
+            6: 1.2,
+            7: 1.0,
+            8: 1.2,
+            9: 1.0
+        };
+
+        let gameState = {
+            completedChallenges: [],
+            scores: new Array(10).fill(5),
+            currentChallenge: null,
+            currentQuestions: [],
+            currentAnswers: []
+        };
+
+        // === FUNCIONES AUXILIARES ===
+        function validateScores(scores) {
+            return scores.map(s => Math.max(1, Math.min(10, s)));
+        }
+
+        function createParticles() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.classList.add('particle', 'star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                container.appendChild(star);
+            }
+            for (let i = 0; i < 30; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('particle', 'bubble');
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                const size = Math.random() * 20 + 5;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.setProperty('--duration', `${Math.random() * 10 + 15}s`);
+                container.appendChild(bubble);
+            }
+            for (let i = 0; i < 3; i++) {
+                const neb = document.createElement('div');
+                neb.classList.add('particle', 'nebula');
+                neb.style.left = `${Math.random() * 100}%`;
+                neb.style.top = `${Math.random() * 100}%`;
+                neb.style.width = `${Math.random() * 300 + 200}px`;
+                neb.style.height = `${Math.random() * 300 + 200}px`;
+                neb.style.setProperty('--duration', `${Math.random() * 30 + 30}s`);
+                container.appendChild(neb);
+            }
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const meteor = document.createElement('div');
+                    meteor.classList.add('particle', 'meteor');
+                    meteor.style.left = `${-20 + Math.random() * 20}%`;
+                    meteor.style.top = `${-20 + Math.random() * 20}%`;
+                    meteor.style.setProperty('--duration', `${Math.random() * 6 + 6}s`);
+                    container.appendChild(meteor);
+                    setTimeout(() => meteor.remove(), 10000);
+                }, i * 8000);
+            }
+        }
+
+        function createCursorTrail() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const trail = document.getElementById('cursor-trail');
+            let posX = 0, posY = 0;
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            function animate() {
+                const distX = mouseX - posX;
+                const distY = mouseY - posY;
+                posX += distX / 8;
+                posY += distY / 8;
+                trail.style.left = `${posX}px`;
+                trail.style.top = `${posY}px`;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.key-card') || e.target.closest('.option') || e.target.closest('.btn')) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                const rect = e.target.closest('.key-card,.option,.btn').getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+
+        function init() {
+            createParticles();
+            createCursorTrail();
+            renderKeys();
+            setupEventListeners();
+        }
+
+        function renderKeys() {
+            const container = document.getElementById('key-container');
+            container.innerHTML = '';
+            dimensions.forEach((dim, index) => {
+                const card = document.createElement('div');
+                card.className = gameState.completedChallenges.includes(dim.id) ? 'key-card completed' : 'key-card';
+                card.dataset.id = dim.id;
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                const isCompleted = gameState.completedChallenges.includes(dim.id);
+                const progressWidth = isCompleted ? '100%' : '0%';
+                card.innerHTML = `
+                    <i class="fas ${dim.icon}" aria-hidden="true"></i>
+                    <h3>${dim.name}</h3>
+                    <div class="mini-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${isCompleted ? 100 : 0}">
+                        <div class="mini-progress-bar" style="width: ${progressWidth};"></div>
+                    </div>
+                `;
+                card.style.animation = `fadeInUp 0.5s ${index * 0.1}s ease both`;
+                card.addEventListener('click', () => {
+                    if (!isCompleted) openChallenge(dim.id);
+                });
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (!isCompleted) openChallenge(dim.id);
+                    }
+                });
+                container.appendChild(card);
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (gameState.completedChallenges.length / 10) * 100;
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            document.getElementById('progress-aria').setAttribute('aria-valuenow', gameState.completedChallenges.length);
+            if (progress === 100) {
+                progressBar.classList.add('rainbow');
+            } else {
+                progressBar.classList.remove('rainbow');
+            }
+            document.getElementById('progress-text').textContent = `Perfil: ${gameState.completedChallenges.length}/10 dimensiones registradas`;
+            if (gameState.completedChallenges.length === 10) {
+                document.getElementById('complete-btn-container').style.display = 'block';
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    createConfetti();
+                }
+            }
+        }
+
+        function openChallenge(id) {
+            if (gameState.completedChallenges.includes(id)) return;
+            gameState.currentChallenge = id;
+            gameState.currentQuestions = selectRandomQuestions(gameState.currentChallenge);
+            gameState.currentAnswers = [null, null];
+            document.getElementById('challenge-title').textContent = dimensions[id].name;
+            renderQuestions();
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            gameState.currentQuestions.forEach((q, idx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-container';
+                if (idx === 0) qDiv.classList.add('active');
+                const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+                const optionsHtml = shuffledOptions.map((opt, i) => `
+                    <div class="option" data-question="${idx}" data-option-value="${opt.value}" role="radio" tabindex="0" aria-checked="false">
+                        ${opt.text}
+                    </div>
+                `).join('');
+                qDiv.innerHTML = `
+                    <div class="question">Pregunta ${idx + 1}: ${q.question}</div>
+                    <div class="options" role="radiogroup">${optionsHtml}</div>
+                `;
+                container.appendChild(qDiv);
+            });
+            container.addEventListener('click', handleOptionClick);
+            container.addEventListener('keydown', handleOptionKeydown);
+        }
+
+        function handleOptionClick(e) {
+            const option = e.target.closest('.option');
+            if (!option) return;
+            selectOption(option);
+        }
+
+        function handleOptionKeydown(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const option = e.target.closest('.option');
+                if (option) {
+                    e.preventDefault();
+                    selectOption(option);
+                }
+            }
+        }
+
+        function selectOption(option) {
+            const qIdx = parseInt(option.dataset.question);
+            const value = parseInt(option.dataset.optionValue);
+            document.querySelectorAll(`.option[data-question="${qIdx}"]`).forEach(el => {
+                el.classList.remove('selected');
+                el.setAttribute('aria-checked', 'false');
+            });
+            option.classList.add('selected');
+            option.setAttribute('aria-checked', 'true');
+            gameState.currentAnswers[qIdx] = value;
+            document.querySelectorAll('.question-container').forEach(q => q.classList.remove('active'));
+            const nextQuestion = document.querySelectorAll('.question-container')[qIdx + 1];
+            if (nextQuestion) {
+                nextQuestion.classList.add('active');
+            } else {
+                document.querySelectorAll('.question-container')[qIdx].classList.add('active');
+            }
+        }
+
+        function selectRandomQuestions(dimensionIndex) {
+            const dimensionQuestions = questionsBank[dimensionIndex];
+            const shuffled = [...dimensionQuestions].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 2);
+        }
+
+        function submitChallenge() {
+            if (gameState.currentAnswers.some(a => a === null)) {
+                alert('Por favor, responde todas las preguntas.');
+                return;
+            }
+            const avgScore = (gameState.currentAnswers[0] + gameState.currentAnswers[1]) / 2;
+            gameState.scores[gameState.currentChallenge] = avgScore;
+            gameState.completedChallenges.push(gameState.currentChallenge);
+            const modal = document.getElementById('challenge-modal');
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                renderKeys();
+                showCompletionNotification(dimensions[gameState.currentChallenge].name);
+            }, 400);
+        }
+
+        function showCompletionNotification(dimensionName) {
+            const notification = document.createElement('div');
+            notification.setAttribute('role', 'alert');
+            notification.innerHTML = `
+                <i class="fas fa-user-check" style="color: #2ecc71; font-size: 1.8rem; margin-bottom: 8px;" aria-hidden="true"></i>
+                <h3 style="margin: 0 0 6px; color: white;">¡Perfil actualizado!</h3>
+                <p style="margin: 0; color: #e8f4fc;">Tu dimensión "${dimensionName}" ha sido registrada</p>
+            `;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.background = 'rgba(30, 40, 70, 0.95)';
+            notification.style.color = 'white';
+            notification.style.padding = '16px 20px';
+            notification.style.borderRadius = '12px';
+            notification.style.zIndex = '2000';
+            notification.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.4)';
+            notification.style.maxWidth = '300px';
+            notification.style.borderLeft = '4px solid #2ecc71';
+            notification.style.animation = 'slideInRight 0.5s ease';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        function createConfetti() {
+            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+            const confettiCount = 150;
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.setAttribute('aria-hidden', 'true');
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 8 + 4;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                const duration = Math.random() * 3 + 2;
+                confetti.style.animationDuration = `${duration}s`;
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    document.body.removeChild(confetti);
+                }, duration * 1000);
+            }
+        }
+
+        // === FUNCIONES DE SIMILITUD CORREGIDAS Y MEJORADAS ===
+
+        function getRanks(arr) {
+            if (arr.every(v => v === arr[0])) return arr.map(() => (arr.length + 1) / 2);
+            const sorted = [...arr].sort((a, b) => a - b);
+            const rankMap = {};
+            let i = 0;
+            while (i < sorted.length) {
+                let j = i;
+                while (j < sorted.length && sorted[j] === sorted[i]) j++;
+                const avgRank = (i + j + 1) / 2;
+                for (let k = i; k < j; k++) {
+                    rankMap[sorted[k]] = avgRank;
+                }
+                i = j;
+            }
+            return arr.map(val => rankMap[val]);
+        }
+
+        function spearman(x, y) {
+            const rankX = getRanks(x);
+            const rankY = getRanks(y);
+            let d2 = 0;
+            for (let i = 0; i < rankX.length; i++) {
+                const d = rankX[i] - rankY[i];
+                d2 += d * d;
+            }
+            const n = rankX.length;
+            return n > 1 ? 1 - (6 * d2) / (n * (n * n - 1)) : 0;
+        }
+
+        function cosineSimilarityCentered(x, y) {
+            const meanX = x.reduce((a, b) => a + b, 0) / x.length;
+            const meanY = y.reduce((a, b) => a + b, 0) / y.length;
+            const xCentered = x.map(v => v - meanX);
+            const yCentered = y.map(v => v - meanY);
+            const dotProduct = xCentered.reduce((sum, xi, i) => sum + xi * yCentered[i], 0);
+            const magX = Math.sqrt(xCentered.reduce((sum, xi) => sum + xi * xi, 0));
+            const magY = Math.sqrt(yCentered.reduce((sum, yi) => sum + yi * yi, 0));
+            if (magX === 0 && magY === 0) return 1;
+            if (magX === 0 || magY === 0) return 0;
+            return dotProduct / (magX * magY);
+        }
+
+        function weightedEuclidean(x, y, weights) {
+            const distance = x.reduce((sum, xi, i) => 
+                sum + weights[i] * Math.pow(xi - y[i], 2), 0
+            );
+            const maxWeightedDistance = Math.sqrt(weights.reduce((sum, w) => sum + w * 81, 0));
+            return 1 - Math.sqrt(distance) / maxWeightedDistance;
+        }
+
+        function calculateProfileVariance(scores) {
+            const n = scores.length;
+            const mean = scores.reduce((a, b) => a + b, 0) / n;
+            return scores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) / (n - 1);
+        }
+
+        function calculateDynamicWeights(userScores) {
+            const baseWeights = Object.values(dimensionWeights);
+            const mean = userScores.reduce((a, b) => a + b, 0) / userScores.length;
+            const deviations = userScores.map(score => Math.abs(score - mean));
+            const maxDeviation = Math.max(...deviations);
+            const dynamic = userScores.map((score, i) => {
+                let factor = 1.0;
+                if (score <= 2) factor += 0.5;
+                else if (score <= 3) factor += 0.25;
+                if (score >= 9) factor += 0.3;
+                else if (score >= 8) factor += 0.15;
+                if (maxDeviation > 0) {
+                    factor += 0.3 * (deviations[i] / maxDeviation);
+                }
+                return baseWeights[i] * factor;
+            });
+            const sum = dynamic.reduce((a, b) => a + b, 0);
+            return dynamic.map(w => w / sum);
+        }
+
+        function applySoftRules(userScores, careerScores) {
+            let penalty = 0;
+            if (userScores[1] < careerScores[1]) {
+                penalty += 0.3 * Math.max(0, careerScores[1] - userScores[1]) / 9;
+            }
+            if (userScores[0] < careerScores[0]) {
+                penalty += 0.3 * Math.max(0, careerScores[0] - userScores[0]) / 9;
+            }
+            if (userScores[3] < careerScores[3]) {
+                penalty += 0.3 * Math.max(0, careerScores[3] - userScores[3]) / 9;
+            }
+            if (userScores[8] < careerScores[8]) {
+                penalty += 0.3 * Math.max(0, careerScores[8] - userScores[8]) / 9;
+            }
+            return Math.max(0.1, 1 - penalty); // piso mínimo
+        }
+
+        function stabilityFactorFromVariance(variance) {
+            const maxVariance = 20.25;
+            return Math.exp(-variance / maxVariance);
+        }
+
+        function hybridScore(user, career) {
+            const dynamicWeights = calculateDynamicWeights(user);
+            const euclidean = weightedEuclidean(user, career, dynamicWeights);
+            const cosine = cosineSimilarityCentered(user, career);
+            return 0.6 * euclidean + 0.4 * cosine;
+        }
+
+        function calculateAllCareerScores(userScores) {
+            const validatedScores = validateScores(userScores);
+            const isAllOnes = validatedScores.every(score => score === 1);
+            const isAllTens = validatedScores.every(score => score === 10);
+
+            if (isAllOnes) {
+                return Object.keys(professionsMatrix).map(career => [career, 0.1]);
+            }
+
+            if (isAllTens) {
+                const careerVariances = {};
+                for (const [career, scores] of Object.entries(professionsMatrix)) {
+                    const varCareer = calculateProfileVariance(scores);
+                    careerVariances[career] = varCareer;
+                }
+                const maxVar = Math.max(...Object.values(careerVariances));
+                return Object.entries(careerVariances).map(([career, v]) => [career, 0.7 + 0.3 * (v / maxVar)]);
+            }
+
+            const profileVariance = calculateProfileVariance(validatedScores);
+            const stabilityFactor = stabilityFactorFromVariance(profileVariance);
+            const results = [];
+
+            for (const [career, careerScores] of Object.entries(professionsMatrix)) {
+                let score = hybridScore(validatedScores, careerScores);
+                const ruleFactor = applySoftRules(validatedScores, careerScores);
+                score = Math.max(0.1, score * ruleFactor * stabilityFactor);
+                results.push([career, score]);
+            }
+
+            // Eliminar umbral arbitrario → siempre top-N
+            results.sort((a, b) => b[1] - a[1]);
+            return results;
+        }
+
+        function diversify(careers, topN) {
+            if (careers.length <= topN) return careers;
+            const selected = [careers[0]];
+            while (selected.length < topN) {
+                let bestCareer = null;
+                let maxMinDist = -1;
+                for (let c of careers) {
+                    if (selected.some(s => s[0] === c[0])) continue;
+                    const minDist = Math.min(...selected.map(s => {
+                        const u = professionsMatrix[s[0]];
+                        const v = professionsMatrix[c[0]];
+                        return Math.sqrt(u.reduce((sum, xi, i) => sum + Math.pow(xi - v[i], 2), 0));
+                    }));
+                    if (minDist > maxMinDist) {
+                        maxMinDist = minDist;
+                        bestCareer = c;
+                    }
+                }
+                if (bestCareer) selected.push(bestCareer);
+                else break;
+            }
+            return selected;
+        }
+
+        function calculateCompatibleCareers(userScores = null) {
+            const scores = userScores || gameState.scores;
+            const allScores = calculateAllCareerScores(scores);
+            return diversify(allScores, 10);
+        }
+
+        function setHrefWithLista(listaCarrera) {
+            const enlace = document.querySelector('#btnCarreraDetalle');
+            const baseUrl = "../profesional_ia/app_final8.html";
+            const query = `?lista=${encodeURIComponent(JSON.stringify(listaCarrera))}`;
+            enlace.href = baseUrl + query;
+        }
+
+        function showResults() {
+            //const userScores = validateScores([...gameState.scores]);
+            const userScores = [9, 4, 9, 6, 4, 7, 9, 9, 6, 4];
+            const isAllOnes = userScores.every(score => score === 1);
+            const isAllTens = userScores.every(score => score === 10);
+            const mean = userScores.reduce((a, b) => a + b, 0) / userScores.length;
+            const variance = calculateProfileVariance(userScores);
+            const std = Math.sqrt(variance);
+            const cv = std / mean;
+            const isLowVariance = cv < 0.15;
+
+            let careers = calculateCompatibleCareers(userScores);
+            if (careers.length === 0) {
+                const specialMessageContainer = document.getElementById('special-message-container');
+                specialMessageContainer.innerHTML = `
+                    <div class="special-message no-match-message" role="status">
+                        <h3><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> No se encontraron carreras compatibles</h3>
+                        <p>Tu perfil actual tiene preferencias muy específicas que no coinciden con las carreras disponibles.</p>
+                        <p>Te recomendamos explorar diferentes áreas o considerar desarrollar nuevas habilidades.</p>
+                    </div>
+                `;
+                document.getElementById('results-title').textContent = 'Explora Nuevas Opciones';
+                document.getElementById('career-list').innerHTML = '';
+                document.getElementById('game-container').style.display = 'none';
+                document.getElementById('results-container').style.display = 'block';
+                return;
+            }
+
+            let listCareersID = careers.map(x => getIDProfession(x[0]));
+            setHrefWithLista(listCareersID);
+
+            const specialMessageContainer = document.getElementById('special-message-container');
+            specialMessageContainer.innerHTML = '';
+
+            if (isAllTens) {
+                const specialMessage = document.createElement('div');
+                specialMessage.className = 'special-message all-tens-message';
+                specialMessage.setAttribute('role', 'status');
+                specialMessage.innerHTML = `
+                    <h3><i class="fas fa-trophy" aria-hidden="true"></i> ¡Felicidades! Perfil Excepcional Detectado</h3>
+                    <p>Tienes un perfil extraordinariamente equilibrado y destacas en todas las dimensiones evaluadas.</p>
+                    <p>Eres una persona versátil con potencial para tener éxito en cualquier carrera que elijas.</p>
+                    <p>Aquí te presentamos las 10 carreras más destacadas que podrían ser de tu interés:</p>
+                `;
+                specialMessageContainer.appendChild(specialMessage);
+                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+            } else if (isAllOnes) {
+                const specialMessage = document.createElement('div');
+                specialMessage.className = 'special-message all-ones-message';
+                specialMessage.setAttribute('role', 'status');
+                specialMessage.innerHTML = `
+                    <h3><i class="fas fa-chart-line" aria-hidden="true"></i> Áreas de Oportunidad Detectadas</h3>
+                    <p>Tu perfil actual muestra áreas de mejora en todas las dimensiones evaluadas.</p>
+                    <p>No te preocupes, esto es una excelente oportunidad para crecer y desarrollar nuevas habilidades.</p>
+                    <p>Te recomendamos explorar diferentes áreas para descubrir tus intereses y fortalezas:</p>
+                `;
+                specialMessageContainer.appendChild(specialMessage);
+                document.getElementById('results-title').textContent = 'Oportunidades de Desarrollo Profesional';
+            } else if (isLowVariance) {
+                const specialMessage = document.createElement('div');
+                specialMessage.className = 'special-message low-variance-message';
+                specialMessage.setAttribute('role', 'status');
+                specialMessage.innerHTML = `
+                    <h3><i class="fas fa-balance-scale" aria-hidden="true"></i> Perfil Equilibrado Detectado</h3>
+                    <p>Tu perfil muestra puntuaciones similares en todas las dimensiones, lo que indica que tienes un perfil versátil.</p>
+                    <p>Te recomendamos explorar diferentes áreas antes de tomar una decisión definitiva.</p>
+                    <p>Aquí te presentamos las carreras más compatibles con tu perfil:</p>
+                `;
+                specialMessageContainer.appendChild(specialMessage);
+                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+            } else {
+                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+            }
+
+            // Normalización final min-max
+            const scores = careers.map(c => c[1]);
+            const minScore = Math.min(...scores);
+            const maxScore = Math.max(...scores);
+            const range = maxScore - minScore || 1;
+
+            const list = document.getElementById('career-list');
+            list.innerHTML = '';
+            careers.forEach(([name, rawScore], index) => {
+                const finalScore = (rawScore - minScore) / range;
+                const pct = Math.round(finalScore * 100);
+                const matchLevel = pct >= 80 ? 'Excelente' : 
+                                  pct >= 70 ? 'Muy Bueno' : 
+                                  pct >= 60 ? 'Bueno' : 'Aceptable';
+                const emoji = pct >= 80 ? '🌟' : pct >= 70 ? '✨' : pct >= 60 ? '👍' : '👌';
+                const item = document.createElement('li');
+                item.className = 'career-item';
+                item.style.animation = `fadeInUp 0.5s ${index * 0.1}s ease both`;
+                item.innerHTML = `
+                    <div class="career-name">
+                        ${name}
+                        <div style="font-size: 0.85rem; color: #a0c4ff; margin-top: 4px;">
+                            ${emoji} ${matchLevel}
+                        </div>
+                    </div>
+                    <div class="career-score" data-target="${pct}" aria-label="Compatibilidad: ${pct}%">${pct}%</div>
+                `;
+                list.appendChild(item);
+            });
+
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+        }
+
+        function restartGame() {
+            gameState = {
+                completedChallenges: [],
+                scores: new Array(10).fill(5),
+                currentChallenge: null,
+                currentQuestions: [],
+                currentAnswers: []
+            };
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            document.getElementById('complete-btn-container').style.display = 'none';
+            renderKeys();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('close-modal').addEventListener('click', () => {
+                document.getElementById('challenge-modal').classList.remove('active');
+                document.getElementById('challenge-modal').setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            });
+            document.getElementById('submit-challenge').addEventListener('click', submitChallenge);
+            document.getElementById('show-results').addEventListener('click', showResults);
+            document.getElementById('restart-game').addEventListener('click', restartGame);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
