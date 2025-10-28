@@ -792,6 +792,63 @@
             color: #ebf5fb;
             box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
         }
+        
+        /* === NUEVOS ESTILOS PARA BOTONES DE FILTRO === */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-btn {
+            background: rgba(20, 30, 60, 0.7);
+            border: 2px solid rgba(52, 152, 219, 0.5);
+            color: #f0f4f8;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.2), rgba(52, 152, 219, 0.4));
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .filter-btn:hover::before {
+            transform: translateX(0);
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            color: #ffffff;
+        }
+        
+        .filter-btn.active {
+            background: rgba(52, 152, 219, 0.7);
+            border-color: #3498db;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+            color: #ffffff;
+        }
+        
+        .filter-btn.active::before {
+            transform: translateX(0);
+        }
+        
         /* === MEDIA QUERIES === */
         @media (max-width: 768px) {
             body {
@@ -852,6 +909,14 @@
                 margin-top: 2.5rem;
                 font-size: 0.85rem;
             }
+            .filter-container {
+                gap: 8px;
+                margin-bottom: 1.2rem;
+            }
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
         }
         @media (max-width: 480px) {
             header h1 {
@@ -896,6 +961,14 @@
                 font-size: 1rem;
                 padding: 1.1rem;
             }
+            .filter-container {
+                gap: 6px;
+                margin-bottom: 1rem;
+            }
+            .filter-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
         }
         @media (max-width: 360px) {
             .key-container {
@@ -906,6 +979,14 @@
             }
             .game-container, .results-container {
                 padding: 1.2rem;
+            }
+            .filter-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .filter-btn {
+                width: 100%;
+                max-width: 200px;
             }
         }
         .result-buttons {
@@ -955,6 +1036,10 @@
             </section>
             <section class="results-container" id="results-container" aria-live="polite">
                 <h2 id="results-title">Tus 10 Carreras Más Compatibles</h2>
+                
+                <!-- Contenedor para los botones de filtro -->
+                <div class="filter-container" id="filter-container"></div>
+                
                 <div id="special-message-container"></div>
                 <ul class="career-list" id="career-list" role="list"></ul>
                 <div class="result-buttons">
@@ -1094,10 +1179,10 @@
         }
 
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.key-card') || e.target.closest('.option') || e.target.closest('.btn')) {
+            if (e.target.closest('.key-card') || e.target.closest('.option') || e.target.closest('.btn') || e.target.closest('.filter-btn')) {
                 const ripple = document.createElement('span');
                 ripple.classList.add('ripple');
-                const rect = e.target.closest('.key-card,.option,.btn').getBoundingClientRect();
+                const rect = e.target.closest('.key-card,.option,.btn,.filter-btn').getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height);
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
@@ -1472,7 +1557,7 @@
         function calculateCompatibleCareers(userScores = null) {
             const scores = userScores || gameState.scores;
             const allScores = calculateAllCareerScores(scores);
-            return diversify(allScores, 10);
+            return diversify(allScores, 20);
         }
 
         function setHrefWithLista(listaCarrera) {
@@ -1527,7 +1612,7 @@
                     <p>Aquí te presentamos las 10 carreras más destacadas que podrían ser de tu interés:</p>
                 `;
                 specialMessageContainer.appendChild(specialMessage);
-                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+                document.getElementById('results-title').textContent = 'Tus 20 Carreras Más Compatibles';
             } else if (isAllOnes) {
                 const specialMessage = document.createElement('div');
                 specialMessage.className = 'special-message all-ones-message';
@@ -1551,9 +1636,9 @@
                     <p>Aquí te presentamos las carreras más compatibles con tu perfil:</p>
                 `;
                 specialMessageContainer.appendChild(specialMessage);
-                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+                document.getElementById('results-title').textContent = 'Tus 20 Carreras Más Compatibles';
             } else {
-                document.getElementById('results-title').textContent = 'Tus 10 Carreras Más Compatibles';
+                document.getElementById('results-title').textContent = 'Tus 20 Carreras Más Compatibles';
             }
 
             // CAMBIO CLAVE: Eliminamos la normalización min-max y usamos la puntuación directa
@@ -1567,12 +1652,71 @@
                 area2: getArea2(p[0])
             }));
             const area2Unico = [...new Set(careers2.map(x => x.area2))];
-            careers2.forEach((objeto, index) => {
-                const name = objeto[0]
-                const rawScore = objeto[1]
-                const area2 = objeto["area2"]
-                
-                // Convertimos la puntuación cruda (0-1) a porcentaje (0-100%)
+            window.currentCareers =  careers2;
+            // Crear botones de filtro
+            createFilterButtons(area2Unico);
+            
+            // Mostrar todas las carreras inicialmente
+            displayCareers(careers2);
+            
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+        }
+        
+        function createFilterButtons(areas) {
+            const filterContainer = document.getElementById('filter-container');
+            filterContainer.innerHTML = '';
+            
+            // Botón "Todos"
+            const btnTodos = document.createElement('button');
+            btnTodos.className = 'filter-btn active';
+            btnTodos.textContent = 'Todos';
+            btnTodos.dataset.area = 'Todos';
+            filterContainer.appendChild(btnTodos);
+            
+            // Botones por cada área
+            areas.forEach(area => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = area;
+                btn.dataset.area = area;
+                filterContainer.appendChild(btn);
+            });
+            
+            // Agregar evento a los botones
+            filterContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    // Actualizar estado activo
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    // Filtrar carreras
+                    const selectedArea = e.target.dataset.area;
+                    filterCareers(selectedArea);
+                }
+            });
+        }
+        
+        function filterCareers(area) {
+            const careers2 = window.currentCareers || [];
+            if (area === 'Todos') {
+                displayCareers(careers2);
+            } else {
+                const filteredCareers = careers2.filter(career => career.area2 === area);
+                displayCareers(filteredCareers);
+            }
+            
+        }
+        
+        function displayCareers(careers) {
+            setHrefWithLista(careers.map(c => getIDProfession(c[0])))
+            const list = document.getElementById('career-list');
+            list.innerHTML = '';
+            
+            careers.forEach((objeto, index) => {
+                const name = objeto[0];
+                const rawScore = objeto[1];
+                const area2 = objeto.area2;
                 let pct = Math.round(rawScore * 100);
                 
                 // Aseguramos que esté entre 10 y 100
@@ -1597,9 +1741,6 @@
                 `;
                 list.appendChild(item);
             });
-
-            document.getElementById('game-container').style.display = 'none';
-            document.getElementById('results-container').style.display = 'block';
         }
 
         function restartGame() {
