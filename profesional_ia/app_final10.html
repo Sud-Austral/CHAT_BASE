@@ -771,7 +771,13 @@
             
             // Formatear instituciones
             let institutionsHTML = '';
-            profession.institutions = profession.institutions.split(',');
+            //console.log(profession.institutions.split(','))
+            try {
+                profession.institutions = profession.institutions.split(',');    
+            } catch (error) {
+                console.log("Error")
+            }
+            
             if (profession.institutions && profession.institutions.length > 0) {
                 institutionsHTML = profession.institutions.map(inst => 
                     `<span class="institution-badge">${inst}</span>`
