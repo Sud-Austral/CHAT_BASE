@@ -1380,8 +1380,6 @@ const idProfession = {'Agronomía': 102,
  'Trabajo Social': 'Humanidades y Ciencias Sociales',
  'Veterinaria': 'Ciencias de la Salud y Veterinaria'}
 
-
-
 function getIDProfession(profesion){
     return idProfession[profesion];
 }
